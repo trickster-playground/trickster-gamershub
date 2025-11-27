@@ -2,8 +2,10 @@
  * Components Section
  */
 import Brand from '@/components/home/Brand';
+import Feature from '@/components/home/Feature';
 import Header from '@/components/home/Header';
 import Hero from '@/components/home/Hero';
+import Overview from '@/components/home/Overview';
 import Process from '@/components/home/Process';
 
 /**
@@ -24,7 +26,6 @@ import { type SharedData } from '@/types';
 /**
  * Node Modules
  */
-import Feature from '@/components/home/Feature';
 import { ReactLenis } from 'lenis/react';
 
 export default function Welcome({
@@ -52,6 +53,7 @@ export default function Welcome({
             <Brand />
             <Feature />
             <Process />
+            <Overview />
           </main>
         </div>
       </ReactLenis>

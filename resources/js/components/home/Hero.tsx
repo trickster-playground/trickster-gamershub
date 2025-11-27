@@ -1,7 +1,6 @@
 /**
- * Components
+ * Components UI
  */
-import ReactPlayer from 'react-player';
 import { AspectRatio } from '../ui/aspect-ratio';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
@@ -28,6 +27,7 @@ import {
   Variants,
 } from 'motion/react';
 import { useRef } from 'react';
+import ReactPlayer from 'react-player';
 
 /**
  * Framer Motion Variants

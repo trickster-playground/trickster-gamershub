@@ -32,7 +32,7 @@ import { navMenu } from '@/constants';
 const Header = () => {
   return (
     <header className="grid h-16 grid-cols-1 items-center md:h-20 lg:h-24">
-      <div className="container flex justify-between">
+      <div className="container flex justify-between lg:grid lg:grid-cols-[1fr_3fr_1fr]">
         <Logo variant="icon" />
 
         <NavigationMenu className="mx-auto max-lg:hidden">

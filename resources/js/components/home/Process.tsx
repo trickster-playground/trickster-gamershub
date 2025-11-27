@@ -99,7 +99,7 @@ const Process = () => {
             >
               <img
                 src={processBanner}
-                alt=""
+                alt="Process Banner"
                 className="h-full w-full object-contain object-bottom"
                 width={500}
                 height={528}
