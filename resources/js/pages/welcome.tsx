@@ -1,6 +1,7 @@
 /**
- * Components Section
+ * Components Home
  */
+import Blog from '@/components/home/Blog';
 import Brand from '@/components/home/Brand';
 import Feature from '@/components/home/Feature';
 import Header from '@/components/home/Header';
@@ -39,7 +40,7 @@ export default function Welcome({
 
   return (
     <>
-      <Head title="Welcome">
+      <Head title="GamersHub">
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link
           href="https://fonts.bunny.net/css?family=mona-sans:400,500,600"
@@ -56,6 +57,7 @@ export default function Welcome({
             <Process />
             <Overview />
             <Review />
+            <Blog />
           </main>
         </div>
       </ReactLenis>
