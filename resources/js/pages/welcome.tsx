@@ -7,6 +7,7 @@ import Header from '@/components/home/Header';
 import Hero from '@/components/home/Hero';
 import Overview from '@/components/home/Overview';
 import Process from '@/components/home/Process';
+import Review from '@/components/home/Review';
 
 /**
  * Inertia React
@@ -54,6 +55,7 @@ export default function Welcome({
             <Feature />
             <Process />
             <Overview />
+            <Review />
           </main>
         </div>
       </ReactLenis>
