@@ -4,6 +4,7 @@
 import Brand from '@/components/home/Brand';
 import Header from '@/components/home/Header';
 import Hero from '@/components/home/Hero';
+import Process from '@/components/home/Process';
 
 /**
  * Inertia React
@@ -50,6 +51,7 @@ export default function Welcome({
             <Hero />
             <Brand />
             <Feature />
+            <Process />
           </main>
         </div>
       </ReactLenis>

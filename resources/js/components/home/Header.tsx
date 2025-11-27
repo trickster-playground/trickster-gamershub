@@ -1,8 +1,6 @@
 /**
- * Components
+ * Components UI
  */
-import { navMenu } from '@/constants';
-import { Menu } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
   NavigationMenu,
@@ -16,10 +14,20 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 /**
- * Layout
+ * Components Home
  */
 import Logo from './Logo';
 import MobileMenu from './MobileMenu';
+
+/**
+ * Assets
+ */
+import { Menu } from 'lucide-react';
+
+/**
+ * Constants
+ */
+import { navMenu } from '@/constants';
 
 const Header = () => {
   return (
