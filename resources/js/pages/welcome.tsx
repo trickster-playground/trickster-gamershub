@@ -1,6 +1,7 @@
 /**
  * Components Section
  */
+import Brand from '@/components/home/Brand';
 import Header from '@/components/home/Header';
 import Hero from '@/components/home/Hero';
 
@@ -46,6 +47,7 @@ export default function Welcome({
           <Header />
           <main>
             <Hero />
+            <Brand />
           </main>
         </div>
       </ReactLenis>
