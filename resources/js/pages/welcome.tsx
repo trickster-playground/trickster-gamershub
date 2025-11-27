@@ -23,6 +23,7 @@ import { type SharedData } from '@/types';
 /**
  * Node Modules
  */
+import Feature from '@/components/home/Feature';
 import { ReactLenis } from 'lenis/react';
 
 export default function Welcome({
@@ -48,6 +49,7 @@ export default function Welcome({
           <main>
             <Hero />
             <Brand />
+            <Feature />
           </main>
         </div>
       </ReactLenis>

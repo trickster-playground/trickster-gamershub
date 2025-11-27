@@ -1,3 +1,5 @@
+import { JSX } from "react";
+
 type MenuItem = {
     href: string;
     label: string;

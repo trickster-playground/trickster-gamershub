@@ -160,7 +160,7 @@
   }
 
   .section-subtitle {
-    @apply text-primary text-sm font-medium uppercase;
+    @apply text-blue-600 text-sm font-medium uppercase;
   }
 
   .section-title {
