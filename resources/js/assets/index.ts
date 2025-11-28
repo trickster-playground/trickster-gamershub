@@ -22,6 +22,7 @@ import avatar1 from '@/assets/avatar-1.jpg';
 import avatar2 from '@/assets/avatar-2.jpg';
 import avatar3 from '@/assets/avatar-3.jpg';
 import ctaBanner from '@/assets/cta-banner.png';
+import authBackground from '@/assets/background.webp';
 
 const brands = [brand1, brand2, brand3, brand4, brand5];
 
@@ -40,5 +41,6 @@ export {
   avatar1,
   avatar2,
   avatar3,
-  ctaBanner
+  ctaBanner,
+  authBackground
 };

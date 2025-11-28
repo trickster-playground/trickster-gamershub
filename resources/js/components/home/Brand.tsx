@@ -26,7 +26,6 @@ const Brand = () => {
         >
           Powering data insights for today's startup and tomorrow's leader.
         </motion.p>
-
         <motion.div
           variants={variants.staggerContainer}
           initial="start"
