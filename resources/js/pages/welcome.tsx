@@ -5,6 +5,7 @@ import Blog from '@/components/home/Blog';
 import Brand from '@/components/home/Brand';
 import CTA from '@/components/home/CTA';
 import Feature from '@/components/home/Feature';
+import Footer from '@/components/home/Footer';
 import Header from '@/components/home/Header';
 import Hero from '@/components/home/Hero';
 import Overview from '@/components/home/Overview';
@@ -61,6 +62,8 @@ export default function Welcome({
             <Blog />
             <CTA />
           </main>
+
+          <Footer />
         </div>
       </ReactLenis>
     </>
