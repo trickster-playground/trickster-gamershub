@@ -112,7 +112,7 @@ const Hero = () => {
             variants={heroChildVariant}
             className="mt-6 flex justify-center gap-2 md:mt-10"
           >
-            <Button className="cursor-pointer">Start Free Trial</Button>
+            <Button className="cursor-pointer">Start Journey</Button>
 
             <Dialog>
               <DialogTrigger asChild>

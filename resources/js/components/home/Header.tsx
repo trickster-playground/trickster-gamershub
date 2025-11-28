@@ -1,4 +1,14 @@
 /**
+ * Node Modules
+ */
+import { Link } from '@inertiajs/react';
+
+/**
+ * Routes
+ */
+import { dashboard, login, register } from '@/routes';
+
+/**
  * Components UI
  */
 import { Button } from '../ui/button';
@@ -29,7 +39,13 @@ import { Menu } from 'lucide-react';
  */
 import { navMenu } from '@/constants';
 
-const Header = () => {
+const Header = ({
+  auth,
+  canRegister,
+}: {
+  auth: any;
+  canRegister?: boolean;
+}) => {
   return (
     <header className="grid h-16 grid-cols-1 items-center md:h-20 lg:h-24">
       <div className="container flex justify-between lg:grid lg:grid-cols-[1fr_3fr_1fr]">
@@ -88,8 +104,23 @@ const Header = () => {
         </NavigationMenu>
 
         <div className="flex items-center justify-end gap-2 max-lg:hidden">
-          <Button variant={'ghost'}> Sign In</Button>
-          <Button> Free Trial</Button>
+          {auth?.user ? (
+            <Link href={dashboard()}>
+              <Button>Dashboard</Button>
+            </Link>
+          ) : (
+            <>
+              <Link href={login()}>
+                <Button variant="ghost">Sign In</Button>
+              </Link>
+
+              {canRegister && (
+                <Link href={register()}>
+                  <Button>Sign Up</Button>
+                </Link>
+              )}
+            </>
+          )}
         </div>
 
         <Popover>

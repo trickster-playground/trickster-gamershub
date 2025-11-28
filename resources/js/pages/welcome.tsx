@@ -51,7 +51,7 @@ export default function Welcome({
       </Head>
       <ReactLenis root>
         <div className="relative isolate overflow-hidden">
-          <Header />
+          <Header auth={auth} canRegister={canRegister} />
           <main>
             <Hero />
             <Brand />
