@@ -1,6 +1,6 @@
 import { AppHeader } from '@/components/app-header';
 import { AppShell } from '@/components/app-shell';
-import { AppHeaderContent } from '@/components/customs/layouts/app-header-content';
+import { AppContent } from '@/components/app-content';
 import { type BreadcrumbItem } from '@/types';
 import type { PropsWithChildren } from 'react';
 
@@ -11,7 +11,7 @@ export default function AppHeaderLayout({
   return (
     <AppShell>
       <AppHeader breadcrumbs={breadcrumbs} />
-      <AppHeaderContent>{children}</AppHeaderContent>
+      <AppContent>{children}</AppContent>
     </AppShell>
   );
 }

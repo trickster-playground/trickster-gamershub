@@ -13,6 +13,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Dashboard() {
   const { auth, flash } = usePage<SharedData>().props;
+
   return (
     <CustomAppLayout breadcrumbs={breadcrumbs}>
       <Head title="Dashboard" />
@@ -20,10 +21,10 @@ export default function Dashboard() {
       {/* Left Content */}
       <div className="order-1 col-span-12 flex h-full w-full flex-col gap-4 overflow-x-auto rounded-xl p-4 md:order-1 md:col-span-1 lg:order-1 lg:col-span-3">
         <ProfileCard
-          name={`${auth.user?.name || 'Leanne Graham'}`}
-          username={`${auth.user?.username || 'Nothing in life is to be feared, it is only to be understood.'}`}
-          avatar={`${auth.user?.avatar || 'https://github.com/shadcn.png'}`}
-          background={`${auth.user?.background || 'https://github.com/shadcn.png'}`}
+          name={`${auth.user?.name || 'John Doe'}`}
+          username={`${auth.user?.username || 'Johndoe.'}`}
+          avatar={`/storage/${auth.user?.avatar?.path || 'https://github.com/shadcn.png'}`}
+          background={`/storage/${auth.user?.background?.path || 'https://github.com/shadcn.png'}`}
         />
       </div>
 
