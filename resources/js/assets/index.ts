@@ -13,7 +13,7 @@ import brand4 from '@/assets/brand-logo-4.svg';
 import brand5 from '@/assets/brand-logo-5.svg';
 import feature1 from '@/assets/feature-1.png';
 import feature2 from '@/assets/feature-2.png';
-import processBanner from '@/assets/process-banner.png';
+import processBanner from '@/assets/process-banner2.png';
 import overviewBanner from '@/assets/overview-banner.png';
 import blog1 from '@/assets/blog-1.jpg';
 import blog2 from '@/assets/blog-2.jpg';
