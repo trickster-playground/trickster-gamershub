@@ -1,0 +1,374 @@
+@config "../../tailwind.config.ts";
+
+/* BASE DARK THEME */
+.fc {
+  /* slate-900 */
+  color: #e2e8f0;
+  /* slate-200 */
+  font-family: 'Instrument Sans',
+    ui-sans-serif,
+    system-ui,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji';
+  border-radius: 3px;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f1f5f9;
+  /* slate-100 */
+}
+
+.fc .fc-button {
+  background-color: #000000;
+  /* slate-800 */
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 0.90rem;
+  color: #f8fafc;
+  transition: background 0.3s;
+  text-transform: capitalize;
+}
+
+.fc .fc-button:hover {
+  background-color: rgb(26, 24, 24);
+  /* slate-700 */
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.fc .fc-button-primary:focus {
+  box-shadow: none !important;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: #0051ff !important;
+  /* blue-900 */
+  color: white !important;
+  border-radius: 0.3rem;
+}
+
+/* REMOVE ALL BORDERS */
+.fc .fc-scrollgrid,
+.fc .fc-scrollgrid-section,
+.fc .fc-scrollgrid-sync-inner,
+.fc .fc-scrollgrid-sync-table,
+.fc .fc-daygrid-day,
+.fc .fc-daygrid-day-frame,
+.fc .fc-daygrid-day-top,
+.fc .fc-col-header-cell,
+.fc .fc-scrollgrid-liquid,
+.fc td,
+.fc th {
+  border: none !important;
+}
+
+.fc .fc-popover-header {
+  background: #000;
+  border-bottom: 2px solid #275eb8;
+}
+
+.fc .fc-popover-body {
+  background: #000;
+}
+
+.fc-theme-standard .fc-popover {
+  border: 2px solid #275eb8;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.fc .fc-popover-close {
+  font-weight: 700;
+opacity: 100;
+}
+
+/* OPTIONAL: Style hari-hari */
+.fc .fc-col-header-cell-cushion {
+  padding: 1rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  /* slate-300 */
+}
+
+.fc .fc-daygrid-day-number {
+  padding: 0.25rem 1.5rem;
+  color: #e2e8f0;
+  /* slate-200 */
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* OPTIONAL: Hover effect */
+.fc .fc-daygrid-day:hover {
+  background-color: #275eb8;
+  /* slate-800 */
+  transition: background 0.2s;
+  cursor: pointer;
+  border-radius: 0.3rem;
+}
+
+.fc .fc-today-button {
+  /* slate-700 */
+  color: #ffffff;
+  /* slate-400 */
+}
+
+.fc .fc-today-button:disabled {
+  background-color: black;
+  /* slate-700 */
+  color: #ffffff;
+  /* slate-400 */
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Maps */
+.full-height-map {
+  height: 450px;
+  width: 1000px;
+}
+
+/* Button */
+.comic-button {
+  display: inline-flex;
+  justify-items: center;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #0051ff;
+  border: 2px solid #000000;
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px #000000;
+  transition: all 0.3s ease;
+}
+
+.comic-button:hover {
+  background-color: #fff;
+  color: #0051ff;
+  border: 2px solid #0051ff;
+  box-shadow: 5px 5px 0px #0051ff;
+}
+
+.comic-button:active {
+  border-color: #0051ff;
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+.green-comic-button {
+  display: inline-flex;
+  justify-items: center;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #007f5f;
+  border: 2px solid #000000;
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px #000000;
+  transition: all 0.3s ease;
+}
+
+.green-comic-button:hover {
+  background-color: #fff;
+  color: #007f5f;
+  border: 2px solid #007f5f;
+  box-shadow: 5px 5px 0px #007f5f;
+}
+
+.green-comic-button:active {
+  border-color: #007f5f;
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+.red-comic-button {
+  display: inline-flex;
+  justify-items: center;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #b91c1c;
+  border: 2px solid #000000;
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px #000000;
+  transition: all 0.3s ease;
+}
+
+.red-comic-button:hover {
+  background-color: #fff;
+  color: #b91c1c;
+  border: 2px solid #b91c1c;
+  box-shadow: 5px 5px 0px #b91c1c;
+}
+
+.red-comic-button:active {
+  border-color: #b91c1c;
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+.link-comic-button {
+  display: inline-flex;
+  justify-items: center;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #0f172a;
+  border: 2px solid #0f172a;
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px #000;
+  transition: all 0.3s ease;
+}
+
+.link-comic-button:hover {
+  background-color: #fff;
+  color: #0f172a;
+  border: 2px solid #0051ff;
+  box-shadow: 5px 5px 0px #0051ff;
+}
+
+.link-comic-button:active {
+  border-color: #0051ff;
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+
+/* Tiptap Editor */
+.tiptap p.is-editor-empty:first-child::before {
+  color: theme("colors.muted.foreground");
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap.ProseMirror {
+  outline: none;
+}
+
+blockquote {
+  border-left: 3px solid #0051ff;
+  border-radius: 3px;
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: #252529;
+  font-style: italic;
+}
+
+.tiptap-button {
+  padding: 0.5rem 1rem;
+  background-color: #000000;
+  border: 1px solid #3d3737;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.tiptap-button-active {
+  background-color: #333;
+  color: white;
+}
+
+.emoji-button {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.emoji-picker {
+  position: absolute;
+  z-index: 1000;
+}
+
+.emoji-picker.top {
+  bottom: 100%;
+  margin-bottom: 8px;
+}
+
+.emoji-picker.bottom {
+  top: 100%;
+  margin-top: 8px;
+}
+
+
+/* Carousel */
+
+.btn-prev,
+.btn-next {
+  width: 40px;
+  /* Sesuaikan dengan ukuran yang diinginkan */
+  height: 40px;
+  /* Sesuaikan dengan ukuran yang diinginkan */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0,
+      0,
+      0,
+      0.5);
+  /* Warna latar belakang semi-transparan */
+  color: white;
+  border-radius: 50%;
+  /* Membuat tombol menjadi lingkaran */
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.btn-prev {
+  left: 10px;
+  /* Posisikan tombol sebelumnya */
+}
+
+.btn-next {
+  right: 10px;
+  /* Posisikan tombol berikutnya */
+}
+
+/* Media query untuk mobile devices */
+@media (max-width: 768px) {
+
+  .btn-prev,
+  .btn-next {
+    width: 30px;
+    height: 30px;
+    top: 50%;
+    /* Posisikan sedikit lebih rendah untuk visibilitas */
+    transform: translateY(-50%);
+  }
+
+  .btn-prev {
+    left: 5px;
+    /* Sesuaikan jarak untuk mobile */
+  }
+
+  .btn-next {
+    right: 5px;
+    /* Sesuaikan jarak untuk mobile */
+  }
+}

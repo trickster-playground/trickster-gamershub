@@ -7,6 +7,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@config "../../tailwind.config.ts";
+
 @theme {
   --font-sans:
     'Mona Sans', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
@@ -147,6 +149,11 @@
   }
 }
 
+html,
+body {
+  height: 100%;
+}
+
 @layer utilities {
   .container {
     @apply mx-auto px-4 2xl:max-w-screen-xl;
@@ -173,5 +180,14 @@
 
   .img-cover {
     @apply h-full w-full object-cover;
+  }
+
+  /* Left sidebar */
+  .leftsidebar {
+    @apply hidden rounded-3xl md:flex px-6 py-10 flex-col justify-between min-w-[270px] bg-dark-2;
+  }
+
+  .leftsidebar-link {
+    @apply rounded-lg  hover:bg-primary-500 transition;
   }
 }
