@@ -19,7 +19,7 @@ class PasswordController extends Controller
 	{
 		return Inertia::render('settings/password', [
 			'user' => new UserResource(
-				$request->user()->load(['socialLinks', 'avatar', 'background'])
+				$request->user()->load(['avatar', 'background'])
 			),
 		]);
 	}
