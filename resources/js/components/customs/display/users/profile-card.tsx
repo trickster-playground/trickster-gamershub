@@ -18,17 +18,17 @@ export function ProfileCard({
   return (
     <div className="w-full overflow-hidden rounded-xl bg-black text-white">
       {/* Cover */}
-      <div className="relative h-36 w-full overflow-hidden rounded-t-xl">
+      <div className="relative h-36 w-full overflow-hidden rounded-t-xl border-b-1 border-neutral-800">
         <img
           src={background}
           alt="Cover"
           className="aspect-video h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/80"></div>
+        <div className="from-blue/40 absolute inset-0 bg-gradient-to-b to-black/80"></div>
 
         {/* Avatar + Name + Username */}
         <div className="absolute bottom-4 left-5 flex items-center gap-4">
-          <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-white">
+          <div className="h-16 w-16 cursor-pointer overflow-hidden rounded-full border-1 border-white hover:scale-105 hover:border-primary-600">
             <img
               className="h-full w-full object-cover"
               src={avatar}

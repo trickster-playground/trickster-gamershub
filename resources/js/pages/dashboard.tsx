@@ -1,8 +1,27 @@
-import { ProfileCard } from '@/components/customs/display/users/profile-card';
-import CustomAppLayout from '@/layouts/customs/custom-app-layout';
-import { dashboard } from '@/routes';
-import { SharedData, type BreadcrumbItem } from '@/types';
+/**
+ * Node Modules
+*/
 import { Head, usePage } from '@inertiajs/react';
+
+/**
+ * Routes
+*/
+import { dashboard } from '@/routes';
+
+/**
+ * Layouts
+ */
+import CustomAppLayout from '@/layouts/customs/custom-app-layout';
+
+/**
+ *  Components Display
+ */
+import { ProfileCard } from '@/components/customs/display/users/profile-card';
+
+/**
+ * Types
+ */
+import { SharedData, type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
