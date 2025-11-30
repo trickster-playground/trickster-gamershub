@@ -43,19 +43,19 @@ class PostController extends Controller
 		try {
 			$post = Post::create($data);
 
-			$files = $data['files'];
-			foreach ($files as $file) {
-				$path = $file->store('attachments/' . $user->id . '/' . 'posts' . '/' . $post->id, 'public');
-				$allFilePaths[] = $path;
-				PostAttachment::create([
-					'post_id' => $post->id,
-					'file_name' => $file->getClientOriginalName(), // TODO: ganti dengan HASH
-					'path' => $path,
-					'modified' => $file->getMTime() * 1000,
-					'type' => $file->getMimeType(),
-					'size' => $file->getSize(),
-				]);
-			}
+			// $files = $data['files'];
+			// foreach ($files as $file) {
+			// 	$path = $file->store('attachments/' . $user->id . '/' . 'posts' . '/' . $post->id, 'public');
+			// 	$allFilePaths[] = $path;
+			// 	PostAttachment::create([
+			// 		'post_id' => $post->id,
+			// 		'file_name' => $file->getClientOriginalName(), // TODO: ganti dengan HASH
+			// 		'path' => $path,
+			// 		'modified' => $file->getMTime() * 1000,
+			// 		'type' => $file->getMimeType(),
+			// 		'size' => $file->getSize(),
+			// 	]);
+			// }
 
 			DB::commit();
 		} catch (\Exception $e) {

@@ -41,17 +41,9 @@ const CreatePost = () => {
               </Link>
             </div>
           </div>
+
           {/* Form Component */}
-          <PostForm
-            action="Create"
-            post={{
-              caption: '',
-              attachments: [],
-              location: '',
-              tags: '',
-              slug: '',
-            }}
-          />
+          <PostForm />
         </div>
       </div>
     </AppLayout>

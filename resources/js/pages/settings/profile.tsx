@@ -37,7 +37,7 @@ export default function Profile({
   mustVerifyEmail: boolean;
   status?: string;
 }) {
-  const { auth, user } = usePage<SharedData>().props;
+  const { auth } = usePage<SharedData>().props;
 
   const socialPlatforms = ['instagram', 'facebook', 'linkedin', 'website'];
 
