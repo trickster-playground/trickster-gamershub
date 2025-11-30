@@ -38,6 +38,7 @@ export interface User {
   bio?: string;
   avatar?: Avatar;
   background?: Background;
+  socialLinks?: SocialLink[];
   email_verified_at: string | null;
   two_factor_enabled?: boolean;
   created_at: string;
@@ -57,4 +58,10 @@ export interface Background {
   user_id: number;
   type: 'background';
   path: string;
+}
+
+export interface SocialLink {
+  id?: number;
+  platform: string;
+  url: string;
 }

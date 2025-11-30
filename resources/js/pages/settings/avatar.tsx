@@ -88,7 +88,6 @@ export default function Avatar() {
           >
             {({ processing, recentlySuccessful, errors }) => (
               <>
-
                 {/* Avatar */}
                 <div className="grid gap-2">
                   <Label className="text-sm font-medium">Profile Avatar</Label>
@@ -161,7 +160,6 @@ export default function Avatar() {
                   </div>
                 </div>
 
-
                 {/* Background */}
                 <div className="grid gap-2">
                   <Label className="text-sm font-medium">
@@ -172,9 +170,10 @@ export default function Avatar() {
                       <>
                         <img
                           src={
-                            previewBackground || `/storage/${auth.user.background?.path}`
+                            previewBackground ||
+                            `/storage/${auth.user.background?.path}`
                           }
-                          className="border object-cover aspect-video w-full rounded-md h-48"
+                          className="aspect-video h-48 w-full rounded-md border object-cover"
                         />
 
                         <Button

@@ -19,8 +19,15 @@ class UserResource extends JsonResource
 			'id' => $this->id,
 			'name' => $this->name,
 			'email' => $this->email,
-			'avatar' => $this->avatar?->path ? url(Storage::url($this->avatar->path)) : null,
-			'background' => $this->background?->path ? Storage::url($this->background->path) : null,
+
+			// Avatar & Background Resource
+			'avatar' => new UserAvatarResource($this->whenLoaded('avatar')),
+			'background' => new UserBackgroundResource($this->whenLoaded('background')),
+
+			// Social Links Resource
+			'socialLinks' => UserSocialLinkResource::collection(
+				$this->whenLoaded('socialLinks')
+			),
 		];
 	}
 }

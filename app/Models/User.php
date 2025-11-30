@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Users\UserAttachment;
+use App\Models\Users\UserSocialLink;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -96,5 +97,10 @@ class User extends Authenticatable
 	public function background()
 	{
 		return $this->hasOne(UserAttachment::class)->where('type', 'background');
+	}
+
+	public function socialLinks()
+	{
+		return $this->hasMany(UserSocialLink::class);
 	}
 }

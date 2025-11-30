@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\AppearanceController;
 use App\Http\Controllers\Settings\AvatarController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
@@ -18,6 +19,10 @@ Route::middleware('auth')->group(function () {
 	Route::get('settings/avatar', [AvatarController::class, 'edit'])->name('avatar.edit');
 	Route::patch('/settings/avatar', [AvatarController::class, 'update'])->name('avatar.update');
 
+	// Delete Social Links
+	Route::delete('/social-links/{id}', [ProfileController::class, 'destroySocialLink'])->name('social-links.destroy');
+
+
 	// Password Settings
 	Route::get('settings/password', [PasswordController::class, 'edit'])->name('user-password.edit');
 	Route::put('settings/password', [PasswordController::class, 'update'])
@@ -25,9 +30,7 @@ Route::middleware('auth')->group(function () {
 		->name('user-password.update');
 
 	// Appearance Settings
-	Route::get('settings/appearance', function () {
-		return Inertia::render('settings/appearance');
-	})->name('appearance.edit');
+	Route::get('settings/appearance', [AppearanceController::class, 'edit'])->name('appearance.edit');
 
 	// Two-Factor Authentication Settings
 	Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])
