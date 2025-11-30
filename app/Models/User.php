@@ -4,9 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Posts\Post;
 use App\Models\Users\UserAttachment;
 use App\Models\Users\UserSocialLink;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -102,5 +105,20 @@ class User extends Authenticatable
 	public function socialLinks()
 	{
 		return $this->hasMany(UserSocialLink::class);
+	}
+
+	public function posts(): HasMany
+	{
+		return $this->hasMany(Post::class);
+	}
+
+	public function likedPosts(): BelongsToMany
+	{
+		return $this->belongsToMany(Post::class, 'post_likes');
+	}
+
+	public function savedPosts(): BelongsToMany
+	{
+		return $this->belongsToMany(Post::class, 'post_saves');
 	}
 }
