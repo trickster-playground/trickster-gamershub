@@ -260,4 +260,8 @@ body {
   .post-card_img {
     @apply h-auto max-h-[250px] w-full rounded-3xl object-fill xs:max-h-[400px] lg:max-h-[550px];
   }
+
+  .invert-white {
+    @apply brightness-0 invert transition;
+  }
 }

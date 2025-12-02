@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Posts;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\PostStoreRequest;
 use App\Http\Requests\Posts\PostUpdateRequest;
+use App\Http\Resources\Posts\PostResource;
 use App\Http\Resources\Users\UserResource;
 use App\Models\Posts\Post;
 use App\Models\Posts\PostAttachment;
@@ -70,6 +71,20 @@ class PostController extends Controller
 			return response()->json(['message' => 'Failed to update post', 'error' => $e->getMessage()], 500);
 		}
 		return redirect(route('dashboard'))->with('message', 'Post created successfully.');
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 */
+	public function edit(string $slug)
+	{
+		$post = Post::with('attachments')->where('slug', $slug)->firstOrFail();
+
+		$this->authorize('owner', $post);
+
+		return Inertia::render('posts/edit-post', [
+			'post' => new PostResource($post),
+		]);
 	}
 
 	/**

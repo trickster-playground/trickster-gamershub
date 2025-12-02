@@ -26,6 +26,7 @@ class PostUpdateRequest extends FormRequest
 		'svg',
 		'mp3',
 		'mp4',
+		'webp',
 	];
 
 	/**

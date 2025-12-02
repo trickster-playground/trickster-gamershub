@@ -137,7 +137,7 @@ const PostForm = ({ post, action }: PostsFormProps) => {
       });
     } else if (action === 'Update') {
       formData.append('_method', 'PATCH');
-      router.post(('post.update', data.slug), formData, {
+      router.post(postRoutes.update(data.slug).url, formData, {
         forceFormData: true,
         onSuccess: () => console.log('Updated successfully'),
         onError: (error) => console.log('Error:', error),

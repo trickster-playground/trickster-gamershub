@@ -32,6 +32,7 @@ class PostStoreRequest extends FormRequest
 		'svg',
 		'mp3',
 		'mp4',
+		'webp',
 	];
 
 	/**
