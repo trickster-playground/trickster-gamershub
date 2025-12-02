@@ -29,13 +29,17 @@ import {
  */
 import { IconEdit, IconSettings, IconTrash } from '@tabler/icons-react';
 
-interface PostSettingsProps {
-  slug: string;
+interface PostCommentSettingsProps {
+  commentId: number;
   onDelete?: () => void; // optional if needed delete action
   children?: ReactNode; // if need to inject custom trigger
 }
 
-const PostSettings = ({ slug, onDelete, children }: PostSettingsProps) => {
+const PostCommentSettings = ({
+  commentId,
+  onDelete,
+  children,
+}: PostCommentSettingsProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -47,7 +51,7 @@ const PostSettings = ({ slug, onDelete, children }: PostSettingsProps) => {
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
           <Link
-            href={`/posts/${slug}/edit`}
+            href={`/posts/${commentId}/edit`}
             className="group flex w-full cursor-pointer items-center justify-between"
           >
             <p className="group-hover:text-blue-500">Update</p>
@@ -89,4 +93,4 @@ const PostSettings = ({ slug, onDelete, children }: PostSettingsProps) => {
   );
 };
 
-export default PostSettings;
+export default PostCommentSettings;

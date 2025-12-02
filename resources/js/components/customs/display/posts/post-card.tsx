@@ -208,7 +208,7 @@ const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
               <>
                 <CarouselPrevious className="btn-prev" />
                 <CarouselNext className="btn-next" />
-                <div className="text-center text-sm text-muted-foreground">
+                <div className="relative -mt-10 mb-10 text-center text-sm text-muted-foreground">
                   Slide {current} of {count}
                 </div>
               </>

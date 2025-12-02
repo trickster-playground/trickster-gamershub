@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Posts;
 
 use App\Http\Controllers\Controller;
 use App\Models\Posts\Post;
+use App\Models\Posts\PostComment;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
 class PostCommentController extends Controller
 {
+	use AuthorizesRequests;
+
 	public function store(Request $request): RedirectResponse
 	{
 		// validate input
@@ -28,5 +32,31 @@ class PostCommentController extends Controller
 
 		// redirect back to the previous page
 		return back()->with('message', 'Comment added!');
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 */
+	public function destroy(Request $request, $id)
+	{
+		$comment = PostComment::where('id', $id)->firstOrFail();
+
+		$this->authorize('owner', $comment);
+
+		// Delete associated attachments from storage
+		// if ($post->attachments) {
+		// 	foreach ($post->attachments as $attachment) {
+		// 		Storage::disk('public')->delete($attachment->path);
+		// 	}
+
+		// 	// Delete the attachments folder
+		// 	$folderPath = 'attachments/' . $request->user()->id . '/' . $post->id;
+		// 	Storage::disk('public')->deleteDirectory($folderPath);
+		// }
+
+		// Delete the post
+		$comment->delete();
+
+		return back()->with('message', 'Comment deleted!');
 	}
 }

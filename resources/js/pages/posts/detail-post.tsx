@@ -110,7 +110,7 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
                   <>
                     <CarouselPrevious className="btn-prev" />
                     <CarouselNext className="btn-next" />
-                    <div className="relative -mt-10 mb-3 text-center text-sm text-muted-foreground">
+                    <div className="relative -mt-10 mb-5 text-center text-sm text-muted-foreground">
                       Slide {current} of {count}
                     </div>
                   </>
