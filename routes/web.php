@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Home\DashboardController;
+use App\Http\Controllers\Posts\PostCommentController;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostInteractionController;
 use Illuminate\Support\Facades\Route;
@@ -32,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/post/{id}/like', [PostInteractionController::class, 'likePost'])->name('post.like');
 	Route::post('/post/{id}/save', [PostInteractionController::class, 'savePost'])->name('post.save');
 
-	//   Route::post('/post/comment/store', [PostCommentController::class, 'store'])->middleware('auth')->name('comment.store');
+	Route::post('/post/comment/store', [PostCommentController::class, 'store'])->middleware('auth')->name('comment.store');
 });
 
 require __DIR__ . '/settings.php';

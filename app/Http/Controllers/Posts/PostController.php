@@ -164,8 +164,9 @@ class PostController extends Controller
 		$post = Post::with([
 			'user.avatar',
 			'attachments',
+			'comments.user.avatar'
 		])
-			->withCount(['likes', 'saves'])
+			->withCount(['likes', 'saves', 'comments'])
 			->withExists([
 				'likes as is_liked' => fn($q) => $q->where('user_id', $auth),
 				'saves as is_saved' => fn($q) => $q->where('user_id', $auth),

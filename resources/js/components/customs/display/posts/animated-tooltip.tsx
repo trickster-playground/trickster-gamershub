@@ -17,7 +17,9 @@ export const AnimatedTooltip = ({
     name: string;
     username: string;
     designation: string;
-    avatar: string;
+    avatar: {
+      path: string;
+    };
   }[];
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -89,7 +91,7 @@ export const AnimatedTooltip = ({
             onMouseMove={handleMouseMove}
             height={100}
             width={100}
-            src={item.avatar}
+            src={item.avatar?.path}
             alt={item.name}
             className="relative !m-0 h-8 w-8 rounded-full border-2 border-white object-cover object-top !p-0 transition duration-500 group-hover:z-30 group-hover:scale-105"
           />

@@ -23,8 +23,9 @@ class DashboardController extends Controller
 		$posts = Post::with([
 			'user.avatar',
 			'attachments',
+			'comments.user.avatar',
 		])
-			->withCount(['likes'])
+			->withCount(['likes', 'comments'])
 			->withExists([
 				'likes as is_liked' => fn($q) => $q->where('user_id', $user),
 				'saves as is_saved' => fn($q) => $q->where('user_id', $user),

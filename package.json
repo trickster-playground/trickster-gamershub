@@ -30,6 +30,7 @@
         "@inertiajs/react": "^2.1.4",
         "@primer/octicons-react": "^19.21.0",
         "@primer/react-brand": "^0.57.2",
+        "@radix-ui/react-accordion": "^1.2.12",
         "@radix-ui/react-alert-dialog": "^1.1.15",
         "@radix-ui/react-aspect-ratio": "^1.1.8",
         "@radix-ui/react-avatar": "^1.1.3",

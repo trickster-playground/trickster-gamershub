@@ -18,8 +18,6 @@ const PostStats = ({ post, onLikeToggle, onSaveToggle }: PostStatsProps) => {
   const [likesCount, setLikesCount] = useState(post.likes_count);
   const [commentsCount, setCommentsCount] = useState(post.comments_count);
 
-  console.log(post);
-
   const handleLikePost = async () => {
     if (isLoading) return;
     setIsLoading(true);

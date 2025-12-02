@@ -1,4 +1,6 @@
 import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
+import PostCommentCard from '@/components/customs/display/posts/post-comment-card';
+import PostCommentForm from '@/components/customs/display/posts/post-comment-form';
 import PostSettings from '@/components/customs/display/posts/post-settings';
 import PostStats from '@/components/customs/display/posts/post-stats';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -198,6 +200,13 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
             </div>
           </div>
         </div>
+
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-semibold">All Comments</h1>
+          <PostCommentCard comments={post.comments} />
+        </div>
+
+        <PostCommentForm postId={post.id} />
       </div>
     </AppLayout>
   );
