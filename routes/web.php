@@ -23,7 +23,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/posts/create', [PostController::class, 'store'])->name('post.store');
 
 	//   Route::get('/posts/{slug}/edit', [PostController::class, 'edit'])->name('post.edit');
-	//   Route::patch('/posts/{slug}/edit', [PostController::class, 'update'])->name('post.update');
+	Route::patch('/posts/{slug}/edit', [PostController::class, 'update'])->name('post.update');
 
 	//   Route::get('/posts/{username}/{slug}', [PostController::class, 'show'])->name('post.show');
 	//   Route::delete('/posts/{slug}/delete', [PostController::class, 'destroy'])->middleware('auth')->name('posts.destroy');

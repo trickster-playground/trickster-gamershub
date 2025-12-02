@@ -21,7 +21,7 @@ interface PostUploadProps {
     )[];
     deletedFile: FileObject | null;
   }) => void;
-  initialFiles?: (
+  value?: (
     | File
     | {
         id: number;
@@ -42,13 +42,13 @@ const mainVariant = {
 
 export const PostUpload: React.FC<PostUploadProps> = ({
   onChange,
-  initialFiles = [],
+  value = [],
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const initialFileObjects = initialFiles.map((file) => {
+    const initialFileObjects = value.map((file) => {
       const castedFile = file as File;
       return {
         file: castedFile,
@@ -74,7 +74,7 @@ export const PostUpload: React.FC<PostUploadProps> = ({
         if (!('path' in fileObj.file)) URL.revokeObjectURL(fileObj.preview);
       });
     };
-  }, [initialFiles]);
+  }, [value]);
 
   const handleFileChange = (newFiles: File[]) => {
     const updatedFiles = newFiles.map((file) => ({

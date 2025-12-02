@@ -251,4 +251,13 @@ body {
   .common-container {
     @apply mx-auto flex flex-1 flex-col items-center gap-4 p-10 px-8;
   }
+
+  /* Post Card */
+  .post-card {
+    @apply w-full max-w-screen-md rounded-3xl border border-dark-4 bg-dark-2 p-5 lg:p-7;
+  }
+
+  .post-card_img {
+    @apply h-auto max-h-[250px] w-full rounded-3xl object-fill xs:max-h-[400px] lg:max-h-[550px];
+  }
 }

@@ -13,12 +13,15 @@ class UserResource extends JsonResource
 	 *
 	 * @return array<string, mixed>
 	 */
+	public static $wrap = null;
+
 	public function toArray(Request $request): array
 	{
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
 			'email' => $this->email,
+			'username' => $this->username,
 
 			// Avatar & Background Resource
 			'avatar' => new UserAvatarResource($this->whenLoaded('avatar')),
