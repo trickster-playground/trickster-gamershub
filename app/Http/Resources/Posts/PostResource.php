@@ -27,6 +27,10 @@ class PostResource extends JsonResource
 			'tags' => $this->tags,
 			'created_at' => $this->created_at,
 			'updated_at' => $this->updated_at,
+
+			'likes_count' => $this->likes_count,
+			'has_liked' => (bool) $this->is_liked,
+			'has_saved' => (bool) $this->is_saved,
 		];
 	}
 }

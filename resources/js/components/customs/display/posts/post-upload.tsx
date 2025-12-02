@@ -1,8 +1,19 @@
-import { Button } from '@/components/ui/button';
-import { IconTrash, IconUpload } from '@tabler/icons-react';
+/**
+ * Node Modules
+ */
+import { useDropzone } from 'react-dropzone';
 import { motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+
+/**
+ * Components
+ */
+import { Button } from '@/components/ui/button';
+
+/**
+ * Assets
+ */
+import { IconTrash, IconUpload } from '@tabler/icons-react';
 
 interface FileObject {
   file: File & { path?: string; file_name?: string; updated_at?: number };
@@ -176,9 +187,9 @@ export const PostUpload: React.FC<PostUploadProps> = ({
                 <Button
                   type="button"
                   onClick={() => handleDeleteFile(index)}
-                  className="absolute top-2 right-2 z-50 text-red-500 hover:text-red-700"
+                  className="absolute top-2 right-2 z-50 text-red-400 hover:text-red-500"
                 >
-                  <IconTrash className="hover:invert-red" />
+                  <IconTrash className="size-5" />
                 </Button>
                 <div className="mt-2 flex w-full items-center justify-between gap-4">
                   <motion.p

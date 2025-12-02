@@ -76,7 +76,7 @@ class PostController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 */
-	public function edit(string $slug)
+	public function edit(Request $request, string $slug)
 	{
 		$post = Post::with('attachments')->where('slug', $slug)->firstOrFail();
 
@@ -84,6 +84,9 @@ class PostController extends Controller
 
 		return Inertia::render('posts/edit-post', [
 			'post' => new PostResource($post),
+			'user' => new UserResource(
+				$request->user()->load(['avatar', 'background'])
+			),
 		]);
 	}
 

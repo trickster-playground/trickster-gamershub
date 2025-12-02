@@ -24,12 +24,17 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import PostSettings from './post-settings';
+import PostStats from './post-stats';
 
 /**
  * Types
  */
 import { SharedData } from '@/types';
 import { Post } from '@/types/posts';
+
+/**
+ * Actions
+ */
 import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
 
 interface PostCardProps {
@@ -38,7 +43,7 @@ interface PostCardProps {
   onSaveToggle?: (postId: number, saved: boolean) => void;
 }
 
-const PostCard = ({ post }: PostCardProps) => {
+const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
   // Authenticated User
   const { auth } = usePage<SharedData>().props;
 
@@ -210,6 +215,12 @@ const PostCard = ({ post }: PostCardProps) => {
             )}
           </Carousel>
         )}
+
+        <PostStats
+          post={post}
+          onLikeToggle={onLikeToggle}
+          onSaveToggle={onSaveToggle}
+        />
       </div>
     </div>
   );
