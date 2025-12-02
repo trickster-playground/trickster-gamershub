@@ -9,6 +9,7 @@ use App\Http\Resources\Posts\PostResource;
 use App\Http\Resources\Users\UserResource;
 use App\Models\Posts\Post;
 use App\Models\Posts\PostAttachment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -85,7 +87,7 @@ class PostController extends Controller
 		return Inertia::render('posts/edit-post', [
 			'post' => new PostResource($post),
 			'user' => new UserResource(
-				$request->user()->load(['avatar', 'background'])
+				$request->user()->load(['avatar'])
 			),
 		]);
 	}
@@ -150,6 +152,34 @@ class PostController extends Controller
 				'error' => $e->getMessage()
 			], 500);
 		}
+	}
+
+	/**
+	 * Display the specified resource.
+	 */
+	public function show(Request $request, string $username, string $slug)
+	{
+		$auth = Auth::id();
+		$user = User::where('username', $username)->firstOrFail();
+		$post = Post::with([
+			'user.avatar',
+			'attachments',
+		])
+			->withCount(['likes', 'saves'])
+			->withExists([
+				'likes as is_liked' => fn($q) => $q->where('user_id', $auth),
+				'saves as is_saved' => fn($q) => $q->where('user_id', $auth),
+			])
+			->where('slug', $slug)
+			->where('user_id', $user->id)
+			->firstOrFail();
+
+		return Inertia::render('posts/detail-post', [
+			'post' => new PostResource($post),
+			'user' => new UserResource(
+				$request->user()->load(['avatar'])
+			),
+		]);
 	}
 
 	/**
