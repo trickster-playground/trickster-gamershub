@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/post/{id}/save', [PostInteractionController::class, 'savePost'])->name('post.save');
 
 	Route::post('/post/comment/store', [PostCommentController::class, 'store'])->middleware('auth')->name('comment.store');
+	Route::patch('/post/comment/{id}/update', [PostCommentController::class, 'update'])->middleware('auth')->name('comment.update');
 	Route::post('/post/comment/{id}/delete', [PostCommentController::class, 'destroy'])->middleware('auth')->name('comment.destroy');
 });
 

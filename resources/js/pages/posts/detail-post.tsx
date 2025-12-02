@@ -80,6 +80,11 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
       },
     });
   };
+
+  const [editCommentFn, setEditCommentFn] = useState<
+    ((id: number, content: string) => void) | null
+  >(null);
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Detail Post" />
@@ -203,10 +208,16 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
 
         <div className="flex flex-col items-center justify-center">
           <h1 className="text-2xl font-semibold">All Comments</h1>
-          <PostCommentCard comments={post.comments} />
+          <PostCommentCard
+            comments={post.comments}
+            onEdit={(id, content) => editCommentFn?.(id, content)}
+          />
         </div>
 
-        <PostCommentForm postId={post.id} />
+        <PostCommentForm
+          postId={post.id}
+          onRegisterEdit={(fn) => setEditCommentFn(() => fn)}
+        />
       </div>
     </AppLayout>
   );

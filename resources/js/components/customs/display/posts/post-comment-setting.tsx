@@ -1,7 +1,6 @@
 /**
  * Node Modules
  */
-import { Link } from '@inertiajs/react';
 import { ReactNode } from 'react';
 /**
  * Components
@@ -33,12 +32,16 @@ interface PostCommentSettingsProps {
   commentId: number;
   onDelete?: () => void; // optional if needed delete action
   children?: ReactNode; // if need to inject custom trigger
+  commentContent: string;
+  onEdit: (id: number, content: string) => void;
 }
 
 const PostCommentSettings = ({
   commentId,
   onDelete,
   children,
+  commentContent,
+  onEdit,
 }: PostCommentSettingsProps) => {
   return (
     <DropdownMenu>
@@ -50,16 +53,16 @@ const PostCommentSettings = ({
 
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link
-            href={`/posts/${commentId}/edit`}
+          <button
             className="group flex w-full cursor-pointer items-center justify-between"
+            onClick={() => onEdit(commentId, commentContent)}
           >
             <p className="group-hover:text-blue-500">Update</p>
             <IconEdit
               className="size-5 text-blue-400 group-hover:text-blue-500"
               stroke="2"
             />
-          </Link>
+          </button>
         </DropdownMenuItem>
 
         {onDelete && (

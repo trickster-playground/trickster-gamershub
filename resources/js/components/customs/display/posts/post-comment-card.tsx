@@ -10,9 +10,10 @@ import PostCommentSettings from './post-comment-setting';
 
 interface PostCommentCardProps {
   comments: PostComment[];
+  onEdit: (id: number, content: string) => void;
 }
 
-const PostCommentCard = ({ comments }: PostCommentCardProps) => {
+const PostCommentCard = ({ comments, onEdit }: PostCommentCardProps) => {
   // Authenticated User
   const { auth } = usePage<SharedData>().props;
 
@@ -69,7 +70,9 @@ const PostCommentCard = ({ comments }: PostCommentCardProps) => {
                     <div>
                       <PostCommentSettings
                         commentId={comment.id}
+                        commentContent={comment.comment}
                         onDelete={() => handleDeleteComment(comment.id)}
+                        onEdit={() => onEdit(comment.id, comment.comment)}
                       />
                     </div>
                   ) : (

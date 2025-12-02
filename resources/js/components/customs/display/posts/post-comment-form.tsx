@@ -1,65 +1,138 @@
+'use client';
+
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+
 import PostCommentController from '@/actions/App/Http/Controllers/Posts/PostCommentController';
 import InputError from '@/components/input-error';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/react';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import Tiptap from './tiptap';
 
 interface PostCommentFormProps {
   postId: number;
+  onRegisterEdit: (fn: (id: number, content: string) => void) => void;
 }
 
-const PostCommentForm = ({ postId }: PostCommentFormProps) => {
+const PostCommentForm = ({ postId, onRegisterEdit }: PostCommentFormProps) => {
+  const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+
   const { data, setData, post, processing, reset, errors } = useForm({
     comment: '',
     post_id: postId,
   });
 
-  const handlePostComment = (e: FormEvent) => {
+  // === DIPANGGIL DARI COMMENT CARD ===
+  const startEditing = (id: number, content: string) => {
+    setIsEditing(true);
+    setEditingCommentId(id);
+    setData('comment', content);
+    setOpen(true);
+  };
+
+  // DAFTARKAN FUNGSI KE PARENT
+  useEffect(() => {
+    onRegisterEdit(startEditing);
+  }, []);
+
+  // === CREATE OR UPDATE SUBMIT ===
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    post(PostCommentController.store().url, {
-      preserveScroll: true,
-      onSuccess: () => reset(),
-      onError: (err) => console.log(err),
-    });
+    if (isEditing && editingCommentId) {
+      // UPDATE COMMENT
+      post(PostCommentController.update(editingCommentId).url, {
+        method: 'patch',
+        onSuccess: () => {
+          reset();
+          setOpen(false);
+          setIsEditing(false);
+          setEditingCommentId(null);
+        },
+      });
+    } else {
+      // CREATE COMMENT
+      post(PostCommentController.store().url, {
+        preserveScroll: true,
+        onSuccess: () => {
+          reset();
+          setOpen(false);
+        },
+      });
+    }
   };
 
   return (
-    <div className="sticky bottom-2 mt-4 w-full">
-      <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-4 rounded-[20px] bg-dark-4 px-8">
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger>
-              <h1 className="font-semibold">Leave a comment ...</h1>
-            </AccordionTrigger>
-            <AccordionContent className="px-2">
-              <form onSubmit={handlePostComment}>
+    <>
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerTrigger asChild>
+          <button className="comic-button sticky bottom-1 mx-auto flex w-full max-w-4xl cursor-pointer justify-center text-center">
+            Leave a comment...
+          </button>
+        </DrawerTrigger>
+
+        <DrawerContent className="border-dark-3 bg-dark-3">
+          <div className="mx-auto w-full max-w-3xl p-4">
+            <DrawerHeader>
+              <DrawerTitle className="text-light-1">
+                {isEditing ? 'Update comment' : 'Write a comment'}
+              </DrawerTitle>
+              <DrawerDescription className="text-light-3">
+                {isEditing
+                  ? 'Modify your comment.'
+                  : 'Share your thoughts about this post.'}
+              </DrawerDescription>
+            </DrawerHeader>
+
+            <form onSubmit={handleSubmit}>
+              <div className="mt-2">
                 <Tiptap
                   value={data.comment}
                   onChange={(value) => setData('comment', value)}
                 />
-                <div className="mt-2 flex flex-col items-center justify-center gap-2">
-                  <InputError message={errors.comment} className="mt-2" />
-                  <button
-                    type="submit"
-                    className="comic-button"
-                    disabled={processing}
+              </div>
+
+              <InputError message={errors.comment} className="mt-2" />
+
+              <DrawerFooter className="flex flex-row-reverse gap-3">
+                <button
+                  type="submit"
+                  disabled={processing}
+                  className="comic-button cursor-pointer"
+                >
+                  {isEditing ? 'Update' : 'Comment'}
+                </button>
+
+                <DrawerClose asChild>
+                  <Button
+                    type="button"
+                    className="red-comic-button cursor-pointer"
+                    onClick={() => {
+                      reset();
+                      setIsEditing(false);
+                      setEditingCommentId(null);
+                    }}
                   >
-                    Comment
-                  </button>
-                </div>
-              </form>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
-    </div>
+                    Cancel
+                  </Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </form>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };
 

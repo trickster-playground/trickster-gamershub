@@ -25,7 +25,7 @@ const Tiptap: React.FC<TiptapProps> = ({ value, onChange, className }) => {
     extensions: [
       StarterKit,
       Placeholder.configure({
-        placeholder: 'Type the caption here...',
+        placeholder: 'Type the text here...',
       }),
     ],
     content: value,
@@ -48,7 +48,7 @@ const Tiptap: React.FC<TiptapProps> = ({ value, onChange, className }) => {
       const spaceAbove = buttonRect.top;
       const spaceBelow = window.innerHeight - buttonRect.bottom;
 
-      if (spaceBelow < 200 && spaceAbove > 200) {
+      if (spaceBelow < 550 && spaceAbove > 200) {
         setPickerPosition('top');
       } else {
         setPickerPosition('bottom');
