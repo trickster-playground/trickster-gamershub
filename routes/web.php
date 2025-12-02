@@ -26,7 +26,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::patch('/posts/{slug}/edit', [PostController::class, 'update'])->name('post.update');
 
 	//   Route::get('/posts/{username}/{slug}', [PostController::class, 'show'])->name('post.show');
-	//   Route::delete('/posts/{slug}/delete', [PostController::class, 'destroy'])->middleware('auth')->name('posts.destroy');
+	Route::delete('/posts/{slug}/delete', [PostController::class, 'destroy'])->middleware('auth')->name('posts.destroy');
 
 	//   Route::post('/post/{id}/like', [PostInteractionController::class, 'likePost'])->name('post.like');
 	//   Route::post('/post/{id}/save', [PostInteractionController::class, 'savePost'])->name('post.save');

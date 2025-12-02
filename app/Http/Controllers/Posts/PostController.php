@@ -14,10 +14,13 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 class PostController extends Controller
 {
+	use AuthorizesRequests;
 	/**
-	 * Show the form for creating a new post.
+	 * Show the form for creating a new resource.
 	 */
 	public function create(Request $request)
 	{
@@ -29,7 +32,7 @@ class PostController extends Controller
 	}
 
 	/**
-	 * Store a newly created post in storage.
+	 * Store a newly created resource in storage.
 	 */
 	public function store(PostStoreRequest $request)
 	{
@@ -85,10 +88,10 @@ class PostController extends Controller
 			// Authorization check
 			$this->authorize('owner', $post);
 
-			// Update post data
+			// Update post details
 			$post->update($request->only('caption', 'location', 'tags'));
 
-			// Hapus file yang dihapus user
+			// Delete removed files from user
 			if (!empty($deletedFiles)) {
 				foreach ($deletedFiles as $deletedFileId) {
 					$attachment = PostAttachment::where('post_id', $post->id)->where('id', $deletedFileId)->first();
@@ -99,7 +102,7 @@ class PostController extends Controller
 				}
 			}
 
-			// Upload file baru
+			// Upload new files
 			if ($request->hasFile('files')) {
 				foreach ($request->file('files') as $file) {
 					$path = $file->store("attachments/{$request->user()->id}/posts/{$post->id}", 'public');
@@ -119,7 +122,7 @@ class PostController extends Controller
 			DB::commit();
 			return redirect(route('dashboard'))->with('status', 'Post updated successfully');
 		} catch (\Exception $e) {
-			// Jika ada error, hapus file yang sudah terupload
+			// If there is an error, delete the uploaded files
 			foreach ($allFilePaths as $path) {
 				Storage::disk('public')->delete($path);
 			}
@@ -129,5 +132,31 @@ class PostController extends Controller
 				'error' => $e->getMessage()
 			], 500);
 		}
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 */
+	public function destroy(Request $request, $slug)
+	{
+		$post = Post::where('slug', $slug)->firstOrFail();
+
+		$this->authorize('owner', $post);
+
+		// Delete associated attachments from storage
+		if ($post->attachments) {
+			foreach ($post->attachments as $attachment) {
+				Storage::disk('public')->delete($attachment->path);
+			}
+
+			// Delete the attachments folder
+			$folderPath = 'attachments/' . $request->user()->id . '/' . $post->id;
+			Storage::disk('public')->deleteDirectory($folderPath);
+		}
+
+		// Delete the post
+		$post->delete();
+
+		return redirect()->route('dashboard')->with('success', 'Post deleted successfully.');
 	}
 }

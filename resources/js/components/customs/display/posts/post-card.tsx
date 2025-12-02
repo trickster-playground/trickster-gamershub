@@ -1,7 +1,7 @@
 /**
  * Node Modules
  */
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
 /**
@@ -14,6 +14,7 @@ import { absoluteDate } from '@/lib/format-date';
  * Components
  */
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselApi,
@@ -22,11 +23,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import PostSettings from './post-settings';
 
 /**
  * Types
  */
+import { SharedData } from '@/types';
 import { Post } from '@/types/posts';
+import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
 
 interface PostCardProps {
   post: Post;
@@ -35,6 +39,9 @@ interface PostCardProps {
 }
 
 const PostCard = ({ post }: PostCardProps) => {
+  // Authenticated User
+  const { auth } = usePage<SharedData>().props;
+
   // Initials Hook
   const getInitials = useInitials();
 
@@ -59,12 +66,24 @@ const PostCard = ({ post }: PostCardProps) => {
 
     setCount(api.scrollSnapList().length);
     updateCurrent();
-    api.on("select", updateCurrent);
+    api.on('select', updateCurrent);
 
     return () => {
-      api.off("select", updateCurrent);
+      api.off('select', updateCurrent);
     };
   }, [api]);
+
+  // Handle Delete Post
+  const handleDeletePost = (slug: string) => {
+    const { url, method } = PostController.destroy(slug);
+
+    router.visit(url, {
+      method,
+      onSuccess: () => {
+        console.log('Post deleted');
+      },
+    });
+  };
 
   return (
     <div className="post-card mx-auto flex gap-4">
@@ -115,6 +134,23 @@ const PostCard = ({ post }: PostCardProps) => {
                 </p>
               </div>
             </div>
+          </div>
+          <div className="flex-center px-3">
+            {auth.user.id === post.user.id ? (
+              <PostSettings
+                slug={post.slug}
+                onDelete={() => handleDeletePost(post.slug)}
+              />
+            ) : (
+              <div>
+                <Button
+                  type="button"
+                  className={`comic-button cursor-pointer !text-sm`}
+                >
+                  Follow
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -174,8 +210,6 @@ const PostCard = ({ post }: PostCardProps) => {
             )}
           </Carousel>
         )}
-
-        
       </div>
     </div>
   );
