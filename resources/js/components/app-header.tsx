@@ -213,7 +213,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                   variant="ghost"
                   className="size-10 rounded-full border-0 p-1 ring-0 transition-none"
                 >
-                  <Avatar className="size-8 overflow-hidden rounded-ful">
+                  <Avatar className="rounded-ful size-8 overflow-hidden">
                     <AvatarImage
                       src={`/storage/${auth.user.avatar?.path}`}
                       alt={auth.user.name}

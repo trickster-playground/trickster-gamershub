@@ -82,7 +82,7 @@ const PostStats = ({ post, onLikeToggle, onSaveToggle }: PostStatsProps) => {
 
         <Link href={`/posts/${post.user.username}/${post.slug}`}>
           <IconMessagePlus
-            className="stroke-[1.5] text-sky-600 transition-colors duration-300 hover:cursor-pointer hover:text-sky-500"
+            className="stroke-[1.5] text-sky-500 transition-colors duration-300 hover:cursor-pointer hover:text-sky-600"
             width={28}
             height={28}
           />
