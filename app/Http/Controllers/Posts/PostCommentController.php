@@ -13,6 +13,10 @@ class PostCommentController extends Controller
 {
 	use AuthorizesRequests;
 
+
+	/**
+	 * Store a newly created resource in storage.
+	 */
 	public function store(Request $request): RedirectResponse
 	{
 		// validate input
@@ -32,6 +36,30 @@ class PostCommentController extends Controller
 
 		// redirect back to the previous page
 		return back()->with('message', 'Comment added!');
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 */
+	public function update(Request $request, $id): RedirectResponse
+	{
+		// Get the related comment
+		$comment = PostComment::findOrFail($id);
+
+		// Authorize the owner of comment
+		$this->authorize('owner', $comment);
+
+		// Validate input user
+		$validated = $request->validate([
+			'comment' => 'required|string|max:255|not_regex:/^\s*$/',
+		]);
+
+		// Update comment
+		$comment->update([
+			'comment' => $validated['comment'],
+		]);
+
+		return back()->with('message', 'Comment updated!');
 	}
 
 	/**

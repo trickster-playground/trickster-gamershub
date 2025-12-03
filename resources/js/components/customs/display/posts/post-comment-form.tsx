@@ -28,12 +28,13 @@ const PostCommentForm = ({ postId, onRegisterEdit }: PostCommentFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
 
-  const { data, setData, post, processing, reset, errors } = useForm({
-    comment: '',
-    post_id: postId,
-  });
+  const { data, setData, post, patch, processing, reset, errors, clearErrors } =
+    useForm({
+      comment: '',
+      post_id: postId,
+    });
 
-  // === DIPANGGIL DARI COMMENT CARD ===
+  // From comment card
   const startEditing = (id: number, content: string) => {
     setIsEditing(true);
     setEditingCommentId(id);
@@ -41,19 +42,18 @@ const PostCommentForm = ({ postId, onRegisterEdit }: PostCommentFormProps) => {
     setOpen(true);
   };
 
-  // DAFTARKAN FUNGSI KE PARENT
+  // register function to parent component
   useEffect(() => {
     onRegisterEdit(startEditing);
   }, []);
 
-  // === CREATE OR UPDATE SUBMIT ===
+  // Handel create or update
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     if (isEditing && editingCommentId) {
-      // UPDATE COMMENT
-      post(PostCommentController.update(editingCommentId).url, {
-        method: 'patch',
+      // Update comment
+      patch(PostCommentController.update(editingCommentId).url, {
         onSuccess: () => {
           reset();
           setOpen(false);
@@ -62,7 +62,7 @@ const PostCommentForm = ({ postId, onRegisterEdit }: PostCommentFormProps) => {
         },
       });
     } else {
-      // CREATE COMMENT
+      // Create comment
       post(PostCommentController.store().url, {
         preserveScroll: true,
         onSuccess: () => {
@@ -75,7 +75,19 @@ const PostCommentForm = ({ postId, onRegisterEdit }: PostCommentFormProps) => {
 
   return (
     <>
-      <Drawer open={open} onOpenChange={setOpen}>
+      <Drawer
+        open={open}
+        onOpenChange={(value) => {
+          setOpen(value);
+
+          if (!value) {
+            reset();
+            clearErrors();
+            setIsEditing(false);
+            setEditingCommentId(null);
+          }
+        }}
+      >
         <DrawerTrigger asChild>
           <button className="comic-button sticky bottom-1 mx-auto flex w-full max-w-4xl cursor-pointer justify-center text-center">
             Leave a comment...
@@ -120,6 +132,7 @@ const PostCommentForm = ({ postId, onRegisterEdit }: PostCommentFormProps) => {
                     className="red-comic-button cursor-pointer"
                     onClick={() => {
                       reset();
+                      clearErrors();
                       setIsEditing(false);
                       setEditingCommentId(null);
                     }}

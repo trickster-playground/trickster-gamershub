@@ -4,6 +4,7 @@ import PostCommentForm from '@/components/customs/display/posts/post-comment-for
 import PostSettings from '@/components/customs/display/posts/post-settings';
 import PostStats from '@/components/customs/display/posts/post-stats';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselApi,
@@ -90,7 +91,7 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
       <Head title="Detail Post" />
 
       {/* Main Content */}
-      <div className="flex max-h-screen flex-col space-y-3 px-4 pt-4">
+      <div className="flex min-h-full flex-col space-y-3 px-4 pt-4">
         <div className="post_details-container">
           <div className="post_details-card flex-grow">
             {post.attachments && post.attachments.length > 0 ? (
@@ -160,10 +161,21 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
 
                 {/* RIGHT: Settings */}
                 <div className="px-3">
-                  <PostSettings
-                    slug={post.slug}
-                    onDelete={() => handleDeletePost(post.slug)}
-                  />
+                  {auth.user.id === post.user.id ? (
+                    <PostSettings
+                      slug={post.slug}
+                      onDelete={() => handleDeletePost(post.slug)}
+                    />
+                  ) : (
+                    <div>
+                      <Button
+                        type="button"
+                        className={`comic-button cursor-pointer !text-sm`}
+                      >
+                        Follow
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
 
