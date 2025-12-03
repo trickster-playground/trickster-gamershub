@@ -37,13 +37,13 @@ class UserProfileResource extends JsonResource
 
 
 			// Followers & Following count
-			// 'followers_count' => $this->followers()->count(),
-			// 'following_count' => $this->following()->count(),
+			'followersCount' => $this->followers()->count(),
+			'followingCount' => $this->followings()->count(),
 
 			// Is the logged in user currently following this user?
-			// 'is_following' => $loggedInUser
-			// 	? $loggedInUser->following()->where('following_id', $this->id)->exists()
-			// 	: false,
+			'isFollowing' => $loggedInUser
+				? $loggedInUser->followings()->where('following_id', $this->id)->exists()
+				: false,
 
 			// Posts created by this user
 			'posts' => PostResource::collection(

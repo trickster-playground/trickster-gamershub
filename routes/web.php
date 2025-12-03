@@ -5,6 +5,7 @@ use App\Http\Controllers\Posts\PostCommentController;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostInteractionController;
 use App\Http\Controllers\Users\UserProfileController;
+use App\Http\Controllers\Users\UserRelationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -40,5 +41,14 @@ Route::middleware(['auth'])->group(function () {
 	Route::patch('/post/comment/{id}/update', [PostCommentController::class, 'update'])->middleware('auth')->name('comment.update');
 	Route::post('/post/comment/{id}/delete', [PostCommentController::class, 'destroy'])->middleware('auth')->name('comment.destroy');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::post('/users/{user}/follow', [UserRelationController::class, 'follow'])->name('follow');
+    Route::delete('/users/{user}/unfollow', [UserRelationController::class, 'unfollow'])->name('unfollow');
+
+    Route::get('/users/{user}/followers', [UserRelationController::class, 'followers'])->name('followers');
+    Route::get('/users/{user}/followings', [UserRelationController::class, 'followings'])->name('followings');
+});
+
 
 require __DIR__ . '/settings.php';

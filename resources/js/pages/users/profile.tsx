@@ -2,6 +2,7 @@ import ProfilePosts from '@/components/customs/display/users/profile-posts';
 import ProfilePostsLikes from '@/components/customs/display/users/profile-posts-likes';
 import ProfilePostsSaves from '@/components/customs/display/users/profile-posts-saves';
 import ProfileStats from '@/components/customs/display/users/profile-stats';
+import UserFollowButton from '@/components/customs/display/users/user-follow-button';
 import { FloatingDock } from '@/components/ui/acternity/floating-dock';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
@@ -34,6 +35,8 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
   const [posts, setPosts] = useState(userProfile.posts ?? []);
   const [likedPosts, setLikedPosts] = useState(userProfile.likedPosts ?? []);
   const [savedPosts, setSavedPosts] = useState(userProfile.savedPosts ?? []);
+
+  console.log(userProfile);
 
   // Handle like toggle
   const handleLikeToggle = (postId: number, liked: boolean) => {
@@ -135,20 +138,23 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
                 value={userProfile.posts?.length ?? 0}
                 label="Posts"
               />
-              <ProfileStats value={123} label="Followers" />
-              <ProfileStats value={45} label="Following" />
+              <ProfileStats
+                value={userProfile.followersCount || 0}
+                label="Followers"
+              />
+              <ProfileStats
+                value={userProfile.followingsCount || 0}
+                label="Following"
+              />
             </div>
             <p
               className="small-medium md:base-medium mt-4 max-w-screen-sm xl:text-justify"
               dangerouslySetInnerHTML={{ __html: userProfile.bio ?? '' }}
             ></p>
-            <div className="mt-2 flex flex-col xl:flex-row justify-center gap-4 xl:justify-between">
+            <div className="mt-2 flex flex-col justify-center gap-4 xl:flex-row xl:justify-between">
               {links.length > 0 && (
                 <div>
-                  <FloatingDock
-                    items={links}
-                    desktopClassName='w-fit'
-                  />
+                  <FloatingDock items={links} desktopClassName="w-fit" />
                 </div>
               )}
               {currentUser ? (
@@ -165,7 +171,10 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
                   </Link>
                 </div>
               ) : (
-                'Follow'
+                <UserFollowButton
+                  userId={userProfile.id}
+                  isFollowing={userProfile.isFollowing ?? false}
+                />
               )}
             </div>
           </div>

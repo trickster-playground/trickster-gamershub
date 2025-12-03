@@ -121,4 +121,16 @@ class User extends Authenticatable
 	{
 		return $this->belongsToMany(Post::class, 'post_saves');
 	}
+
+	public function followings()
+	{
+		return $this->belongsToMany(User::class, 'user_relations', 'follower_id', 'following_id')
+			->withTimestamps();
+	}
+
+	public function followers()
+	{
+		return $this->belongsToMany(User::class, 'user_relations', 'following_id', 'follower_id')
+			->withTimestamps();
+	}
 }

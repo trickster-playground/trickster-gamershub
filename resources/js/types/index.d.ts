@@ -36,17 +36,34 @@ export interface User {
   username: string;
   email: string;
   bio?: string;
-  avatar?: Avatar;
-  background?: Background;
+
+  avatar?: Avatar | null;
+  background?: Background | null;
+
   socialLinks?: SocialLink[];
+
+  isFollowing?: boolean;
+
+  // follow counts
+  followersCount?: number;
+  followingsCount?: number;
+
+  // lists (optional)
+  followings?: User[];
+  followers?: User[];
+
   posts?: Post[];
   likedPosts?: Post[];
   savedPosts?: Post[];
+
   email_verified_at: string | null;
   two_factor_enabled?: boolean;
+
   created_at: string;
   updated_at: string;
-  [key: string]: unknown; // This allows for additional properties...
+
+  // allow extra properties safely
+  [key: string]: unknown;
 }
 
 export interface Avatar {
