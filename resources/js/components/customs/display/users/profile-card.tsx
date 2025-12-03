@@ -52,7 +52,7 @@ export function ProfileCard({
                 className={`group leftsidebar-link comic-button items-center justify-center`}
               >
                 <Link
-                  href={`${link.routeName}`}
+                  href={`${link.route}`}
                   as="button"
                   className="group flex w-full cursor-pointer items-center justify-center gap-1 p-2"
                 >

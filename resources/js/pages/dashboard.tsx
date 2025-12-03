@@ -1,11 +1,11 @@
 /**
  * Node Modules
-*/
+ */
 import { Head, usePage } from '@inertiajs/react';
 
 /**
  * Routes
-*/
+ */
 import { dashboard } from '@/routes';
 
 /**
@@ -14,14 +14,16 @@ import { dashboard } from '@/routes';
 import CustomAppLayout from '@/layouts/customs/custom-app-layout';
 
 /**
- *  Components Display
+ *  Components
  */
 import { ProfileCard } from '@/components/customs/display/users/profile-card';
 
 /**
  * Types
  */
+import PostCard from '@/components/customs/display/posts/post-card';
 import { SharedData, type BreadcrumbItem } from '@/types';
+import { Post } from '@/types/posts';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -30,7 +32,11 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-export default function Dashboard() {
+interface DashboardProps {
+  posts: Post[];
+}
+
+export default function Dashboard({ posts }: DashboardProps) {
   const { auth, flash } = usePage<SharedData>().props;
 
   return (
@@ -49,9 +55,9 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <div className="order-3 col-span-12 flex h-full w-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4 md:order-3 md:col-span-2 lg:order-2 lg:col-span-6">
-        {/* {posts.map(post => (
+        {posts.map((post) => (
           <PostCard key={post.id} post={post} />
-        ))} */}
+        ))}
       </div>
 
       {/* Right Content */}

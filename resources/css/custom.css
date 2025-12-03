@@ -5,7 +5,8 @@
   /* slate-900 */
   color: #e2e8f0;
   /* slate-200 */
-  font-family: 'Instrument Sans',
+  font-family:
+    'Mona Sans' 'Instrument Sans',
     ui-sans-serif,
     system-ui,
     sans-serif,
@@ -30,7 +31,7 @@
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.5rem 0.90rem;
+  padding: 0.5rem 0.9rem;
   color: #f8fafc;
   transition: background 0.3s;
   text-transform: capitalize;
@@ -86,7 +87,7 @@
 
 .fc .fc-popover-close {
   font-weight: 700;
-opacity: 100;
+  opacity: 100;
 }
 
 /* OPTIONAL: Style hari-hari */
@@ -256,10 +257,9 @@ opacity: 100;
   transform: translateY(4px);
 }
 
-
 /* Tiptap Editor */
 .tiptap p.is-editor-empty:first-child::before {
-  color: theme("colors.muted.foreground");
+  color: oklch(0.705 0.015 286.067);
   content: attr(data-placeholder);
   float: left;
   height: 0;
@@ -284,13 +284,15 @@ blockquote {
 .tiptap-button {
   padding: 0.5rem 1rem;
   background-color: #000000;
-  border: 1px solid #3d3737;
+  border: 1px solid #ffffff;
   cursor: pointer;
   border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .tiptap-button-active {
-  background-color: #333;
+  background-color: #0051ff;
   color: white;
 }
 
@@ -314,7 +316,6 @@ blockquote {
   margin-top: 8px;
 }
 
-
 /* Carousel */
 
 .btn-prev,
@@ -326,10 +327,7 @@ blockquote {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0,
-      0,
-      0,
-      0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   /* Warna latar belakang semi-transparan */
   color: white;
   border-radius: 50%;
@@ -352,7 +350,6 @@ blockquote {
 
 /* Media query untuk mobile devices */
 @media (max-width: 768px) {
-
   .btn-prev,
   .btn-next {
     width: 30px;
