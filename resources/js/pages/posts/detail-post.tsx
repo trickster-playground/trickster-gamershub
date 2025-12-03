@@ -1,4 +1,12 @@
-import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
+/**
+ * Node Modules
+ */
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
+
+/**
+ * Components
+ */
 import PostCommentCard from '@/components/customs/display/posts/post-comment-card';
 import PostCommentForm from '@/components/customs/display/posts/post-comment-form';
 import PostSettings from '@/components/customs/display/posts/post-settings';
@@ -13,14 +21,28 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
-import { absoluteDate } from '@/lib/format-date';
+
+/**
+ * Controller
+ */
+import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
+
+/**
+ * Types
+ */
 import { BreadcrumbItem, SharedData } from '@/types';
 import { Post } from '@/types/posts';
 
-import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+/**
+ * Hooks
+ */
+import { useInitials } from '@/hooks/use-initials';
+
+/**
+ * Helpers
+ */
+import { absoluteDate } from '@/lib/format-date';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {

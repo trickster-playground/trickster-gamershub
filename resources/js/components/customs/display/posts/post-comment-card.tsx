@@ -1,12 +1,30 @@
+/**
+ * Node Modules
+ */
+import { Link, router, usePage } from '@inertiajs/react';
+
+/**
+ * Components
+ */
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { useInitials } from '@/hooks/use-initials';
+import PostCommentSettings from './post-comment-setting';
+
+/**
+ * Types
+ */
 import { SharedData } from '@/types';
 import { PostComment } from '@/types/posts';
 
+/**
+ * Hooks
+ */
+import { useInitials } from '@/hooks/use-initials';
+
+/**
+ * Controller
+ */
 import PostCommentController from '@/actions/App/Http/Controllers/Posts/PostCommentController';
-import { Link, router, usePage } from '@inertiajs/react';
-import PostCommentSettings from './post-comment-setting';
 
 interface PostCommentCardProps {
   comments: PostComment[];

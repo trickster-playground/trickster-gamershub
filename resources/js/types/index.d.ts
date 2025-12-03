@@ -39,6 +39,9 @@ export interface User {
   avatar?: Avatar;
   background?: Background;
   socialLinks?: SocialLink[];
+  posts?: Post[];
+  likedPosts?: Post[];
+  savedPosts?: Post[];
   email_verified_at: string | null;
   two_factor_enabled?: boolean;
   created_at: string;

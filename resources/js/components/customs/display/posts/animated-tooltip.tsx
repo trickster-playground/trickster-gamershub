@@ -1,5 +1,8 @@
 'use client';
 
+/**
+ * Node modules
+ */
 import {
   AnimatePresence,
   motion,

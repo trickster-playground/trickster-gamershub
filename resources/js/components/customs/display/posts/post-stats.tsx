@@ -1,9 +1,24 @@
-import { Post } from '@/types/posts';
+/**
+ * Node modules
+ */
 import { Link } from '@inertiajs/react';
-import { IconMessagePlus } from '@tabler/icons-react';
 import axios from 'axios';
 import { useState } from 'react';
+
+/**
+ * Components
+ */
 import { PostCommentTooltip } from './post-comment-tooltip';
+
+/**
+ * Assets
+ */
+import { IconMessagePlus } from '@tabler/icons-react';
+
+/**
+ * Types
+ */
+import { Post } from '@/types/posts';
 
 interface PostStatsProps {
   post: Post;

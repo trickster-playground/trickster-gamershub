@@ -1,9 +1,23 @@
+/**
+ * Node Modules
+ */
+import { Head, Link } from '@inertiajs/react';
+/**
+ * Components
+ */
 import PostForm from '@/components/customs/display/posts/post-form';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+
+/**
+ * Assets
+ */
 import { StepBack } from 'lucide-react';
+
+/**
+ * Types
+ */
+import { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {

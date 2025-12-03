@@ -1,6 +1,14 @@
 'use client';
-import { PostComment } from '@/types/posts';
+
+/**
+ * Components
+ */
 import { AnimatedTooltip } from './animated-tooltip';
+
+/**
+ * Types
+ */
+import { PostComment } from '@/types/posts';
 
 interface PostCommentTooltipProps {
   comments?: PostComment[];
