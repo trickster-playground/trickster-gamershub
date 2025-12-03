@@ -30,6 +30,11 @@ class UserProfileResource extends JsonResource
 			'avatar' => new UserAvatarResource($this->avatar),
 			'background' => new UserBackgroundResource($this->background),
 
+			// Social Links Resource
+			'socialLinks' => UserSocialLinkResource::collection(
+				$this->socialLinks
+			),
+
 
 			// Followers & Following count
 			// 'followers_count' => $this->followers()->count(),

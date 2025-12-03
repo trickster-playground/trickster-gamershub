@@ -2,8 +2,10 @@ import ProfilePosts from '@/components/customs/display/users/profile-posts';
 import ProfilePostsLikes from '@/components/customs/display/users/profile-posts-likes';
 import ProfilePostsSaves from '@/components/customs/display/users/profile-posts-saves';
 import ProfileStats from '@/components/customs/display/users/profile-stats';
+import { FloatingDock } from '@/components/ui/acternity/floating-dock';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
+import { socialIconMap } from '@/lib/socialIcon';
 import { edit } from '@/routes/profile';
 import { BreadcrumbItem, User } from '@/types';
 import { Head, Link } from '@inertiajs/react';
@@ -33,9 +35,7 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
   const [likedPosts, setLikedPosts] = useState(userProfile.likedPosts ?? []);
   const [savedPosts, setSavedPosts] = useState(userProfile.savedPosts ?? []);
 
-  // =============================
-  // LIKE TOGGLE
-  // =============================
+  // Handle like toggle
   const handleLikeToggle = (postId: number, liked: boolean) => {
     setPosts((prevPosts) => {
       const updated = prevPosts.map((post) =>
@@ -48,17 +48,17 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
           : post,
       );
 
-      // Ambil versi terbaru dari post ini setelah update
+      // Get the latest version of this post after update
       const updatedPost = updated.find((p) => p.id === postId);
 
       setLikedPosts((prev) => {
         const exists = prev.find((p) => p.id === postId);
 
         if (liked) {
-          // tambahkan jika belum ada
+          // add if not exists
           if (!exists && updatedPost) return [...prev, updatedPost];
         } else {
-          // hapus jika tidak like
+          // delete if not liked
           if (exists) return prev.filter((p) => p.id !== postId);
         }
 
@@ -69,9 +69,7 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
     });
   };
 
-  // =============================
-  // SAVE TOGGLE
-  // =============================
+  // Handle save toggle
   const handleSaveToggle = (postId: number, saved: boolean) => {
     setPosts((prevPosts) => {
       const updated = prevPosts.map((post) =>
@@ -96,6 +94,13 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
     });
   };
 
+  const links =
+    userProfile.socialLinks?.map((item) => ({
+      title: item.platform,
+      href: item.url,
+      icon: socialIconMap[item.platform] ?? socialIconMap['website'],
+    })) ?? [];
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title={`Profile ${userProfile.name}`} />
@@ -113,10 +118,10 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
           <img
             src={userProfile?.avatar?.path || 'https://github.com/shadcn.png'}
             alt={`${userProfile?.name || 'User'} avatar`}
-            className="h-32 w-32 rounded-full border-2 border-blue-500 object-cover hover:scale-110 hover:cursor-pointer lg:h-40 lg:w-40"
+            className="h-32 w-32 rounded-full border-2 border-blue-500 object-cover hover:scale-110 hover:cursor-pointer lg:h-50 lg:w-50"
           />
 
-          <div className="flex flex-1 flex-col gap-2 text-center xl:text-left">
+          <div className="flex flex-1 flex-col gap-2 pt-2 text-center xl:text-left">
             <div>
               <h1 className="text-2xl font-bold md:text-3xl">
                 {userProfile?.name}
@@ -137,7 +142,15 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
               className="small-medium md:base-medium mt-4 max-w-screen-sm xl:text-justify"
               dangerouslySetInnerHTML={{ __html: userProfile.bio ?? '' }}
             ></p>
-            <div className="mt-2 flex justify-center gap-4 xl:justify-end">
+            <div className="mt-2 flex flex-col xl:flex-row justify-center gap-4 xl:justify-between">
+              {links.length > 0 && (
+                <div>
+                  <FloatingDock
+                    items={links}
+                    desktopClassName='w-fit'
+                  />
+                </div>
+              )}
               {currentUser ? (
                 <div className={``}>
                   <Link
@@ -157,7 +170,7 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
             </div>
           </div>
         </div>
-        <Tabs defaultValue="posts" className="w-full">
+        <Tabs defaultValue="posts" className="h-full w-full">
           <TabsList className="flex h-auto w-full justify-around rounded-none border-b border-dark-4 bg-dark-2">
             <TabsTrigger
               value="posts"

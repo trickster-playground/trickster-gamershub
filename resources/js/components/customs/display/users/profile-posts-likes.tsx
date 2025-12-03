@@ -1,5 +1,16 @@
 import { Post } from '@/types/posts';
 import PostCard from '../posts/post-card';
+import { Button } from '@/components/ui/button';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import { IconHeart } from '@tabler/icons-react';
+import { RefreshCcwIcon } from 'lucide-react';
 
 interface ProfilePostsLikesProps {
   likedPosts: Post[];
@@ -23,9 +34,23 @@ const ProfilePostsLikes = ({
       </div>
     ))
   ) : (
-    <div className="flex h-96 w-full min-w-80 items-center justify-center">
-      <h1 className="text-2xl font-semibold">No liked posts available</h1>
-    </div>
+    <Empty className="h-full min-h-[838px] bg-gradient-to-b from-dark-1/50 from-30% to-background">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <IconHeart />
+        </EmptyMedia>
+        <EmptyTitle>No Liked Posts</EmptyTitle>
+        <EmptyDescription>
+          You&apos;re all caught up. New liked posts will appear here.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button variant="outline" size="sm">
+          <RefreshCcwIcon />
+          Refresh
+        </Button>
+      </EmptyContent>
+    </Empty>
   );
 };
 
