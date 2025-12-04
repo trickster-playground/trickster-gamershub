@@ -11,6 +11,7 @@ import PostCommentCard from '@/components/customs/display/posts/post-comment-car
 import PostCommentForm from '@/components/customs/display/posts/post-comment-form';
 import PostSettings from '@/components/customs/display/posts/post-settings';
 import PostStats from '@/components/customs/display/posts/post-stats';
+import ModalImage from '@/components/customs/display/users/modal-image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -42,6 +43,7 @@ import { useInitials } from '@/hooks/use-initials';
 /**
  * Helpers
  */
+
 import { absoluteDate } from '@/lib/format-date';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -104,9 +106,13 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
     });
   };
 
+  // Comments State
   const [editCommentFn, setEditCommentFn] = useState<
     ((id: number, content: string) => void) | null
   >(null);
+
+  // Modal Image State
+  const [openImage, setOpenImage] = useState<string | null>(null);
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -127,8 +133,9 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
                             attachment.path ||
                             'assets/icons/profile-placeholder.svg'
                           }
-                          className="post-card_img aspect-square rounded-md object-contain"
+                          className="post-card_img aspect-square rounded-md object-contain cursor-pointer"
                           alt={`Attachment ${index + 1}`}
+                          onClick={() => setOpenImage(attachment.path || '')}
                         />
                       </div>
                     </CarouselItem>
@@ -147,6 +154,14 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
             ) : (
               ''
             )}
+
+            <ModalImage
+              isOpen={openImage !== null}
+              src={openImage}
+              alt="Preview"
+              onClose={() => setOpenImage(null)}
+            />
+
             <div className="post_details-info flex w-1/2 flex-col gap-3">
               <div className="flex w-full items-start justify-between">
                 {/* LEFT: Avatar + Name + Date */}

@@ -22,6 +22,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import ModalImage from '../users/modal-image';
+import UserFollowButton from '../users/user-follow-button';
 import PostSettings from './post-settings';
 import PostStats from './post-stats';
 
@@ -35,7 +37,6 @@ import { Post } from '@/types/posts';
  * Actions
  */
 import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
-import UserFollowButton from '../users/user-follow-button';
 
 interface PostCardProps {
   post: Post;
@@ -95,6 +96,9 @@ const PostCard = ({
       },
     });
   };
+
+  // Modal image
+  const [openImage, setOpenImage] = useState<string | null>(null);
 
   return (
     <div className="post-card mx-auto flex gap-4">
@@ -160,7 +164,7 @@ const PostCard = ({
                   onToggle={(state) => {
                     if (onFollowToggle) onFollowToggle(post.user.id, state);
                   }}
-                  className='h-8 !text-sm'
+                  className="h-8 !text-sm"
                 />
               </div>
             )}
@@ -205,8 +209,9 @@ const PostCard = ({
                   <div className="p-1">
                     <img
                       src={attachment.path || ''}
-                      className="post-card_img aspect-square rounded-lg"
+                      className="post-card_img aspect-square cursor-pointer rounded-lg"
                       alt={`Attachment ${index + 1 || attachment.file_name}`}
+                      onClick={() => setOpenImage(attachment.path || '')}
                     />
                   </div>
                 </CarouselItem>
@@ -223,6 +228,13 @@ const PostCard = ({
             )}
           </Carousel>
         )}
+
+        <ModalImage
+          isOpen={openImage !== null}
+          src={openImage}
+          alt="Preview"
+          onClose={() => setOpenImage(null)}
+        />
 
         <PostStats
           post={post}

@@ -1,3 +1,4 @@
+import ModalImage from '@/components/customs/display/users/modal-image';
 import ProfilePosts from '@/components/customs/display/users/profile-posts';
 import ProfilePostsLikes from '@/components/customs/display/users/profile-posts-likes';
 import ProfilePostsSaves from '@/components/customs/display/users/profile-posts-saves';
@@ -122,6 +123,9 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
       icon: socialIconMap[item.platform] ?? socialIconMap['website'],
     })) ?? [];
 
+  // Modal image
+  const [openImage, setOpenImage] = useState<string | null>(null);
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title={`Profile ${userProfile.name}`} />
@@ -132,19 +136,28 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
             'https://images.unsplash.com/photo-1553492206-f609eddc33dd?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
           }
           alt={`${userProfile?.name || 'User'} background`}
-          className="h-[400px] w-full rounded-md object-cover"
+          onClick={() => setOpenImage(userProfile?.background?.path ?? null)}
+          className="h-[400px] w-full cursor-pointer rounded-md object-cover"
+        />
+
+        <ModalImage
+          isOpen={openImage !== null}
+          src={openImage}
+          alt="Preview"
+          onClose={() => setOpenImage(null)}
         />
 
         <div className="flex flex-col items-center gap-6 rounded-b-md bg-dark-1 p-6 shadow-md xl:flex-row xl:items-start">
           <img
             src={userProfile?.avatar?.path || 'https://github.com/shadcn.png'}
             alt={`${userProfile?.name || 'User'} avatar`}
+            onClick={() => setOpenImage(userProfile?.avatar?.path ?? null)}
             className="h-32 w-32 rounded-full border-2 border-blue-500 object-cover hover:scale-110 hover:cursor-pointer lg:h-50 lg:w-50"
           />
 
           <div className="flex flex-1 flex-col gap-2 pt-2 text-center xl:text-left">
             <div>
-              <h1 className="text-2xl font-bold md:text-3xl">
+              <h1 className="text-2xl font-bold capitalize md:text-3xl">
                 {userProfile?.name}
               </h1>
               <p className="text-sm text-gray-500 md:text-base">
@@ -170,11 +183,11 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
               dangerouslySetInnerHTML={{ __html: userProfile.bio ?? '' }}
             ></p>
             <div className="mt-2 flex flex-col justify-center gap-4 xl:flex-row xl:justify-between">
-              {links.length > 0 && (
-                <div>
+              <div>
+                {links.length > 0 && (
                   <FloatingDock items={links} desktopClassName="w-fit" />
-                </div>
-              )}
+                )}
+              </div>
               {currentUser ? (
                 <div className={``}>
                   <Link
@@ -191,7 +204,7 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
               ) : (
                 <div className="mx-auto flex max-w-md lg:mx-0">
                   <UserFollowButton
-                  className='h-12'
+                    className="h-12"
                     userId={userProfile.id}
                     isFollowing={isFollowing ?? false}
                     onToggle={(state) =>

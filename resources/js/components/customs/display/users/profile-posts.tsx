@@ -1,5 +1,27 @@
-import { Post } from '@/types/posts';
+/**
+ * Components
+ */
+import { Button } from '@/components/ui/button';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
 import PostCard from '../posts/post-card';
+
+/**
+ * Assets
+ */
+import { IconLayoutGrid } from '@tabler/icons-react';
+import { RefreshCcwIcon } from 'lucide-react';
+
+/**
+ * Types
+ */
+import { Post } from '@/types/posts';
 
 interface ProfilePostsProps {
   posts: Post[];
@@ -26,9 +48,23 @@ const ProfilePosts = ({
       </div>
     ))
   ) : (
-    <div className="flex h-96 w-full min-w-80 items-center justify-center">
-      <h1 className="text-2xl font-semibold">No posts available</h1>
-    </div>
+    <Empty className="h-full min-h-[838px] bg-gradient-to-b from-dark-1/50 from-30% to-background">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <IconLayoutGrid />
+        </EmptyMedia>
+        <EmptyTitle>No Posts</EmptyTitle>
+        <EmptyDescription>
+          You&apos;re all caught up. New posts will appear here.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button variant="outline" size="sm">
+          <RefreshCcwIcon />
+          Refresh
+        </Button>
+      </EmptyContent>
+    </Empty>
   );
 };
 

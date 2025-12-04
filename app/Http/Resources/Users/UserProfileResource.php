@@ -38,7 +38,7 @@ class UserProfileResource extends JsonResource
 
 			// Followers & Following count
 			'followersCount' => $this->followers()->count(),
-			'followingCount' => $this->followings()->count(),
+			'followingsCount' => $this->followings()->count(),
 
 			// Is the logged in user currently following this user?
 			'isFollowing' => $loggedInUser
