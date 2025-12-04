@@ -32,7 +32,6 @@ class PostResource extends JsonResource
 				return PostCommentResource::collection($this->comments)->resolve();
 			}, []),
 
-
 			'likes_count' => $this->likes_count,
 			'comments_count' => $this->comments_count,
 			'has_liked' => (bool) $this->is_liked,

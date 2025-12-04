@@ -16,12 +16,14 @@ interface ProfilePostsSavesProps {
   savedPosts: Post[];
   onLikeToggle: (postId: number, liked: boolean) => void;
   onSaveToggle: (postId: number, saved: boolean) => void;
+  onFollowToggle?: (userId: number, state: boolean) => void;
 }
 
 const ProfilePostsSaves = ({
   savedPosts,
   onSaveToggle,
   onLikeToggle,
+  onFollowToggle,
 }: ProfilePostsSavesProps) => {
   return savedPosts.length > 0 ? (
     savedPosts.map((post) => (
@@ -30,6 +32,7 @@ const ProfilePostsSaves = ({
           post={post}
           onLikeToggle={onLikeToggle}
           onSaveToggle={onSaveToggle}
+          onFollowToggle={onFollowToggle}
         />
       </div>
     ))

@@ -18,6 +18,8 @@ class UserResource extends JsonResource
 
 	public function toArray(Request $request): array
 	{
+		$loggedInUser = $request->user();
+
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
@@ -32,6 +34,12 @@ class UserResource extends JsonResource
 			'socialLinks' => UserSocialLinkResource::collection(
 				$this->whenLoaded('socialLinks')
 			),
+
+			'isFollowing' => $loggedInUser
+				? $loggedInUser->followings()
+				->where('following_id', $this->id)
+				->exists()
+				: false,
 
 			'posts' => PostResource::collection($this->whenLoaded('posts')),
 			'likedPosts' => PostResource::collection($this->whenLoaded('likedPosts')), // Menambahkan likedPosts

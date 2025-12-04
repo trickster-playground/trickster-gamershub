@@ -9,6 +9,7 @@ import AppLayout from '@/layouts/app-layout';
 import { socialIconMap } from '@/lib/socialIcon';
 import { edit } from '@/routes/profile';
 import { BreadcrumbItem, User } from '@/types';
+import { Post } from '@/types/posts';
 import { Head, Link } from '@inertiajs/react';
 import {
   IconBookmark,
@@ -35,8 +36,6 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
   const [posts, setPosts] = useState(userProfile.posts ?? []);
   const [likedPosts, setLikedPosts] = useState(userProfile.likedPosts ?? []);
   const [savedPosts, setSavedPosts] = useState(userProfile.savedPosts ?? []);
-
-  console.log(userProfile);
 
   // Handle like toggle
   const handleLikeToggle = (postId: number, liked: boolean) => {
@@ -96,6 +95,25 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
       return updated;
     });
   };
+
+  const handleFollowToggle = (userId: number, state: boolean) => {
+    setIsFollowing(state); // update follow state profile user
+
+    // update semua posts milik user ini di semua tab
+    const updateUserFollow = (posts: Post[]) =>
+      posts.map((p) =>
+        p.user.id === userId
+          ? { ...p, user: { ...p.user, isFollowing: state } }
+          : p,
+      );
+
+    setPosts((prev) => updateUserFollow(prev));
+    setLikedPosts((prev) => updateUserFollow(prev));
+    setSavedPosts((prev) => updateUserFollow(prev));
+  };
+
+  // Follow state
+  const [isFollowing, setIsFollowing] = useState(userProfile.isFollowing);
 
   const links =
     userProfile.socialLinks?.map((item) => ({
@@ -171,10 +189,16 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
                   </Link>
                 </div>
               ) : (
-                <UserFollowButton
-                  userId={userProfile.id}
-                  isFollowing={userProfile.isFollowing ?? false}
-                />
+                <div className="mx-auto flex max-w-md lg:mx-0">
+                  <UserFollowButton
+                  className='h-12'
+                    userId={userProfile.id}
+                    isFollowing={isFollowing ?? false}
+                    onToggle={(state) =>
+                      handleFollowToggle(userProfile.id, state)
+                    }
+                  />
+                </div>
               )}
             </div>
           </div>
@@ -211,6 +235,7 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
               posts={posts}
               onLikeToggle={handleLikeToggle}
               onSaveToggle={handleSaveToggle}
+              onFollowToggle={handleFollowToggle}
             />
           </TabsContent>
 
@@ -219,6 +244,7 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
               likedPosts={likedPosts}
               onLikeToggle={handleLikeToggle}
               onSaveToggle={handleSaveToggle}
+              onFollowToggle={handleFollowToggle}
             />
           </TabsContent>
 
@@ -227,6 +253,7 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
               savedPosts={savedPosts}
               onLikeToggle={handleLikeToggle}
               onSaveToggle={handleSaveToggle}
+              onFollowToggle={handleFollowToggle}
             />
           </TabsContent>
         </Tabs>

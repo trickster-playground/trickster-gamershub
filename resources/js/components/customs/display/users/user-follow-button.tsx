@@ -1,36 +1,47 @@
-import UserRelationController from '@/actions/App/Http/Controllers/Users/UserRelationController';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { router } from '@inertiajs/react';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface FollowButtonProps {
   userId: number;
   isFollowing: boolean;
+  onToggle: (newState: boolean) => void;
+  className?: string;
 }
 
-const UserFollowButton = ({ userId, isFollowing }: FollowButtonProps) => {
+const UserFollowButton = ({
+  userId,
+  isFollowing,
+  onToggle,
+  className
+}: FollowButtonProps) => {
   const [loading, setLoading] = useState(false);
-  const [following, setFollowing] = useState(isFollowing);
 
   const handleToggle = () => {
     setLoading(true);
+    const optimisticValue = !isFollowing;
 
-    if (following) {
-      // Unfollow
-      router.delete(UserRelationController.unfollow(userId).url, {
-        onSuccess: () => {
-          setFollowing(false);
+    // Optimistic UI
+    onToggle(optimisticValue);
+
+    if (isFollowing) {
+      router.delete(`/users/${userId}/unfollow`, {
+        onSuccess: () => setLoading(false),
+        onError: () => {
+          onToggle(isFollowing); // revert
           setLoading(false);
         },
       });
     } else {
-      // Follow
       router.post(
-        UserRelationController.follow(userId).url,
+        `/users/${userId}/follow`,
         {},
         {
-          onSuccess: () => {
-            setFollowing(true);
+          onSuccess: () => setLoading(false),
+          onError: () => {
+            onToggle(isFollowing); // revert
             setLoading(false);
           },
         },
@@ -42,9 +53,20 @@ const UserFollowButton = ({ userId, isFollowing }: FollowButtonProps) => {
     <Button
       disabled={loading}
       onClick={handleToggle}
-      className={`h-12 cursor-pointer items-center gap-2 rounded-lg transition-all ${following ? 'red-comic-button' : 'comic-button'}`}
+      className={cn(
+        'flex h-10 items-center gap-2 rounded-lg transition-all',
+        isFollowing ? 'red-comic-button' : 'comic-button',
+        loading && 'cursor-not-allowed opacity-80',
+        className,
+      )}
     >
-      {loading ? '...' : following ? 'Unfollow' : 'Follow'}
+      {loading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : isFollowing ? (
+        'Unfollow'
+      ) : (
+        'Follow'
+      )}
     </Button>
   );
 };

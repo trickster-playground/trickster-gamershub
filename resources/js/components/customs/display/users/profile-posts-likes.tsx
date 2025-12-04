@@ -1,5 +1,6 @@
-import { Post } from '@/types/posts';
-import PostCard from '../posts/post-card';
+/**
+ * Components
+ */
 import { Button } from '@/components/ui/button';
 import {
   Empty,
@@ -9,19 +10,31 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
+import PostCard from '../posts/post-card';
+
+/**
+ * Assets
+ */
 import { IconHeart } from '@tabler/icons-react';
 import { RefreshCcwIcon } from 'lucide-react';
+
+/**
+ * Types
+ */
+import { Post } from '@/types/posts';
 
 interface ProfilePostsLikesProps {
   likedPosts: Post[];
   onLikeToggle: (postId: number, liked: boolean) => void;
   onSaveToggle: (postId: number, saved: boolean) => void;
+  onFollowToggle?: (userId: number, state: boolean) => void;
 }
 
 const ProfilePostsLikes = ({
   likedPosts,
   onLikeToggle,
   onSaveToggle,
+  onFollowToggle,
 }: ProfilePostsLikesProps) => {
   return likedPosts.length > 0 ? (
     likedPosts.map((post) => (
@@ -30,6 +43,7 @@ const ProfilePostsLikes = ({
           post={post}
           onLikeToggle={onLikeToggle}
           onSaveToggle={onSaveToggle}
+          onFollowToggle={onFollowToggle}
         />
       </div>
     ))

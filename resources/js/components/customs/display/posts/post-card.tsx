@@ -14,7 +14,6 @@ import { absoluteDate } from '@/lib/format-date';
  * Components
  */
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselApi,
@@ -36,14 +35,21 @@ import { Post } from '@/types/posts';
  * Actions
  */
 import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
+import UserFollowButton from '../users/user-follow-button';
 
 interface PostCardProps {
   post: Post;
   onLikeToggle?: (postId: number, liked: boolean) => void;
   onSaveToggle?: (postId: number, saved: boolean) => void;
+  onFollowToggle?: (userId: number, state: boolean) => void;
 }
 
-const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
+const PostCard = ({
+  post,
+  onLikeToggle,
+  onSaveToggle,
+  onFollowToggle,
+}: PostCardProps) => {
   // Authenticated User
   const { auth } = usePage<SharedData>().props;
 
@@ -148,12 +154,14 @@ const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
               />
             ) : (
               <div>
-                <Button
-                  type="button"
-                  className={`comic-button cursor-pointer !text-sm`}
-                >
-                  Follow
-                </Button>
+                <UserFollowButton
+                  userId={post.user.id}
+                  isFollowing={post.user.isFollowing ?? false}
+                  onToggle={(state) => {
+                    if (onFollowToggle) onFollowToggle(post.user.id, state);
+                  }}
+                  className='h-8 !text-sm'
+                />
               </div>
             )}
           </div>
