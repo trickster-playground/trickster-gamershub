@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Tournaments\TournamentCategoryController;
 use App\Http\Controllers\Home\DashboardController;
 use App\Http\Controllers\Posts\PostCommentController;
 use App\Http\Controllers\Posts\PostController;
@@ -23,6 +24,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Users Route
 Route::get('/user/{username}', [UserProfileController::class, 'show'])->name('user.profile');
 
+// User Relation Route
+Route::middleware('auth')->group(function () {
+	Route::post('/users/{user}/follow', [UserRelationController::class, 'follow'])->name('follow');
+	Route::delete('/users/{user}/unfollow', [UserRelationController::class, 'unfollow'])->name('unfollow');
+
+	Route::get('/users/{user}/followers', [UserRelationController::class, 'followers'])->name('followers');
+	Route::get('/users/{user}/followings', [UserRelationController::class, 'followings'])->name('followings');
+});
+
 // Posts Route
 Route::middleware(['auth'])->group(function () {
 	Route::get('/posts/create', [PostController::class, 'create'])->name('post.create');
@@ -42,13 +52,11 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/post/comment/{id}/delete', [PostCommentController::class, 'destroy'])->middleware('auth')->name('comment.destroy');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::post('/users/{user}/follow', [UserRelationController::class, 'follow'])->name('follow');
-    Route::delete('/users/{user}/unfollow', [UserRelationController::class, 'unfollow'])->name('unfollow');
-
-    Route::get('/users/{user}/followers', [UserRelationController::class, 'followers'])->name('followers');
-    Route::get('/users/{user}/followings', [UserRelationController::class, 'followings'])->name('followings');
+// Tournament Category Route
+Route::middleware(['auth'])->group(function () {
+	Route::get('/administrator/category', [TournamentCategoryController::class, 'index'])->name('admin.category');
 });
+
 
 
 require __DIR__ . '/settings.php';
