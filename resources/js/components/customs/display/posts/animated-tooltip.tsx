@@ -1,5 +1,9 @@
 'use client';
 
+import { Link } from '@inertiajs/react';
+/**
+ * Node modules
+ */
 import {
   AnimatePresence,
   motion,
@@ -81,20 +85,22 @@ export const AnimatedTooltip = ({
                 <div className="absolute inset-x-10 -bottom-px z-30 h-px w-[20%] bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
                 <div className="absolute -bottom-px left-10 z-30 h-px w-[40%] bg-gradient-to-r from-transparent via-sky-500 to-transparent" />
                 <div className="relative z-30 text-base font-bold text-white">
-                  {item.username}
+                  <Link href={`/user/${item.username}`}>{item.username}</Link>
                 </div>
                 <div className="text-xs text-white">{item.designation}</div>
               </motion.div>
             )}
           </AnimatePresence>
-          <img
-            onMouseMove={handleMouseMove}
-            height={100}
-            width={100}
-            src={item.avatar?.path}
-            alt={item.name}
-            className="relative !m-0 h-8 w-8 rounded-full border-2 border-white object-cover object-top !p-0 transition duration-500 group-hover:z-30 group-hover:scale-105"
-          />
+          <Link href={`/user/${item.username}`}>
+            <img
+              onMouseMove={handleMouseMove}
+              height={100}
+              width={100}
+              src={item.avatar?.path}
+              alt={item.name}
+              className="relative !m-0 h-8 w-8 rounded-full border-2 border-white object-cover object-top !p-0 transition duration-500 group-hover:z-30 group-hover:scale-105"
+            />
+          </Link>
         </div>
       ))}
     </>

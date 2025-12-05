@@ -24,6 +24,7 @@ import { ProfileCard } from '@/components/customs/display/users/profile-card';
 import PostCard from '@/components/customs/display/posts/post-card';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { Post } from '@/types/posts';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -38,6 +39,9 @@ interface DashboardProps {
 
 export default function Dashboard({ posts }: DashboardProps) {
   const { auth, flash } = usePage<SharedData>().props;
+
+  // Posts state
+  const [postsState, setPosts] = useState(posts);
 
   return (
     <CustomAppLayout breadcrumbs={breadcrumbs}>
@@ -56,7 +60,20 @@ export default function Dashboard({ posts }: DashboardProps) {
       {/* Main Content */}
       <div className="order-3 col-span-12 flex h-full w-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4 md:order-3 md:col-span-2 lg:order-2 lg:col-span-6">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
+          <PostCard
+            key={post.id}
+            post={post}
+            onFollowToggle={(userId, state) => {
+              // ✅ update postsState
+              setPosts((prev) =>
+                prev.map((p) =>
+                  p.user.id === userId
+                    ? { ...p, user: { ...p.user, isFollowing: state } }
+                    : p,
+                ),
+              );
+            }}
+          />
         ))}
       </div>
 

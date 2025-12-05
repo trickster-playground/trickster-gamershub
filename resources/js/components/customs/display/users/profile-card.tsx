@@ -1,5 +1,22 @@
-import { sidebarLinks } from '@/lib/sidebarLinks';
+/**
+ * Node Modules
+ */
 import { Link } from '@inertiajs/react';
+import { useState } from 'react';
+
+/**
+ * Library Links
+ */
+import { sidebarLinks } from '@/lib/sidebarLinks';
+
+/**
+ * Components
+ */
+import ModalImage from './modal-image';
+
+/**
+ * Assets
+ */
 import { IconPhotoEdit } from '@tabler/icons-react';
 
 interface ProfileCardProps {
@@ -15,28 +32,39 @@ export function ProfileCard({
   avatar,
   background,
 }: ProfileCardProps) {
+  // Modal image
+  const [openImage, setOpenImage] = useState<string | null>(null);
+
   return (
     <div className="w-full overflow-hidden rounded-xl bg-black text-white">
+      <ModalImage
+        isOpen={openImage !== null}
+        src={openImage}
+        alt="Preview"
+        onClose={() => setOpenImage(null)}
+      />
       {/* Cover */}
       <div className="relative h-36 w-full overflow-hidden rounded-t-xl border-b-1 border-neutral-800">
         <img
           src={background}
           alt="Cover"
-          className="aspect-video h-full w-full object-cover"
+          className="z-10 aspect-video h-full w-full cursor-pointer object-cover"
+          onClick={() => setOpenImage(background ?? null)}
         />
-        <div className="from-blue/40 absolute inset-0 bg-gradient-to-b to-black/80"></div>
+        <div className="from-blue/40 pointer-events-none absolute inset-0 bg-gradient-to-b to-black/80"></div>
 
         {/* Avatar + Name + Username */}
         <div className="absolute bottom-4 left-5 flex items-center gap-4">
           <div className="h-16 w-16 cursor-pointer overflow-hidden rounded-full border-1 border-white hover:scale-105 hover:border-primary-600">
             <img
-              className="h-full w-full object-cover"
+              className="h-full w-full cursor-pointer object-cover"
               src={avatar}
               alt={username}
+              onClick={() => setOpenImage(avatar ?? null)}
             />
           </div>
           <div>
-            <h2 className="text-sm font-semibold">{name}</h2>
+            <h2 className="text-sm font-semibold capitalize">{name}</h2>
             <p className="text-sm text-gray-300">@{username}</p>
           </div>
         </div>

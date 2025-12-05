@@ -1,10 +1,19 @@
-import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
+/**
+ * Node Modules
+ */
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
+
+/**
+ * Components
+ */
 import PostCommentCard from '@/components/customs/display/posts/post-comment-card';
 import PostCommentForm from '@/components/customs/display/posts/post-comment-form';
 import PostSettings from '@/components/customs/display/posts/post-settings';
 import PostStats from '@/components/customs/display/posts/post-stats';
+import ModalImage from '@/components/customs/display/users/modal-image';
+import UserFollowButton from '@/components/customs/display/users/user-follow-button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselApi,
@@ -13,14 +22,29 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
-import { absoluteDate } from '@/lib/format-date';
+
+/**
+ * Controller
+ */
+import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
+
+/**
+ * Types
+ */
 import { BreadcrumbItem, SharedData } from '@/types';
 import { Post } from '@/types/posts';
 
-import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+/**
+ * Hooks
+ */
+import { useInitials } from '@/hooks/use-initials';
+
+/**
+ * Helpers
+ */
+
+import { absoluteDate } from '@/lib/format-date';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -33,9 +57,15 @@ interface PostDetailProps {
   post: Post;
   onLikeToggle?: (postId: number, liked: boolean) => void;
   onSaveToggle?: (postId: number, saved: boolean) => void;
+  onFollowToggle?: (userId: number, state: boolean) => void;
 }
 
-const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
+const ShowPost = ({
+  post,
+  onLikeToggle,
+  onSaveToggle,
+  onFollowToggle,
+}: PostDetailProps) => {
   // Authenticated User
   const { auth } = usePage<SharedData>().props;
 
@@ -82,9 +112,13 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
     });
   };
 
+  // Comments State
   const [editCommentFn, setEditCommentFn] = useState<
     ((id: number, content: string) => void) | null
   >(null);
+
+  // Modal Image State
+  const [openImage, setOpenImage] = useState<string | null>(null);
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -105,8 +139,9 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
                             attachment.path ||
                             'assets/icons/profile-placeholder.svg'
                           }
-                          className="post-card_img aspect-square rounded-md object-contain"
+                          className="post-card_img aspect-square cursor-pointer rounded-md object-contain"
                           alt={`Attachment ${index + 1}`}
+                          onClick={() => setOpenImage(attachment.path || '')}
                         />
                       </div>
                     </CarouselItem>
@@ -125,6 +160,14 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
             ) : (
               ''
             )}
+
+            <ModalImage
+              isOpen={openImage !== null}
+              src={openImage}
+              alt="Preview"
+              onClose={() => setOpenImage(null)}
+            />
+
             <div className="post_details-info flex w-1/2 flex-col gap-3">
               <div className="flex w-full items-start justify-between">
                 {/* LEFT: Avatar + Name + Date */}
@@ -168,12 +211,15 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
                     />
                   ) : (
                     <div>
-                      <Button
-                        type="button"
-                        className={`comic-button cursor-pointer !text-sm`}
-                      >
-                        Follow
-                      </Button>
+                      <UserFollowButton
+                        userId={post.user.id}
+                        isFollowing={post.user.isFollowing ?? false}
+                        onToggle={(state) => {
+                          if (onFollowToggle)
+                            onFollowToggle(post.user.id, state);
+                        }}
+                        className="h-8 !text-sm"
+                      />
                     </div>
                   )}
                 </div>

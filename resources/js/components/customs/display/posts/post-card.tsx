@@ -14,7 +14,6 @@ import { absoluteDate } from '@/lib/format-date';
  * Components
  */
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselApi,
@@ -23,6 +22,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import ModalImage from '../users/modal-image';
+import UserFollowButton from '../users/user-follow-button';
 import PostSettings from './post-settings';
 import PostStats from './post-stats';
 
@@ -41,9 +42,15 @@ interface PostCardProps {
   post: Post;
   onLikeToggle?: (postId: number, liked: boolean) => void;
   onSaveToggle?: (postId: number, saved: boolean) => void;
+  onFollowToggle?: (userId: number, state: boolean) => void;
 }
 
-const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
+const PostCard = ({
+  post,
+  onLikeToggle,
+  onSaveToggle,
+  onFollowToggle,
+}: PostCardProps) => {
   // Authenticated User
   const { auth } = usePage<SharedData>().props;
 
@@ -90,6 +97,9 @@ const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
     });
   };
 
+  // Modal image
+  const [openImage, setOpenImage] = useState<string | null>(null);
+
   return (
     <div className="post-card mx-auto flex gap-4">
       {/* Avatar + Divider */}
@@ -116,7 +126,7 @@ const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
           <div className="flex w-full items-center gap-3">
             <div className="flex flex-col">
               <Link href={`/user/${post.user.username}`}>
-                <p className="base-medium lg:body-bold text-light-1 hover:text-blue-400">
+                <p className="base-medium lg:body-bold text-light-1 capitalize hover:text-blue-400">
                   {post.user.name}
                 </p>
               </Link>
@@ -148,12 +158,14 @@ const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
               />
             ) : (
               <div>
-                <Button
-                  type="button"
-                  className={`comic-button cursor-pointer !text-sm`}
-                >
-                  Follow
-                </Button>
+                <UserFollowButton
+                  userId={post.user.id}
+                  isFollowing={post.user.isFollowing ?? false}
+                  onToggle={(state) => {
+                    if (onFollowToggle) onFollowToggle(post.user.id, state);
+                  }}
+                  className="h-8 !text-sm"
+                />
               </div>
             )}
           </div>
@@ -197,8 +209,9 @@ const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
                   <div className="p-1">
                     <img
                       src={attachment.path || ''}
-                      className="post-card_img aspect-square rounded-lg"
+                      className="post-card_img aspect-square cursor-pointer rounded-lg"
                       alt={`Attachment ${index + 1 || attachment.file_name}`}
+                      onClick={() => setOpenImage(attachment.path || '')}
                     />
                   </div>
                 </CarouselItem>
@@ -215,6 +228,13 @@ const PostCard = ({ post, onLikeToggle, onSaveToggle }: PostCardProps) => {
             )}
           </Carousel>
         )}
+
+        <ModalImage
+          isOpen={openImage !== null}
+          src={openImage}
+          alt="Preview"
+          onClose={() => setOpenImage(null)}
+        />
 
         <PostStats
           post={post}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Users;
 
+use App\Http\Resources\Posts\PostResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +18,8 @@ class UserResource extends JsonResource
 
 	public function toArray(Request $request): array
 	{
+		$loggedInUser = $request->user();
+
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
@@ -31,6 +34,16 @@ class UserResource extends JsonResource
 			'socialLinks' => UserSocialLinkResource::collection(
 				$this->whenLoaded('socialLinks')
 			),
+
+			'isFollowing' => $loggedInUser
+				? $loggedInUser->followings()
+				->where('following_id', $this->id)
+				->exists()
+				: false,
+
+			'posts' => PostResource::collection($this->whenLoaded('posts')),
+			'likedPosts' => PostResource::collection($this->whenLoaded('likedPosts')), // Menambahkan likedPosts
+			'savedPosts' => PostResource::collection($this->whenLoaded('savedPosts')),  // Menambahkan savedPosts
 		];
 	}
 }

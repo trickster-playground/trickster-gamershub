@@ -1,6 +1,14 @@
 'use client';
-import { PostComment } from '@/types/posts';
+
+/**
+ * Components
+ */
 import { AnimatedTooltip } from './animated-tooltip';
+
+/**
+ * Types
+ */
+import { PostComment } from '@/types/posts';
 
 interface PostCommentTooltipProps {
   comments?: PostComment[];
@@ -45,7 +53,7 @@ export function PostCommentTooltip({
         <AnimatedTooltip items={tooltipItems} />
       ) : (
         <span className="text-xs text-muted-foreground">
-          Belum ada komentar dari pengguna
+          There are no comments from users yet
         </span>
       )}
     </div>

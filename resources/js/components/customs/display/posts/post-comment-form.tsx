@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * Node Modules
+ */
+import { useForm } from '@inertiajs/react';
+import { FormEvent, useEffect, useState } from 'react';
+/**
+ * Components
+ */
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import {
   Drawer,
   DrawerClose,
@@ -10,13 +20,12 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-
-import PostCommentController from '@/actions/App/Http/Controllers/Posts/PostCommentController';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { useForm } from '@inertiajs/react';
-import { FormEvent, useEffect, useState } from 'react';
 import Tiptap from './tiptap';
+
+/**
+ * Controller
+ */
+import PostCommentController from '@/actions/App/Http/Controllers/Posts/PostCommentController';
 
 interface PostCommentFormProps {
   postId: number;
