@@ -55,6 +55,7 @@ const ModalUsers = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          onClick={onClose}
         >
           {/* Modal Box */}
           <motion.div
@@ -62,6 +63,7 @@ const ModalUsers = ({
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 40 }}
             className="w-full max-w-lg rounded-xl bg-dark-2 p-4 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="mb-4 flex items-center justify-between border-b border-dark-4 pb-3">
