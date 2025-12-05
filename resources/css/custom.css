@@ -369,3 +369,7 @@ blockquote {
     /* Sesuaikan jarak untuk mobile */
   }
 }
+
+.rdp-today.rdp-selected {
+  @apply rounded-full bg-primary text-primary-foreground;
+}

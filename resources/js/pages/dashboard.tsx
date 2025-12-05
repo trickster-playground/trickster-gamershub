@@ -2,6 +2,7 @@
  * Node Modules
  */
 import { Head, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
 /**
  * Routes
@@ -16,15 +17,15 @@ import CustomAppLayout from '@/layouts/customs/custom-app-layout';
 /**
  *  Components
  */
+import PostCard from '@/components/customs/display/posts/post-card';
+import EventCalendar from '@/components/customs/display/tournaments/event-calendar';
 import { ProfileCard } from '@/components/customs/display/users/profile-card';
 
 /**
  * Types
  */
-import PostCard from '@/components/customs/display/posts/post-card';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { Post } from '@/types/posts';
-import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -79,7 +80,7 @@ export default function Dashboard({ posts }: DashboardProps) {
 
       {/* Right Content */}
       <div className="order-2 col-span-12 flex h-full w-full flex-col gap-4 overflow-x-auto rounded-xl p-4 text-sm md:order-2 md:col-span-1 lg:order-3 lg:col-span-3">
-        {/* <TournamentCalendar /> */}
+        <EventCalendar />
       </div>
     </CustomAppLayout>
   );
