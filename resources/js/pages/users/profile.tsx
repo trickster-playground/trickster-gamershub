@@ -13,6 +13,7 @@ import AppLayout from '@/layouts/app-layout';
  * Components
  */
 import ModalImage from '@/components/customs/display/users/modal-image';
+import ModalUsers from '@/components/customs/display/users/modal-users';
 import ProfilePosts from '@/components/customs/display/users/profile-posts';
 import ProfilePostsLikes from '@/components/customs/display/users/profile-posts-likes';
 import ProfilePostsSaves from '@/components/customs/display/users/profile-posts-saves';
@@ -40,7 +41,6 @@ import { edit } from '@/routes/profile';
 /**
  * Assets
  */
-import ModalUsers from '@/components/customs/display/users/modal-users';
 import {
   IconBookmark,
   IconEdit,

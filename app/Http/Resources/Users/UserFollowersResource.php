@@ -26,6 +26,8 @@ class UserFollowersResource extends JsonResource
 			'isFollowing' => $loggedInUser
 				? $loggedInUser->followings()->where('following_id', $this->id)->exists()
 				: false,
+
+			'created_at' => $this->pivot?->created_at,
 		];
 	}
 }

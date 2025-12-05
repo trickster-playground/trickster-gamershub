@@ -1,3 +1,12 @@
+/**
+ * Node Modules
+ */
+import { Link, usePage } from '@inertiajs/react';
+import { AnimatePresence, motion } from 'framer-motion';
+
+/**
+ * Components
+ */
 import { Button } from '@/components/ui/button';
 import {
   Empty,
@@ -7,12 +16,19 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
-import { SharedData, User } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
-import { IconUserPlus } from '@tabler/icons-react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { RefreshCcwIcon, X } from 'lucide-react';
 import UserFollowButton from './user-follow-button';
+
+/**
+ * Assets
+ */
+import { IconUserPlus } from '@tabler/icons-react';
+import { RefreshCcwIcon, X } from 'lucide-react';
+
+/**
+ * Types
+ */
+import { absoluteDate } from '@/lib/format-date';
+import { SharedData, User } from '@/types';
 
 interface ModalUsersProps {
   isOpen: boolean;
@@ -29,7 +45,7 @@ const ModalUsers = ({
   onClose,
   onFollowToggle,
 }: ModalUsersProps) => {
-  const { auth, flash } = usePage<SharedData>().props;
+  const { auth } = usePage<SharedData>().props;
 
   return (
     <AnimatePresence>
@@ -45,7 +61,7 @@ const ModalUsers = ({
             initial={{ scale: 0.9, opacity: 0, y: 40 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 40 }}
-            className="w-full max-w-md rounded-xl bg-dark-2 p-4 shadow-lg"
+            className="w-full max-w-lg rounded-xl bg-dark-2 p-4 shadow-lg"
           >
             {/* Header */}
             <div className="mb-4 flex items-center justify-between border-b border-dark-4 pb-3">
@@ -110,17 +126,21 @@ const ModalUsers = ({
                   </div>
 
                   {/* Follow Button */}
-
-                  {auth.user?.id !== user.id && (
-                    <UserFollowButton
-                      userId={user.id}
-                      isFollowing={user.isFollowing ?? false}
-                      onToggle={(state) => {
-                        if (onFollowToggle) onFollowToggle(user.id, state);
-                      }}
-                      className="h-8 !text-sm"
-                    />
-                  )}
+                  <div className="flex flex-col items-center gap-2">
+                    {auth.user?.id !== user.id && (
+                      <UserFollowButton
+                        userId={user.id}
+                        isFollowing={user.isFollowing ?? false}
+                        onToggle={(state) => {
+                          if (onFollowToggle) onFollowToggle(user.id, state);
+                        }}
+                        className="h-8 !text-sm"
+                      />
+                    )}
+                    <span className="text-xs">
+                      {absoluteDate(new Date(user.created_at))}
+                    </span>
+                  </div>
                 </Link>
               ))}
             </div>
