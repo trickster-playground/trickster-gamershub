@@ -12,8 +12,8 @@ import PostCommentForm from '@/components/customs/display/posts/post-comment-for
 import PostSettings from '@/components/customs/display/posts/post-settings';
 import PostStats from '@/components/customs/display/posts/post-stats';
 import ModalImage from '@/components/customs/display/users/modal-image';
+import UserFollowButton from '@/components/customs/display/users/user-follow-button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselApi,
@@ -57,9 +57,15 @@ interface PostDetailProps {
   post: Post;
   onLikeToggle?: (postId: number, liked: boolean) => void;
   onSaveToggle?: (postId: number, saved: boolean) => void;
+  onFollowToggle?: (userId: number, state: boolean) => void;
 }
 
-const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
+const ShowPost = ({
+  post,
+  onLikeToggle,
+  onSaveToggle,
+  onFollowToggle,
+}: PostDetailProps) => {
   // Authenticated User
   const { auth } = usePage<SharedData>().props;
 
@@ -133,7 +139,7 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
                             attachment.path ||
                             'assets/icons/profile-placeholder.svg'
                           }
-                          className="post-card_img aspect-square rounded-md object-contain cursor-pointer"
+                          className="post-card_img aspect-square cursor-pointer rounded-md object-contain"
                           alt={`Attachment ${index + 1}`}
                           onClick={() => setOpenImage(attachment.path || '')}
                         />
@@ -205,12 +211,15 @@ const ShowPost = ({ post, onLikeToggle, onSaveToggle }: PostDetailProps) => {
                     />
                   ) : (
                     <div>
-                      <Button
-                        type="button"
-                        className={`comic-button cursor-pointer !text-sm`}
-                      >
-                        Follow
-                      </Button>
+                      <UserFollowButton
+                        userId={post.user.id}
+                        isFollowing={post.user.isFollowing ?? false}
+                        onToggle={(state) => {
+                          if (onFollowToggle)
+                            onFollowToggle(post.user.id, state);
+                        }}
+                        className="h-8 !text-sm"
+                      />
                     </div>
                   )}
                 </div>

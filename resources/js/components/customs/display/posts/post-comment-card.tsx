@@ -7,7 +7,6 @@ import { Link, router, usePage } from '@inertiajs/react';
  * Components
  */
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import PostCommentSettings from './post-comment-setting';
 
 /**
@@ -25,13 +24,19 @@ import { useInitials } from '@/hooks/use-initials';
  * Controller
  */
 import PostCommentController from '@/actions/App/Http/Controllers/Posts/PostCommentController';
+import UserFollowButton from '../users/user-follow-button';
 
 interface PostCommentCardProps {
   comments: PostComment[];
   onEdit: (id: number, content: string) => void;
+  onFollowToggle?: (userId: number, state: boolean) => void;
 }
 
-const PostCommentCard = ({ comments, onEdit }: PostCommentCardProps) => {
+const PostCommentCard = ({
+  comments,
+  onEdit,
+  onFollowToggle,
+}: PostCommentCardProps) => {
   // Authenticated User
   const { auth } = usePage<SharedData>().props;
 
@@ -95,12 +100,15 @@ const PostCommentCard = ({ comments, onEdit }: PostCommentCardProps) => {
                     </div>
                   ) : (
                     <div>
-                      <Button
-                        type="button"
-                        className={`comic-button cursor-pointer !text-sm`}
-                      >
-                        Follow
-                      </Button>
+                      <UserFollowButton
+                        userId={comment.user.id}
+                        isFollowing={comment.user.isFollowing ?? false}
+                        onToggle={(state) => {
+                          if (onFollowToggle)
+                            onFollowToggle(comment.user.id, state);
+                        }}
+                        className="h-8 !text-sm"
+                      />
                     </div>
                   )}
                   <span className="text-xs text-muted-foreground">
