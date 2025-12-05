@@ -126,7 +126,7 @@ const PostCard = ({
           <div className="flex w-full items-center gap-3">
             <div className="flex flex-col">
               <Link href={`/user/${post.user.username}`}>
-                <p className="base-medium lg:body-bold text-light-1 hover:text-blue-400">
+                <p className="base-medium lg:body-bold text-light-1 capitalize hover:text-blue-400">
                   {post.user.name}
                 </p>
               </Link>

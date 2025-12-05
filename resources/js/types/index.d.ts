@@ -48,7 +48,7 @@ export interface User {
   followersCount?: number;
   followingsCount?: number;
 
-  // lists (optional)
+  // lists followers & followings
   followings?: User[];
   followers?: User[];
 
@@ -70,7 +70,7 @@ export interface Avatar {
   id: number;
   user_id: number;
   type: 'avatar';
-  path: string;
+  path?: string;
 }
 
 export interface Background {

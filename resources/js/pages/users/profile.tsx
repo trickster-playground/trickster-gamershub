@@ -1,3 +1,17 @@
+/**
+ * Node Modules
+ */
+import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
+
+/**
+ * Layouts
+ */
+import AppLayout from '@/layouts/app-layout';
+
+/**
+ * Components
+ */
 import ModalImage from '@/components/customs/display/users/modal-image';
 import ProfilePosts from '@/components/customs/display/users/profile-posts';
 import ProfilePostsLikes from '@/components/customs/display/users/profile-posts-likes';
@@ -6,19 +20,33 @@ import ProfileStats from '@/components/customs/display/users/profile-stats';
 import UserFollowButton from '@/components/customs/display/users/user-follow-button';
 import { FloatingDock } from '@/components/ui/acternity/floating-dock';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import AppLayout from '@/layouts/app-layout';
-import { socialIconMap } from '@/lib/socialIcon';
-import { edit } from '@/routes/profile';
+
+/**
+ * Types
+ */
 import { BreadcrumbItem, User } from '@/types';
 import { Post } from '@/types/posts';
-import { Head, Link } from '@inertiajs/react';
+
+/**
+ * Library
+ */
+import { socialIconMap } from '@/lib/socialIcon';
+
+/**
+ * Routes
+ */
+import { edit } from '@/routes/profile';
+
+/**
+ * Assets
+ */
+import ModalUsers from '@/components/customs/display/users/modal-users';
 import {
   IconBookmark,
   IconEdit,
   IconHeart,
   IconLayoutGrid,
 } from '@tabler/icons-react';
-import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -34,6 +62,7 @@ interface ProfileProps {
 }
 
 const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
+  // Posts state
   const [posts, setPosts] = useState(userProfile.posts ?? []);
   const [likedPosts, setLikedPosts] = useState(userProfile.likedPosts ?? []);
   const [savedPosts, setSavedPosts] = useState(userProfile.savedPosts ?? []);
@@ -97,10 +126,14 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
     });
   };
 
-  const handleFollowToggle = (userId: number, state: boolean) => {
-    setIsFollowing(state); // update follow state profile user
+  // Follow state
+  const [isFollowing, setIsFollowing] = useState(userProfile.isFollowing);
 
-    // update semua posts milik user ini di semua tab
+  // Handle follow
+  const handleFollowToggle = (userId: number, state: boolean) => {
+    setIsFollowing(state); // Update follow state profile user
+
+    // Update all posts by this user in all tabs
     const updateUserFollow = (posts: Post[]) =>
       posts.map((p) =>
         p.user.id === userId
@@ -113,9 +146,7 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
     setSavedPosts((prev) => updateUserFollow(prev));
   };
 
-  // Follow state
-  const [isFollowing, setIsFollowing] = useState(userProfile.isFollowing);
-
+  // Social Links
   const links =
     userProfile.socialLinks?.map((item) => ({
       title: item.platform,
@@ -123,8 +154,13 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
       icon: socialIconMap[item.platform] ?? socialIconMap['website'],
     })) ?? [];
 
-  // Modal image
+  // Modal image state
   const [openImage, setOpenImage] = useState<string | null>(null);
+
+  // Modal followers & following state
+  const [openModal, setOpenModal] = useState<null | 'followers' | 'followings'>(
+    null,
+  );
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -166,16 +202,29 @@ const profile = ({ user, userProfile, currentUser }: ProfileProps) => {
             </div>
             <div className="mt-2 flex flex-wrap justify-center gap-2 xl:justify-start">
               <ProfileStats
-                value={userProfile.posts?.length ?? 0}
+                value={userProfile.posts?.length || 0}
                 label="Posts"
               />
               <ProfileStats
                 value={userProfile.followersCount || 0}
                 label="Followers"
+                onClick={() => setOpenModal('followers')}
               />
               <ProfileStats
                 value={userProfile.followingsCount || 0}
                 label="Following"
+                onClick={() => setOpenModal('followings')}
+              />
+
+              <ModalUsers
+                isOpen={openModal !== null}
+                title={openModal === 'followers' ? 'Followers' : 'Following'}
+                users={
+                  openModal === 'followers'
+                    ? userProfile.followers
+                    : userProfile.followings
+                }
+                onClose={() => setOpenModal(null)}
               />
             </div>
             <p

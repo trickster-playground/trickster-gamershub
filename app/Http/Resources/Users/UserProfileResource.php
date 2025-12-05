@@ -35,6 +35,9 @@ class UserProfileResource extends JsonResource
 				$this->socialLinks
 			),
 
+			// Followers & Followings
+			'followers' => UserFollowersResource::collection($this->followers),
+			'followings' => UserFollowingsResource::collection($this->followings),
 
 			// Followers & Following count
 			'followersCount' => $this->followers()->count(),

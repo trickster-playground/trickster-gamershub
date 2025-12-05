@@ -40,7 +40,7 @@ interface DashboardProps {
 export default function Dashboard({ posts }: DashboardProps) {
   const { auth, flash } = usePage<SharedData>().props;
 
-  // ✅ Buat state posts agar bisa update
+  // Posts state
   const [postsState, setPosts] = useState(posts);
 
   return (

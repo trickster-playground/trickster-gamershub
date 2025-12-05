@@ -15,7 +15,7 @@ const UserFollowButton = ({
   userId,
   isFollowing,
   onToggle,
-  className
+  className,
 }: FollowButtonProps) => {
   const [loading, setLoading] = useState(false);
 

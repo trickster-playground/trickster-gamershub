@@ -53,7 +53,7 @@ export function PostCommentTooltip({
         <AnimatedTooltip items={tooltipItems} />
       ) : (
         <span className="text-xs text-muted-foreground">
-          Belum ada komentar dari pengguna
+          There are no comments from users yet
         </span>
       )}
     </div>
