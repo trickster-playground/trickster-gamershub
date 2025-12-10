@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Admin\Tournaments;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tournaments\TournamentCategoryStoreRequest;
+use App\Http\Requests\Tournaments\TournamentCategoryUpdateRequest;
+use App\Http\Resources\Tournaments\TournamentCategoryResource;
 use App\Http\Resources\Users\UserResource;
 use App\Models\Tournaments\TournamentCategory;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TournamentCategoryController extends Controller
 {
@@ -18,23 +21,14 @@ class TournamentCategoryController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$tournamentCategories = TournamentCategory::select(
-			'id',
-			'name',
-			'icon',
-			'slug',
-			'description',
-			'color',
-			'created_at'
-		)
-			->orderBy('id', 'desc')
-			->get();
+		$tournamentCategories = TournamentCategoryResource::collection(
+			TournamentCategory::orderBy('id', 'desc')->get()
+		)->toArray($request);
 
 		return Inertia::render('admin/tournaments/categories/index-category', [
 			'user' => new UserResource(
 				$request->user()->load(['avatar', 'background'])
 			),
-
 			'tournamentCategories' => $tournamentCategories,
 		]);
 	}
@@ -71,7 +65,7 @@ class TournamentCategoryController extends Controller
 			if ($request->hasFile('icon')) {
 
 				$path = $request->file('icon')->store(
-					"attachments/tournaments/categories/{$category->id}",
+					"tournaments/categories/{$category->id}",
 					'public'
 				);
 
@@ -104,18 +98,63 @@ class TournamentCategoryController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 */
-	public function edit(string $id)
+	public function edit($slug)
 	{
-		//
+		$tournamentCategory = TournamentCategory::where('slug', $slug)->firstOrFail();
+
+		return Inertia::render('admin/tournaments/categories/edit-category', [
+			'tournamentCategory' => new TournamentCategoryResource($tournamentCategory),
+		]);
 	}
+
 
 	/**
 	 * Update the specified resource in storage.
 	 */
-	public function update(Request $request, string $id)
+	public function update(TournamentCategoryUpdateRequest $request, TournamentCategory $category)
 	{
-		//
+		DB::beginTransaction();
+
+		try {
+			// Update basic fields first
+			$category->update([
+				'name'        => $request->name,
+				'description' => $request->description,
+				'color'       => $request->color,
+			]);
+
+			// Handle icon update
+			if ($request->hasFile('icon')) {
+
+				// Delete old icon if exists
+				if ($category->icon && Storage::disk('public')->exists($category->icon)) {
+					Storage::disk('public')->delete($category->icon);
+				}
+
+				// Upload new icon
+				$path = $request->file('icon')->store(
+					"tournaments/categories/{$category->id}",
+					'public'
+				);
+
+				$category->update([
+					'icon' => $path,
+				]);
+			}
+
+			DB::commit();
+
+			return redirect(route('admin.category'))
+				->with('success', 'Tournament category updated successfully!');
+		} catch (\Exception $e) {
+			DB::rollBack();
+
+			return back()->withErrors([
+				'error' => $e->getMessage()
+			]);
+		}
 	}
+
 
 	/**
 	 * Remove the specified resource from storage.

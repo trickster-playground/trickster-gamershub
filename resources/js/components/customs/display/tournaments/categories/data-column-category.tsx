@@ -1,6 +1,7 @@
 /**
  * Node Modules
  */
+import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 
 /**
@@ -71,7 +72,7 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
 
       return (
         <img
-          src={`/storage/${iconPath}`}
+          src={`${iconPath}`}
           alt="Icon"
           className="h-20 w-20 rounded-md border object-cover"
         />
@@ -167,13 +168,31 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(item.id.toString())}
+              onClick={() =>
+                navigator.clipboard.writeText(item.slug.toString())
+              }
             >
-              Copy ID
+              Copy Slug
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            {/* Edit */}
+            <DropdownMenuItem asChild>
+              <Link href={`/administrator/category/${item.slug}/edit`}>
+                Edit
+              </Link>
+            </DropdownMenuItem>
+            {/* Delete */}
+            {/* <DropdownMenuItem
+              onClick={() => {
+                if (confirm(`Delete category "${item.name}"?`)) {
+                  router.delete(route('admin.category.destroy', item.slug), {
+                    preserveScroll: true,
+                  });
+                }
+              }}
+            >
+              Delete
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       );

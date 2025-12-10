@@ -6,7 +6,7 @@ export interface TournamentCategory {
   id: number;
   name: string;
   icon?: string;
-  slug: number;
+  slug: string;
   description?: number;
   color: string;
   created_at: string;
