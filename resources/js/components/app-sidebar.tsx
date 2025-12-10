@@ -30,7 +30,7 @@ const adminNavItems: NavItem[] = [
   {
     title: 'Tournament Category',
     href: admin.category(),
-    icon: LayoutGrid,
+    icon: Folder,
   },
 ];
 

@@ -4,10 +4,6 @@
 import { Head, usePage } from '@inertiajs/react';
 
 /**
- * Routes
- */
-
-/**
  * Layouts
  */
 import AdminAppLayout from '@/components/customs/layouts/admin/admin-app-layout';
@@ -15,16 +11,14 @@ import AdminAppLayout from '@/components/customs/layouts/admin/admin-app-layout'
 /**
  *  Components
  */
+import { tournamentCategoryColumns } from '@/components/customs/display/tournaments/categories/data-column-category';
+import { DataTable } from '@/components/customs/display/ui/data-table';
 
 /**
  * Types
  */
-import {
-  columns,
-  Payment,
-} from '@/components/customs/display/tournaments/data-coloumns';
-import { DataTable } from '@/components/customs/display/tournaments/data-table';
 import { type BreadcrumbItem } from '@/types';
+import { TournamentCategory } from '@/types/tournaments';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -33,8 +27,10 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-export default function TournamentCategory() {
-  const { payments } = usePage<{ payments: Payment[] }>().props;
+export default function TournamentCategoryPage() {
+  const { tournamentCategories } = usePage<{
+    tournamentCategories: TournamentCategory[];
+  }>().props;
 
   return (
     <AdminAppLayout breadcrumbs={breadcrumbs}>
@@ -42,7 +38,10 @@ export default function TournamentCategory() {
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <DataTable columns={columns} data={payments} />
+            <DataTable
+              columns={tournamentCategoryColumns}
+              data={tournamentCategories}
+            />
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Tournaments;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Users\UserResource;
+use App\Models\Tournaments\TournamentCategory;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,22 +15,27 @@ class TournamentCategoryController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$payments = [
-			[
-				'id' => '728ed52f',
-				'amount' => 100,
-				'status' => 'pending',
-				'email' => 'm@example.com',
-			]
-		];
+		$tournamentCategories = TournamentCategory::select(
+			'id',
+			'name',
+			'icon',
+			'slug',
+			'description',
+			'color',
+			'created_at'
+		)
+			->orderBy('id', 'desc')
+			->get();
 
 		return Inertia::render('admin/tournaments/tournament-category', [
 			'user' => new UserResource(
 				$request->user()->load(['avatar', 'background'])
 			),
-			'payments' => $payments,
+
+			'tournamentCategories' => $tournamentCategories,
 		]);
 	}
+
 
 	/**
 	 * Show the form for creating a new resource.
