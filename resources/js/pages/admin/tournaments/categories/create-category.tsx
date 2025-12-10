@@ -11,9 +11,7 @@ import AdminAppLayout from '@/components/customs/layouts/admin/admin-app-layout'
 /**
  *  Components
  */
-import { tournamentCategoryColumns } from '@/components/customs/display/tournaments/categories/data-column-category';
-import { DataTable } from '@/components/customs/display/ui/data-table';
-
+import FormCategory from '@/components/customs/display/tournaments/categories/form-category';
 /**
  * Types
  */
@@ -22,12 +20,12 @@ import { TournamentCategory } from '@/types/tournaments';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: 'Tournament Category',
-    href: '/administrator/category',
+    title: 'Create Tournament Category',
+    href: '/administrator/category/create',
   },
 ];
 
-export default function TournamentCategoryPage() {
+export default function CreateTournamentCategory() {
   const { tournamentCategories } = usePage<{
     tournamentCategories: TournamentCategory[];
   }>().props;
@@ -38,10 +36,7 @@ export default function TournamentCategoryPage() {
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <DataTable
-              columns={tournamentCategoryColumns}
-              data={tournamentCategories}
-            />
+            <FormCategory />
           </div>
         </div>
       </div>

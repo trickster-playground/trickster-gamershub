@@ -42,17 +42,22 @@ import DataTablePagination from '../ui/data-table-pagination';
 /**
  * Assets
  */
+import { Link } from '@inertiajs/react';
 import { IconMoodSadDizzy } from '@tabler/icons-react';
 import { RefreshCcwIcon } from 'lucide-react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  title: string;
+  url?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  title,
+  url,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -105,7 +110,9 @@ export function DataTable<TData, TValue>({
           />
         </div>
         <div className="flex items-center">
-          <Button>Add Category</Button>
+          <Link href={url}>
+            <Button>Add {title}</Button>
+          </Link>
         </div>
       </div>
       <div className="overflow-hidden rounded-md border">

@@ -55,6 +55,9 @@ Route::middleware(['auth'])->group(function () {
 // Tournament Category Route
 Route::middleware(['auth'])->group(function () {
 	Route::get('/administrator/category', [TournamentCategoryController::class, 'index'])->name('admin.category');
+	Route::get('/administrator/category/create', [TournamentCategoryController::class, 'create'])->name('admin.category.create');
+
+	Route::post('/administrator/category/create', [TournamentCategoryController::class, 'store'])->name('admin.category.store');
 });
 
 

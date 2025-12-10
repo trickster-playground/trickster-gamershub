@@ -55,6 +55,30 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
     enableHiding: false,
   },
 
+  {
+    accessorKey: 'icon',
+    header: 'Icon',
+    cell: ({ row }) => {
+      const iconPath = row.getValue('icon');
+
+      if (!iconPath) {
+        return (
+          <div className="flex items-center justify-center">
+            <span className="text-xs text-muted-foreground">No Icon</span>
+          </div>
+        );
+      }
+
+      return (
+        <img
+          src={`/storage/${iconPath}`}
+          alt="Icon"
+          className="h-20 w-20 rounded-md border object-cover"
+        />
+      );
+    },
+  },
+
   // Name
   {
     accessorKey: 'name',
