@@ -112,7 +112,7 @@ export default function FormCategory({
             {previewIcon ? (
               <img
                 src={previewIcon}
-                className="h-40 w-40 rounded-lg border object-cover"
+                className="h-40 w-40 rounded-lg border object-contain"
               />
             ) : (
               <div className="flex h-40 w-40 items-center justify-center rounded-lg border text-xs text-muted-foreground">

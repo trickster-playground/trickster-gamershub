@@ -1,7 +1,7 @@
 /**
  * Node Modules
  */
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 
 /**
@@ -26,6 +26,7 @@ import { TournamentCategory } from '@/types/tournaments';
 /**
  * Assets
  */
+import TournamentCategoryController from '@/actions/App/Http/Controllers/Admin/Tournaments/TournamentCategoryController';
 import {
   ArrowDown,
   ArrowUp,
@@ -74,7 +75,7 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
         <img
           src={`${iconPath}`}
           alt="Icon"
-          className="h-20 w-20 rounded-md border object-cover"
+          className="h-20 w-20 rounded-md border object-contain"
         />
       );
     },
@@ -158,6 +159,18 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const item = row.original;
+
+      // Handle Delete Tournament Category
+      const handleDeleteTournamentCategory = (slug: string) => {
+        const { url, method } = TournamentCategoryController.destroy(slug);
+
+        router.visit(url, {
+          method,
+          onSuccess: () => {
+            console.log('Tournament category deleted');
+          },
+        });
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -182,17 +195,15 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
               </Link>
             </DropdownMenuItem>
             {/* Delete */}
-            {/* <DropdownMenuItem
+            <DropdownMenuItem
               onClick={() => {
                 if (confirm(`Delete category "${item.name}"?`)) {
-                  router.delete(route('admin.category.destroy', item.slug), {
-                    preserveScroll: true,
-                  });
+                  handleDeleteTournamentCategory(item.slug);
                 }
               }}
             >
               Delete
-            </DropdownMenuItem> */}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

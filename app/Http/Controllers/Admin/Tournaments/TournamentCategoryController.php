@@ -159,8 +159,25 @@ class TournamentCategoryController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 */
-	public function destroy(string $id)
+	public function destroy(string $slug)
 	{
-		//
+		$tournamentCategory = TournamentCategory::where('slug', $slug)->firstOrFail();
+
+		// Delete associated icon from storage
+		if ($tournamentCategory->icon) {
+
+			// Delete file icon
+			Storage::disk('public')->delete($tournamentCategory->icon);
+
+			// Delete folder from ID
+			$folderPath = 'tournaments/categories/' . $tournamentCategory->id;
+			Storage::disk('public')->deleteDirectory($folderPath);
+		}
+
+		// Delete data
+		$tournamentCategory->delete();
+
+		return redirect()->route('admin.category')
+			->with('success', 'Tournament category deleted successfully.');
 	}
 }
