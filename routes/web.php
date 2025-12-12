@@ -60,7 +60,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/administrator/category/create', [TournamentCategoryController::class, 'store'])->name('admin.category.store');
 
 	Route::get('/administrator/category/{slug}/edit', [TournamentCategoryController::class, 'edit'])->name('admin.category.edit');
-	Route::patch('/administrator/category/{category:slug}/edit', [TournamentCategoryController::class, 'update'])->name('admin.category.update');
+	Route::patch('/administrator/category/{slug}/edit', [TournamentCategoryController::class, 'update'])->name('admin.category.update');
 
 	Route::delete('/administrator/category/{slug}', [TournamentCategoryController::class, 'destroy'])->name('admin.category.destroy');
 });

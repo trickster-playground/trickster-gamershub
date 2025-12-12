@@ -111,22 +111,26 @@ class TournamentCategoryController extends Controller
 	/**
 	 * Update the specified resource in storage.
 	 */
-	public function update(TournamentCategoryUpdateRequest $request, TournamentCategory $category)
+	public function update(TournamentCategoryUpdateRequest $request, $slug)
 	{
 		DB::beginTransaction();
 
 		try {
-			// Update basic fields first
+			// Get category based on slug
+			$category = TournamentCategory::where('slug', $slug)
+				->firstOrFail();
+
+			// Update fields
 			$category->update([
 				'name'        => $request->name,
 				'description' => $request->description,
 				'color'       => $request->color,
 			]);
 
-			// Handle icon update
+			// Update icon
 			if ($request->hasFile('icon')) {
 
-				// Delete old icon if exists
+				// Delete old icon
 				if ($category->icon && Storage::disk('public')->exists($category->icon)) {
 					Storage::disk('public')->delete($category->icon);
 				}
@@ -144,16 +148,16 @@ class TournamentCategoryController extends Controller
 
 			DB::commit();
 
-			return redirect(route('admin.category'))
+			return redirect()->route('admin.category')
 				->with('success', 'Tournament category updated successfully!');
 		} catch (\Exception $e) {
 			DB::rollBack();
 
-			return back()->withErrors([
-				'error' => $e->getMessage()
-			]);
+			return back()
+				->withErrors(['error' => $e->getMessage()]);
 		}
 	}
+
 
 
 	/**
