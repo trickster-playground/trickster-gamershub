@@ -10,44 +10,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { adminNavItems } from '@/lib/routes/adminRoute';
+import { footerNavItems, mainNavItems } from '@/lib/routes/globalRoute';
 import { dashboard } from '@/routes';
-import admin from '@/routes/admin';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 import AppLogo from './app-logo';
 import { AdminNavMain } from './customs/layouts/admin/menu/admin-nav-main';
 
-const mainNavItems: NavItem[] = [
-  {
-    title: 'Dashboard',
-    href: dashboard(),
-    icon: LayoutGrid,
-  },
-];
-
-const adminNavItems: NavItem[] = [
-  {
-    title: 'Tournament Category',
-    href: admin.category(),
-    icon: Folder,
-  },
-];
-
-const footerNavItems: NavItem[] = [
-  {
-    title: 'Repository',
-    href: 'https://github.com/laravel/react-starter-kit',
-    icon: Folder,
-  },
-  {
-    title: 'Documentation',
-    href: 'https://laravel.com/docs/starter-kits#react',
-    icon: BookOpen,
-  },
-];
-
 export function AppSidebar() {
+  const page = usePage<SharedData>();
+  const { auth } = page.props;
+
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
@@ -64,7 +38,11 @@ export function AppSidebar() {
 
       <SidebarContent>
         <NavMain items={mainNavItems} />
-        <AdminNavMain items={adminNavItems} />
+        {auth.user.role === 'administrator' ? (
+          <AdminNavMain items={adminNavItems} />
+        ) : (
+          ''
+        )}
       </SidebarContent>
 
       <SidebarFooter>
