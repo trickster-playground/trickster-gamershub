@@ -26,6 +26,7 @@ import Tiptap from './tiptap';
  * Controller
  */
 import PostCommentController from '@/actions/App/Http/Controllers/Posts/PostCommentController';
+import { comicToast } from '../ui/toasts/comic-toast';
 
 interface PostCommentFormProps {
   postId: number;
@@ -64,6 +65,7 @@ const PostCommentForm = ({ postId, onRegisterEdit }: PostCommentFormProps) => {
       // Update comment
       patch(PostCommentController.update(editingCommentId).url, {
         onSuccess: () => {
+          comicToast.default('Comment updated!');
           reset();
           setOpen(false);
           setIsEditing(false);
@@ -75,6 +77,7 @@ const PostCommentForm = ({ postId, onRegisterEdit }: PostCommentFormProps) => {
       post(PostCommentController.store().url, {
         preserveScroll: true,
         onSuccess: () => {
+          comicToast.default('Comment added!');
           reset();
           setOpen(false);
         },

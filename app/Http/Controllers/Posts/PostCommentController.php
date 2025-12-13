@@ -35,7 +35,7 @@ class PostCommentController extends Controller
 		]);
 
 		// redirect back to the previous page
-		return back()->with('message', 'Comment added!');
+		return back()->with('success', 'Comment added!');
 	}
 
 	/**
@@ -59,7 +59,7 @@ class PostCommentController extends Controller
 			'comment' => $validated['comment'],
 		]);
 
-		return back()->with('message', 'Comment updated!');
+		return back()->with('success', 'Comment updated!');
 	}
 
 	/**
@@ -85,6 +85,6 @@ class PostCommentController extends Controller
 		// Delete the post
 		$comment->delete();
 
-		return back()->with('message', 'Comment deleted!');
+		return back()->with('success', 'Comment deleted!');
 	}
 }

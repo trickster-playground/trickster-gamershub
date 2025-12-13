@@ -24,7 +24,7 @@ interface AppLayoutProps {
   breadcrumbs?: BreadcrumbItem[];
 }
 
-export default function AppLayout({
+export default function CustomAppLayout({
   children,
   breadcrumbs,
   ...props

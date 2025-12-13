@@ -25,6 +25,7 @@ import { useInitials } from '@/hooks/use-initials';
  */
 import PostCommentController from '@/actions/App/Http/Controllers/Posts/PostCommentController';
 import UserFollowButton from '../users/user-follow-button';
+import { comicToast } from '../ui/toasts/comic-toast';
 
 interface PostCommentCardProps {
   comments: PostComment[];
@@ -50,7 +51,7 @@ const PostCommentCard = ({
     router.visit(url, {
       method,
       onSuccess: () => {
-        console.log('Comment deleted');
+        comicToast.default('Comment deleted!');
       },
     });
   };
