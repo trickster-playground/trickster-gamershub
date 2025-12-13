@@ -1,12 +1,13 @@
 /**
  * Routes
  */
-import { dashboard } from '@/routes';
+import { dashboard, tournaments } from '@/routes';
 
 /**
  * Types
  */
 import { NavItem } from '@/types';
+import { IconTournament } from '@tabler/icons-react';
 
 /**
  * Assets
@@ -18,6 +19,11 @@ export const mainNavItems: NavItem[] = [
     title: 'Dashboard',
     href: dashboard(),
     icon: LayoutGrid,
+  },
+  {
+    title: 'Tournaments',
+    href: tournaments(),
+    icon: IconTournament,
   },
 ];
 

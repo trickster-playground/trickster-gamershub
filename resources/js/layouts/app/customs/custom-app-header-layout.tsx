@@ -4,7 +4,7 @@ import { AppHeaderContent } from '@/components/customs/layouts/app-header-conten
 import { type BreadcrumbItem } from '@/types';
 import type { PropsWithChildren } from 'react';
 
-export default function AppHeaderLayout({
+export default function CustomAppHeaderLayout({
   children,
   breadcrumbs,
 }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {

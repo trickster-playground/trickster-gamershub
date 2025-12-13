@@ -11,7 +11,7 @@ export function AppHeaderContent({ variant = 'header', children, ...props }: App
   }
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 mx-auto w-full gap-4 rounded-xl px-4" {...props}>
+    <main className="mx-auto w-full gap-4 rounded-xl px-4" {...props}>
       {children}
     </main>
   );

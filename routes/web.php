@@ -4,6 +4,7 @@ use App\Http\Controllers\Home\DashboardController;
 use App\Http\Controllers\Posts\PostCommentController;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostInteractionController;
+use App\Http\Controllers\Tournaments\TournamentController;
 use App\Http\Controllers\Users\UserProfileController;
 use App\Http\Controllers\Users\UserRelationController;
 use Illuminate\Support\Facades\Route;
@@ -20,9 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 	Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
-// Users Route
-
-// User Relation Route
+// User Routes
 Route::middleware('auth')->group(function () {
 	Route::get('/user/{username}', [UserProfileController::class, 'show'])->name('user.profile');
 	Route::post('/users/{user}/follow', [UserRelationController::class, 'follow'])->name('follow');
@@ -32,7 +31,7 @@ Route::middleware('auth')->group(function () {
 	Route::get('/users/{user}/followings', [UserRelationController::class, 'followings'])->name('followings');
 });
 
-// Posts Route
+// User Post Routes
 Route::middleware(['auth'])->group(function () {
 	Route::get('/posts/create', [PostController::class, 'create'])->name('post.create');
 	Route::post('/posts/create', [PostController::class, 'store'])->name('post.store');
@@ -49,6 +48,11 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/post/comment/store', [PostCommentController::class, 'store'])->name('comment.store');
 	Route::patch('/post/comment/{id}/update', [PostCommentController::class, 'update'])->name('comment.update');
 	Route::post('/post/comment/{id}/delete', [PostCommentController::class, 'destroy'])->name('comment.destroy');
+});
+
+
+Route::middleware(['auth'])->group(function () {
+	Route::get('tournaments', [TournamentController::class, 'index'])->name('tournaments');
 });
 
 
