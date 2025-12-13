@@ -13,11 +13,11 @@ class PostInteractionController extends Controller
 		$post = Post::findOrFail($id);
 		$user = $request->user();
 
-		// Cek apakah user sudah menyukai post
+		// Check if the user has liked the post
 		$like = $post->likes()->where('user_id', $user->id)->first();
 
 		if ($like) {
-			// Jika sudah suka, hapus like
+			// Delete the like if exists
 			$like->delete();
 			$liked = false;
 		} else {
@@ -35,15 +35,15 @@ class PostInteractionController extends Controller
 		$post = Post::findOrFail($id);
 		$user = $request->user();
 
-		// Cek apakah user sudah menyimpan post
+		// Check if the user has saved the post
 		$save = $post->saves()->where('user_id', $user->id)->first();
 
 		if ($save) {
-			// Jika sudah disimpan, hapus dari saved
+			// If it has been saved, delete it from saved
 			$save->delete();
 			$saved = false;
 		} else {
-			// Jika belum disimpan, tambahkan ke saved
+			// If not saved, add to saved
 			$post->saves()->create(['user_id' => $user->id]);
 			$saved = true;
 		}

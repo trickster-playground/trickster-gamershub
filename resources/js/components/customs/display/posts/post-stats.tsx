@@ -19,6 +19,7 @@ import { IconMessagePlus } from '@tabler/icons-react';
  * Types
  */
 import { Post } from '@/types/posts';
+import { comicToast } from '../ui/toasts/comic-toast';
 
 interface PostStatsProps {
   post: Post;
@@ -33,47 +34,61 @@ const PostStats = ({ post, onLikeToggle, onSaveToggle }: PostStatsProps) => {
   const [likesCount, setLikesCount] = useState(post.likes_count);
   const [commentsCount, setCommentsCount] = useState(post.comments_count);
 
-  const handleLikePost = async () => {
+  const handleLikePost = () => {
     if (isLoading) return;
-    setIsLoading(true);
 
     const optimisticLiked = !isLiked;
 
     // Optimistic UI
+    setIsLoading(true);
     setLikesCount((prev) =>
       optimisticLiked ? prev + 1 : Math.max(prev - 1, 0),
     );
     setIsLiked(optimisticLiked);
     onLikeToggle?.(post.id, optimisticLiked);
 
-    try {
-      await axios.post(`/post/${post.id}/like`);
-    } catch (error) {
-      // Rollback UI
-      setLikesCount((prev) =>
-        optimisticLiked ? Math.max(prev - 1, 0) : prev + 1,
-      );
-      setIsLiked(!optimisticLiked);
-      onLikeToggle?.(post.id, !optimisticLiked);
-      console.error('Error liking post:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    comicToast
+      .promise(
+        () =>
+          axios.post(`/post/${post.id}/like`).catch((error) => {
+            // rollback
+            setLikesCount((prev) =>
+              optimisticLiked ? Math.max(prev - 1, 0) : prev + 1,
+            );
+            setIsLiked(!optimisticLiked);
+            onLikeToggle?.(post.id, !optimisticLiked);
+            throw error;
+          }),
+        {
+          loading: optimisticLiked ? 'Liking post...' : 'Unliking post...',
+          success: () => (optimisticLiked ? 'Post liked' : 'Post unliked'),
+          error: 'Failed to update like',
+        },
+      )
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleSavePost = async () => {
-    setIsLoading(true);
+    if (isLoading) return;
 
     const optimisticSaved = !isSaved;
-    setIsSaved(optimisticSaved); // Optimistic UI
+
+    // Optimistic UI
+    setIsLoading(true);
+    setIsSaved(optimisticSaved);
     onSaveToggle?.(post.id, optimisticSaved);
 
     try {
-      const response = await axios.post(`/post/${post.id}/save`);
-      setIsSaved(response.data.saved);
-      onSaveToggle?.(post.id, response.data.saved);
+      await comicToast.promise(() => axios.post(`/post/${post.id}/save`), {
+        loading: optimisticSaved ? 'Saving post...' : 'Unsaving post...',
+        success: () =>
+          optimisticSaved ? 'Post saved' : 'Post removed from saved',
+        error: 'Failed to update saved post',
+      });
     } catch (error) {
-      // Rollback jika gagal
+      // Rollback UI
       setIsSaved(!optimisticSaved);
       onSaveToggle?.(post.id, !optimisticSaved);
       console.error('Error saving post:', error);

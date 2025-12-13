@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { router } from '@inertiajs/react';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { comicToast } from '../ui/toasts/comic-toast';
 
 interface FollowButtonProps {
   userId: number;
@@ -20,33 +21,40 @@ const UserFollowButton = ({
   const [loading, setLoading] = useState(false);
 
   const handleToggle = () => {
-    setLoading(true);
     const optimisticValue = !isFollowing;
 
-    // Optimistic UI
-    onToggle(optimisticValue);
+    comicToast.promise(
+      () =>
+        new Promise<void>((resolve, reject) => {
+          onToggle(optimisticValue);
+          setLoading(true);
 
-    if (isFollowing) {
-      router.delete(`/users/${userId}/unfollow`, {
-        onSuccess: () => setLoading(false),
-        onError: () => {
-          onToggle(isFollowing); // revert
-          setLoading(false);
-        },
-      });
-    } else {
-      router.post(
-        `/users/${userId}/follow`,
-        {},
-        {
-          onSuccess: () => setLoading(false),
-          onError: () => {
-            onToggle(isFollowing); // revert
-            setLoading(false);
-          },
-        },
-      );
-    }
+          const options = {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+              setLoading(false);
+              resolve();
+            },
+            onError: () => {
+              onToggle(isFollowing);
+              setLoading(false);
+              reject();
+            },
+          };
+
+          if (isFollowing) {
+            router.delete(`/users/${userId}/unfollow`, options);
+          } else {
+            router.post(`/users/${userId}/follow`, {}, options);
+          }
+        }),
+      {
+        loading: isFollowing ? 'Unfollowing...' : 'Following...',
+        success: () => (isFollowing ? 'Unfollowed' : 'Followed'),
+        error: 'Something went wrong',
+      },
+    );
   };
 
   return (

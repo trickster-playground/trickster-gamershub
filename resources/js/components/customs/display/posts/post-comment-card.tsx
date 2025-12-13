@@ -50,6 +50,7 @@ const PostCommentCard = ({
 
     router.visit(url, {
       method,
+      preserveScroll: true,
       onSuccess: () => {
         comicToast.default('Comment deleted!');
       },
