@@ -39,24 +39,26 @@ class PostController extends Controller
 	 */
 	public function store(PostStoreRequest $request)
 	{
-
 		$data = $request->validated();
-
-		/** @var \Illuminate\Http\Request $request */
 		$user = $request->user();
 
+		$files = $data['files'] ?? [];
+		unset($data['files']);
+
 		DB::beginTransaction();
-		$allFilePaths = [];
+
 		try {
 			$post = Post::create($data);
 
-			$files = $data['files'];
 			foreach ($files as $file) {
-				$path = $file->store('attachments/' . $user->id . '/' . 'posts' . '/' . $post->id, 'public');
-				$allFilePaths[] = $path;
+				$path = $file->store(
+					"attachments/{$user->id}/posts/{$post->id}",
+					'public'
+				);
+
 				PostAttachment::create([
 					'post_id' => $post->id,
-					'file_name' => $file->getClientOriginalName(), // TODO: ganti dengan HASH
+					'file_name' => $file->getClientOriginalName(),
 					'path' => $path,
 					'modified' => $file->getMTime() * 1000,
 					'type' => $file->getMimeType(),
@@ -65,15 +67,17 @@ class PostController extends Controller
 			}
 
 			DB::commit();
-		} catch (\Exception $e) {
-			foreach ($allFilePaths as $path) {
-				Storage::disk('public')->delete($path);
-			}
+
+			return redirect()
+				->route('dashboard')
+				->with('success', 'Post created successfully.');
+		} catch (\Throwable $e) {
 			DB::rollBack();
-			return response()->json(['message' => 'Failed to update post', 'error' => $e->getMessage()], 500);
+
+			return back()->with('error', 'Failed to create post.');
 		}
-		return redirect(route('dashboard'))->with('message', 'Post created successfully.');
 	}
+
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -140,17 +144,14 @@ class PostController extends Controller
 			}
 
 			DB::commit();
-			return redirect(route('dashboard'))->with('status', 'Post updated successfully');
+			return redirect(route('dashboard'))->with('success', 'Post updated successfully.');
 		} catch (\Exception $e) {
 			// If there is an error, delete the uploaded files
 			foreach ($allFilePaths as $path) {
 				Storage::disk('public')->delete($path);
 			}
 			DB::rollBack();
-			return response()->json([
-				'message' => 'Failed to update post',
-				'error' => $e->getMessage()
-			], 500);
+			return back()->with('error', 'Failed to create post.');
 		}
 	}
 

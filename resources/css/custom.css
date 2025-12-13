@@ -257,6 +257,129 @@
   transform: translateY(4px);
 }
 
+/* Base comic style */
+.comic-base {
+  display: inline-flex;
+  justify-items: center;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  border: 2px solid #000000;
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px #000000;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* BLUE (Default / Primary) */
+.comic-blue {
+  background-color: #0051ff;
+}
+
+.comic-blue:hover {
+  background-color: #fff;
+  color: #0051ff;
+  border-color: #0051ff;
+  box-shadow: 5px 5px 0px #0051ff;
+}
+
+.comic-blue:active {
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+/* GREEN (Success) */
+.comic-green {
+  background-color: #007f5f;
+}
+
+.comic-green:hover {
+  background-color: #fff;
+  color: #007f5f;
+  border-color: #007f5f;
+  box-shadow: 5px 5px 0px #007f5f;
+}
+
+.comic-green:active {
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+/* RED (Error) */
+.comic-red {
+  background-color: #b91c1c;
+}
+
+.comic-red:hover {
+  background-color: #fff;
+  color: #b91c1c;
+  border-color: #b91c1c;
+  box-shadow: 5px 5px 0px #b91c1c;
+}
+
+.comic-red:active {
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+/* YELLOW (Warning) */
+.comic-yellow {
+  background-color: #d97706;
+}
+
+.comic-yellow:hover {
+  background-color: #fff;
+  color: #d97706;
+  border-color: #d97706;
+  box-shadow: 5px 5px 0px #d97706;
+}
+
+.comic-yellow:active {
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+/* DARK (Info / Neutral) */
+.comic-dark {
+  background-color: #0f172a;
+  border-color: #000;
+}
+
+.comic-dark:hover {
+  background-color: #fff;
+  color: #0f172a;
+  border-color: #0051ff;
+  box-shadow: 5px 5px 0px #0051ff;
+}
+
+.comic-dark:active {
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+/* PURPLE (Promise / Loading) */
+.comic-purple {
+  background-color: #6d28d9; /* Ungu */
+}
+
+.comic-purple:hover {
+  background-color: #fff;
+  color: #6d28d9;
+  border-color: #6d28d9;
+  box-shadow: 5px 5px 0px #6d28d9;
+}
+
+.comic-purple:active {
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+
+
 /* Tiptap Editor */
 .tiptap p.is-editor-empty:first-child::before {
   color: oklch(0.705 0.015 286.067);

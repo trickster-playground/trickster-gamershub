@@ -1,14 +1,43 @@
-import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
-import { type BreadcrumbItem } from '@/types';
+/**
+ * Node Modules
+ */
 import { type ReactNode } from 'react';
+
+/**
+ * Components
+ */
+import { Toaster } from '@/components/ui/sonner';
+import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
+
+/**
+ * Types
+ */
+import { type BreadcrumbItem } from '@/types';
+
+/**
+ * Hooks
+ */
+import { useFlashToast } from '@/hooks/customs/use-flash-toast';
 
 interface AppLayoutProps {
   children: ReactNode;
   breadcrumbs?: BreadcrumbItem[];
 }
 
-export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
-  <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
-    {children}
-  </AppLayoutTemplate>
-);
+export default function AdminAppLayout({
+  children,
+  breadcrumbs,
+  ...props
+}: AppLayoutProps) {
+  useFlashToast();
+
+  return (
+    <>
+      <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
+        {children}
+      </AppLayoutTemplate>
+
+      <Toaster position="top-center" />
+    </>
+  );
+}

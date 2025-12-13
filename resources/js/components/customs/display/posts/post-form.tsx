@@ -146,7 +146,7 @@ const PostForm = ({ post, action }: PostsFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-4xl space-y-6">
+    <form onSubmit={handleSubmit} className="flex w-full overflow-y-hidden overflow-x-hidden max-w-4xl space-y-6 px-3">
       <div className="w-full space-y-6">
         {/* Caption */}
         <div className="grid w-full gap-2">
