@@ -22,10 +22,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Users Route
-Route::get('/user/{username}', [UserProfileController::class, 'show'])->name('user.profile');
 
 // User Relation Route
 Route::middleware('auth')->group(function () {
+	Route::get('/user/{username}', [UserProfileController::class, 'show'])->name('user.profile');
 	Route::post('/users/{user}/follow', [UserRelationController::class, 'follow'])->name('follow');
 	Route::delete('/users/{user}/unfollow', [UserRelationController::class, 'unfollow'])->name('unfollow');
 
@@ -42,18 +42,18 @@ Route::middleware(['auth'])->group(function () {
 	Route::patch('/posts/{slug}/edit', [PostController::class, 'update'])->name('post.update');
 
 	Route::get('/posts/{username}/{slug}', [PostController::class, 'show'])->name('post.show');
-	Route::delete('/posts/{slug}/delete', [PostController::class, 'destroy'])->middleware('auth')->name('posts.destroy');
+	Route::delete('/posts/{slug}/delete', [PostController::class, 'destroy'])->name('posts.destroy');
 
 	Route::post('/post/{id}/like', [PostInteractionController::class, 'likePost'])->name('post.like');
 	Route::post('/post/{id}/save', [PostInteractionController::class, 'savePost'])->name('post.save');
 
-	Route::post('/post/comment/store', [PostCommentController::class, 'store'])->middleware('auth')->name('comment.store');
-	Route::patch('/post/comment/{id}/update', [PostCommentController::class, 'update'])->middleware('auth')->name('comment.update');
-	Route::post('/post/comment/{id}/delete', [PostCommentController::class, 'destroy'])->middleware('auth')->name('comment.destroy');
+	Route::post('/post/comment/store', [PostCommentController::class, 'store'])->name('comment.store');
+	Route::patch('/post/comment/{id}/update', [PostCommentController::class, 'update'])->name('comment.update');
+	Route::post('/post/comment/{id}/delete', [PostCommentController::class, 'destroy'])->name('comment.destroy');
 });
 
 // Tournament Category Route
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:administrator'])->group(function () {
 	Route::get('/administrator/category', [TournamentCategoryController::class, 'index'])->name('admin.category');
 	Route::get('/administrator/category/create', [TournamentCategoryController::class, 'create'])->name('admin.category.create');
 
