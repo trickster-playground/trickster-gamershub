@@ -42,7 +42,7 @@ export default function Welcome({
 
   return (
     <>
-      <Head title="GamersHub">
+      <Head title="The Next-gen of E-Sports Platform">
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link
           href="https://fonts.bunny.net/css?family=mona-sans:400,500,600"
