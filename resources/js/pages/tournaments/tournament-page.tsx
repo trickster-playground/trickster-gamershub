@@ -26,12 +26,13 @@ import {
 /**
  * Types
  */
-import { SharedData, type BreadcrumbItem } from '@/types';
+import {  SharedData, type BreadcrumbItem } from '@/types';
 import { TournamentCategory } from '@/types/tournaments';
 
 /**
  * Assets
  */
+import { Button } from '@/components/ui/button';
 import { Network } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -52,17 +53,17 @@ export default function TournamentPage() {
     <CustomAppLayout breadcrumbs={breadcrumbs}>
       <Head title="Tournaments" />
 
-      <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-12 max-w-[1820px] mx-auto">
+      <div className="mx-auto grid max-w-[1820px] grid-cols-1 gap-4 p-4 lg:grid-cols-12">
         {/* ================= LEFT COLUMN (8) ================= */}
         <div className="flex flex-col gap-4 lg:col-span-8">
           {/* Game Categories */}
           <div className="p-4">
-            <h2 className="group mb-4 ml-10 flex w-fit items-center gap-2 text-2xl font-bold text-white">
+            <h2 className="group mb-4 ml-4 flex w-fit items-center gap-2 text-2xl font-bold text-white">
+              Game Categories
               <Network
                 size={25}
-                className="cursor-pointer group-hover:animate-spin"
+                className="cursor-pointer text-blue-400 group-hover:animate-spin"
               />
-              Game Categories
             </h2>
 
             <div className="mx-auto flex items-center justify-center">
@@ -106,13 +107,81 @@ export default function TournamentPage() {
           </div>
 
           {/* Live Match */}
-          <div className="mx-auto w-full max-w-6xl rounded-xl py-4">
+          <div className="mx-auto w-full max-w-6xl py-4">
             <h2 className="mb-3 ml-4 text-2xl font-bold text-white">
               Live Match 🔥
             </h2>
 
-            <div className="mx-4 flex h-96 items-center justify-center rounded-xl bg-red text-white">
-              Live match content
+            <div
+              className="relative mx-4 h-[559px] overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 bg-cover bg-center"
+              style={{
+                backgroundImage:
+                  "url('https://images2.alphacoders.com/474/thumb-1920-474206.jpg')",
+              }}
+            >
+              {/* Background Overlay */}
+              <div className="absolute inset-0 bg-black/50" />
+
+              {/* LIVE Badge */}
+              <div className="absolute top-4 left-4 z-10 flex items-center gap-2 rounded-full bg-blue-600 px-3 py-1 text-sm font-bold text-white">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-red-600" />
+                LIVE
+              </div>
+
+              {/* Viewer Count */}
+              <div className="absolute top-4 right-4 z-10 rounded-full bg-black/60 px-3 py-1 text-sm text-white">
+                👁 12.4K Watching
+              </div>
+
+              {/* Center Content */}
+              <div className="relative z-10 flex h-full flex-col items-center justify-center gap-6 text-white">
+                {/* Match Title */}
+                <h1 className="text-2xl font-bold tracking-widest text-white uppercase">
+                  The International 2025
+                </h1>
+                <p className="text-sm tracking-wider text-white/80 uppercase">
+                  Upper Bracket R1 • BO 3
+                </p>
+
+                {/* Teams */}
+                <div className="flex items-center gap-24">
+                  {/* Left Team */}
+                  <div className="flex flex-col items-center gap-2">
+                    <img
+                      src="https://cdn.prod.website-files.com/637f8005cf82256ba6e57888/6659089be982b2f42abae527_VintageEG-p-500.png"
+                      alt="Evil Geniuses"
+                      className="h-24 w-24 rounded-full"
+                    />
+                    <span className="font-semibold">Evil Geniuses</span>
+                  </div>
+
+                  {/* Score */}
+                  <div className="text-7xl font-extrabold tracking-wide">
+                    0 : 0
+                  </div>
+
+                  {/* Right Team */}
+                  <div className="flex flex-col items-center gap-2">
+                    <img
+                      src="https://cdn.prod.website-files.com/64bf6e8cda9043babe7ca006/65f44cd1a36d0e7ade30289b_Crest-on-dark.svg"
+                      alt="Team Liquid"
+                      className="h-24 w-24 rounded-full"
+                    />
+                    <span className="font-semibold">Team Liquid</span>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <Button
+                  variant={'outline'}
+                  className="group z-20 mt-4 flex items-center gap-2 rounded-lg bg-black/50 px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-blue-600"
+                >
+                  <span className="text-blue-600 group-hover:text-white">
+                    ●
+                  </span>
+                  Watch Live
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -120,51 +189,242 @@ export default function TournamentPage() {
         {/* ================= RIGHT SIDEBAR (4) ================= */}
 
         <div className="h-full pt-5 lg:col-span-4">
-          <div>
-            <h2 className="mb-6 text-2xl font-bold text-white">
-              Upcoming Match
-            </h2>
+          <h2 className="mb-6 text-2xl font-bold text-white">Upcoming Match</h2>
 
-            <div className="flex flex-col gap-5">
-              <div className="h-25 rounded-lg bg-red" />
-              <div className="h-25 rounded-lg bg-red" />
-              <div className="h-25 rounded-lg bg-red" />
-              <div className="h-25 rounded-lg bg-red" />
-              <div className="h-25 rounded-lg bg-red" />
-            </div>
+          <div className="flex flex-col gap-5">
+            {[1, 2, 3, 4, 5].map((_, i) => (
+              <div
+                key={i}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900 via-zinc-900/80 to-black p-4 transition hover:border-blue-500/40"
+              >
+                {/* blue Accent */}
+                <div className="absolute top-0 left-0 h-full w-1 bg-blue-600" />
+
+                {/* Match Info */}
+                <div className="mb-4 text-center">
+                  <p className="text-xs font-semibold tracking-widest text-blue-500 uppercase">
+                    Upper Bracket • BO3
+                  </p>
+                </div>
+
+                {/* Teams */}
+                <div className="flex items-center justify-between">
+                  {/* Team Left */}
+                  <div className="flex items-center gap-3">
+                    <img
+                      src="https://cdn.prod.website-files.com/637f8005cf82256ba6e57888/6659089be982b2f42abae527_VintageEG-p-500.png"
+                      alt="Evil Geniuses"
+                      className="size-10 rounded-full border border-white/10"
+                    />
+                    <span className="text-sm font-extrabold text-white uppercase">
+                      Evil Geniuses
+                    </span>
+                  </div>
+
+                  {/* VS */}
+                  <div className="flex flex-col items-center">
+                    <span className="text-xs text-white/50">VS</span>
+                    <span className="text-xl font-extrabold text-white">
+                      0 : 0
+                    </span>
+                  </div>
+
+                  {/* Team Right */}
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-extrabold text-white uppercase">
+                      Team Liquid
+                    </span>
+                    <img
+                      src="https://cdn.prod.website-files.com/64bf6e8cda9043babe7ca006/65f44cd1a36d0e7ade30289b_Crest-on-dark.svg"
+                      alt="Team Liquid"
+                      className="size-10 rounded-full border border-white/10"
+                    />
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="mt-4 flex items-center justify-between text-xs text-white/50">
+                  <span>Starting Soon</span>
+                  <span className="font-semibold text-blue-500">
+                    Live Today
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* ================= TOURNAMENT SECTION ================= */}
-      <div className="grid grid-cols-1 gap-6 p-4 lg:grid-cols-12 max-w-[1820px] mx-auto">
+      <div className="mx-auto grid max-w-[1820px] grid-cols-1 gap-6 p-4 lg:grid-cols-12">
         {/* ===== Latest Tournament ===== */}
-        <div className="flex flex-col gap-4 lg:col-span-8 max-w-6xl w-full mx-auto py-4">
-          <h2 className="text-2xl font-bold text-white mb-3 ml-4">Latest Tournament 🔥</h2>
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 py-4 lg:col-span-8">
+          <h2 className="mb-3 ml-4 text-2xl font-bold text-white">
+            Latest Tournament 🔥
+          </h2>
 
-          <div className="flex h-96 items-center justify-center rounded-xl bg-red text-white mx-4">
-            Latest Tournament content
+          <div
+            className="relative mx-4 h-[410px] overflow-hidden rounded-2xl bg-cover bg-center"
+            style={{
+              backgroundImage:
+                "url('https://images4.alphacoders.com/136/1363796.jpeg')",
+            }}
+          >
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black/50" />
+
+            {/* Content */}
+            <div className="relative z-10 flex h-full flex-col justify-end p-6 text-white">
+              <span className="mb-2 w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold">
+                NEW
+              </span>
+
+              <h3 className="text-2xl font-bold">
+                Valorant Champions Tour 2024
+              </h3>
+
+              <p className="mt-1 text-sm text-white/80">
+                Global Tournament • BO5 • LAN Event
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* ===== Right Info / Filter ===== */}
-        <div className="flex flex-col gap-4 lg:col-span-4 py-4">
-          <h2 className="text-2xl font-bold text-white mb-3">Tournament Info</h2>
+        {/* ===== Right Info (Blue Esports Luxury) ===== */}
+        <div className="mx-auto flex w-full flex-col gap-4 py-4 lg:col-span-4">
+          <h2 className="mb-3 ml-4 text-2xl font-bold tracking-wide text-white">
+            Tournament Info
+          </h2>
 
-          <div className="h-40 rounded-xl bg-red" />
-          <div className="h-40 rounded-xl bg-red" />
+          <div className="relative mx-4 flex h-full flex-col overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-[#0b1220] via-[#0e1628] to-black text-white backdrop-blur-sm">
+            {/* Blue Glow Top */}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.35),transparent_20%)]" />
+
+            {/* Soft Fade Bottom */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+            {/* Header */}
+            <div className="relative z-10 border-b border-white/10 p-5">
+              <p className="text-xs font-bold tracking-widest text-blue-400 uppercase">
+                Latest Tournament
+              </p>
+              <h3 className="mt-1 text-lg leading-tight font-extrabold uppercase">
+                Valorant Champions
+                <br />
+                Tour 2024
+              </h3>
+            </div>
+
+            {/* Core Stats */}
+            <div className="relative z-10 grid grid-cols-2 gap-3 p-4">
+              {[
+                { label: 'Prize Pool', value: '$50K', highlight: true },
+                { label: 'Format', value: 'BO5' },
+                { label: 'Start Date', value: '12 Oct 2024' },
+                { label: 'Type', value: 'LAN EVENT' },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur transition hover:border-blue-500/40 hover:bg-blue-500/5"
+                >
+                  <p className="text-xs font-bold text-white/50">
+                    {item.label}
+                  </p>
+                  <p
+                    className={`mt-1 font-extrabold ${
+                      item.highlight
+                        ? 'text-2xl text-blue-400'
+                        : 'text-sm text-white'
+                    }`}
+                  >
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Status */}
+            <div className="relative z-10 flex items-center justify-between p-5">
+              <div className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
+                <span className="text-sm font-bold tracking-wide text-red-500 uppercase">
+                  Live Now
+                </span>
+              </div>
+
+              <button className="text-sm font-bold tracking-wide text-white uppercase transition hover:text-blue-400">
+                View Details →
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* ===== All Tournaments ===== */}
-        <div className="lg:col-span-12 py-4 mx-auto w-full">
-          <h2 className="mb-4 text-2xl font-bold text-white ml-11 py-4">All Tournaments</h2>
+        <div className="mx-auto w-full py-10 lg:col-span-12">
+          <h2 className="mb-8 ml-11 text-2xl font-bold tracking-wide text-white">
+            All Tournaments
+          </h2>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mx-11">
-            <div className="h-48 w-full rounded-xl bg-red" />
-            <div className="h-48 w-full rounded-xl bg-red" />
-            <div className="h-48 w-full rounded-xl bg-red" />
-            <div className="h-48 w-full rounded-xl bg-red" />
-            <div className="h-48 w-full rounded-xl bg-red" />
+          <div className="mx-11 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((_, i) => (
+              <div
+                key={i}
+                className="group relative h-[320px] overflow-hidden rounded-3xl"
+              >
+                {/* Background Image */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                  style={{
+                    backgroundImage:
+                      "url('https://images4.alphacoders.com/136/1363796.jpeg')",
+                  }}
+                />
+
+                {/* Diagonal Dark Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/60 to-transparent" />
+
+                {/* blue Accent Slash */}
+                <div className="absolute top-0 -left-20 h-full w-40 rotate-12 bg-blue-600/20 blur-2xl" />
+
+                {/* Content */}
+                <div className="relative z-10 flex h-full flex-col justify-end p-6 text-white">
+                  {/* Status */}
+                  <span className="mb-3 w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-extrabold tracking-wider uppercase">
+                    Upcoming
+                  </span>
+
+                  {/* Title */}
+                  <h3 className="text-xl leading-tight font-extrabold uppercase">
+                    Regional
+                    <br />
+                    Valorant Cup
+                  </h3>
+
+                  {/* Meta */}
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-white/70">
+                    <span>SEA</span>
+                    <span>•</span>
+                    <span>16 Teams</span>
+                    <span>•</span>
+                    <span>12 Oct 2024</span>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="text-lg font-extrabold text-blue-500">
+                      $10K
+                    </span>
+
+                    <span className="text-sm font-bold text-white/80 uppercase transition group-hover:text-blue-500">
+                      View →
+                    </span>
+                  </div>
+                </div>
+
+                {/* Border Glow */}
+                <div className="absolute inset-0 rounded-3xl border border-white/10 transition group-hover:border-blue-500/40" />
+              </div>
+            ))}
           </div>
         </div>
       </div>
