@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
  * Helpers
  */
 import { useInitials } from '@/hooks/use-initials';
-import { absoluteDate } from '@/lib/format-date';
+import { absoluteDate } from '@/lib/format/date';
 
 /**
  * Components

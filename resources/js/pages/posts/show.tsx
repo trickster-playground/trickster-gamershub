@@ -44,7 +44,7 @@ import { useInitials } from '@/hooks/use-initials';
  * Helpers
  */
 
-import { absoluteDate } from '@/lib/format-date';
+import { absoluteDate } from '@/lib/format/date';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {

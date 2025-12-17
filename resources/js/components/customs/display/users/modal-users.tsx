@@ -27,7 +27,7 @@ import { RefreshCcwIcon, X } from 'lucide-react';
 /**
  * Types
  */
-import { absoluteDate } from '@/lib/format-date';
+import { absoluteDate } from '@/lib/format/date';
 import { SharedData, User } from '@/types';
 
 interface ModalUsersProps {

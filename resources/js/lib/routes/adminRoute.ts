@@ -16,7 +16,7 @@ import {
   IconDeviceDesktopAnalytics,
   IconTournament,
 } from '@tabler/icons-react';
-import { Network } from 'lucide-react';
+import { Network, SquareChartGantt } from 'lucide-react';
 
 export const adminNavItems: NavItem[] = [
   {
@@ -25,14 +25,20 @@ export const adminNavItems: NavItem[] = [
     icon: IconDashboard,
   },
   {
-    title: 'Tournaments Post',
-    href: admin.tournaments(),
+    title: 'Tournaments',
     icon: IconTournament,
-  },
-  {
-    title: 'Tournaments Category',
-    href: admin.category(),
-    icon: Network,
+    children: [
+      {
+        title: 'Posts',
+        href: admin.tournaments(),
+        icon: SquareChartGantt,
+      },
+      {
+        title: 'Categories',
+        href: admin.category(),
+        icon: Network,
+      },
+    ],
   },
 ];
 
