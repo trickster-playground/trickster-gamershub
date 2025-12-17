@@ -26,14 +26,13 @@ import {
 /**
  * Types
  */
-import {  SharedData, type BreadcrumbItem } from '@/types';
+import { SharedData, type BreadcrumbItem } from '@/types';
 import { TournamentCategory } from '@/types/tournaments';
 
 /**
  * Assets
  */
 import { Button } from '@/components/ui/button';
-import { Network } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -53,18 +52,17 @@ export default function TournamentPage() {
     <CustomAppLayout breadcrumbs={breadcrumbs}>
       <Head title="Tournaments" />
 
-      <div className="mx-auto grid max-w-[1820px] grid-cols-1 gap-4 p-4 lg:grid-cols-12">
+      <div className="mx-auto grid max-w-[1820px] grid-cols-1 gap-6 p-4 lg:grid-cols-12">
         {/* ================= LEFT COLUMN (8) ================= */}
-        <div className="flex flex-col gap-4 lg:col-span-8">
+        <div className="flex flex-col pt-5 gap-4 lg:col-span-8">
           {/* Game Categories */}
-          <div className="p-4">
-            <h2 className="group mb-4 ml-4 flex w-fit items-center gap-2 text-2xl font-bold text-white">
-              Game Categories
-              <Network
-                size={25}
-                className="cursor-pointer text-blue-400 group-hover:animate-spin"
-              />
-            </h2>
+          <div className="mx-auto w-full max-w-7xl">
+            <div className="relative mb-6 ml-4 flex items-center gap-4">
+              <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
+              <h2 className="text-2xl font-bold tracking-wider text-white">
+                Game Categories
+              </h2>
+            </div>
 
             <div className="mx-auto flex items-center justify-center">
               <Carousel
@@ -107,10 +105,13 @@ export default function TournamentPage() {
           </div>
 
           {/* Live Match */}
-          <div className="mx-auto w-full max-w-6xl py-4">
-            <h2 className="mb-3 ml-4 text-2xl font-bold text-white">
-              Live Match 🔥
-            </h2>
+          <div className="mx-auto w-full max-w-7xl py-4">
+            <div className="relative mb-6 ml-4 flex items-center gap-4">
+              <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
+              <h2 className="text-2xl font-bold tracking-wider text-white">
+                Live Match
+              </h2>
+            </div>
 
             <div
               className="relative mx-4 h-[559px] overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 bg-cover bg-center"
@@ -189,7 +190,12 @@ export default function TournamentPage() {
         {/* ================= RIGHT SIDEBAR (4) ================= */}
 
         <div className="h-full pt-5 lg:col-span-4">
-          <h2 className="mb-6 text-2xl font-bold text-white">Upcoming Match</h2>
+          <div className="relative mb-6 flex items-center gap-4">
+            <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
+            <h2 className="text-2xl font-bold tracking-wider text-white">
+              Live Match
+            </h2>
+          </div>
 
           <div className="flex flex-col gap-5">
             {[1, 2, 3, 4, 5].map((_, i) => (
@@ -258,10 +264,13 @@ export default function TournamentPage() {
       {/* ================= TOURNAMENT SECTION ================= */}
       <div className="mx-auto grid max-w-[1820px] grid-cols-1 gap-6 p-4 lg:grid-cols-12">
         {/* ===== Latest Tournament ===== */}
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 py-4 lg:col-span-8">
-          <h2 className="mb-3 ml-4 text-2xl font-bold text-white">
-            Latest Tournament 🔥
-          </h2>
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 py-4 lg:col-span-8">
+          <div className="relative mb-6 ml-4 flex items-center gap-4">
+            <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
+            <h2 className="text-2xl font-bold tracking-wider text-white">
+              Latest Tournament
+            </h2>
+          </div>
 
           <div
             className="relative mx-4 h-[410px] overflow-hidden rounded-2xl bg-cover bg-center"
@@ -292,9 +301,12 @@ export default function TournamentPage() {
 
         {/* ===== Right Info (Blue Esports Luxury) ===== */}
         <div className="mx-auto flex w-full flex-col gap-4 py-4 lg:col-span-4">
-          <h2 className="mb-3 ml-4 text-2xl font-bold tracking-wide text-white">
-            Tournament Info
-          </h2>
+          <div className="relative mb-6 ml-4 flex items-center gap-4">
+            <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
+            <h2 className="text-2xl font-bold tracking-wider text-white">
+              All Tournament
+            </h2>
+          </div>
 
           <div className="relative mx-4 flex h-full flex-col overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-[#0b1220] via-[#0e1628] to-black text-white backdrop-blur-sm">
             {/* Blue Glow Top */}
@@ -361,15 +373,18 @@ export default function TournamentPage() {
 
         {/* ===== All Tournaments ===== */}
         <div className="mx-auto w-full py-10 lg:col-span-12">
-          <h2 className="mb-8 ml-11 text-2xl font-bold tracking-wide text-white">
-            All Tournaments
-          </h2>
+          <div className="relative mb-6  flex items-center gap-4">
+            <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
+            <h2 className="text-2xl font-bold tracking-wider text-white">
+              All Tournament
+            </h2>
+          </div>
 
-          <div className="mx-11 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mx-auto grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((_, i) => (
               <div
                 key={i}
-                className="group relative h-[320px] overflow-hidden rounded-3xl"
+                className="group relative h-[320px] overflow-hidden rounded-3xl mx-auto w-full"
               >
                 {/* Background Image */}
                 <div
