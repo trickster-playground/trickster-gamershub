@@ -60,7 +60,7 @@ interface PostDetailProps {
   onFollowToggle?: (userId: number, state: boolean) => void;
 }
 
-const ShowPost = ({
+const PostShow = ({
   post,
   onLikeToggle,
   onSaveToggle,
@@ -281,4 +281,4 @@ const ShowPost = ({
   );
 };
 
-export default ShowPost;
+export default PostShow;

@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-const CreatePost = () => {
+const PostCreate = () => {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Create Post" />
@@ -73,4 +73,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default PostCreate;

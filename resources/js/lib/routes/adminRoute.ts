@@ -11,7 +11,11 @@ import { NavItem } from '@/types';
 /**
  * Assets
  */
-import { IconDashboard, IconDeviceDesktopAnalytics } from '@tabler/icons-react';
+import {
+  IconDashboard,
+  IconDeviceDesktopAnalytics,
+  IconTournament,
+} from '@tabler/icons-react';
 import { Network } from 'lucide-react';
 
 export const adminNavItems: NavItem[] = [
@@ -21,7 +25,12 @@ export const adminNavItems: NavItem[] = [
     icon: IconDashboard,
   },
   {
-    title: 'Tournament Category',
+    title: 'Tournaments Post',
+    href: admin.tournaments(),
+    icon: IconTournament,
+  },
+  {
+    title: 'Tournaments Category',
     href: admin.category(),
     icon: Network,
   },

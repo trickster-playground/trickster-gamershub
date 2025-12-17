@@ -25,7 +25,7 @@ class TournamentCategoryController extends Controller
 			TournamentCategory::orderBy('id', 'desc')->get()
 		)->toArray($request);
 
-		return Inertia::render('admin/tournaments/categories/index-category', [
+		return Inertia::render('admin/tournaments/categories/index', [
 			'user' => new UserResource(
 				$request->user()->load(['avatar', 'background'])
 			),
@@ -39,7 +39,7 @@ class TournamentCategoryController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		return Inertia::render('admin/tournaments/categories/create-category', [
+		return Inertia::render('admin/tournaments/categories/create', [
 			'user' => new UserResource(
 				$request->user()->load(['avatar', 'background'])
 			),
@@ -102,7 +102,7 @@ class TournamentCategoryController extends Controller
 	{
 		$tournamentCategory = TournamentCategory::where('slug', $slug)->firstOrFail();
 
-		return Inertia::render('admin/tournaments/categories/edit-category', [
+		return Inertia::render('admin/tournaments/categories/edit', [
 			'tournamentCategory' => new TournamentCategoryResource($tournamentCategory),
 		]);
 	}

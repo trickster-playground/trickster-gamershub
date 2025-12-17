@@ -41,7 +41,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-export default function TournamentPage() {
+export default function TournamentsPage() {
   const { auth, flash } = usePage<SharedData>().props;
 
   const { tournamentCategories } = usePage<{
@@ -54,7 +54,7 @@ export default function TournamentPage() {
 
       <div className="mx-auto grid max-w-[1820px] grid-cols-1 gap-6 p-4 lg:grid-cols-12">
         {/* ================= LEFT COLUMN (8) ================= */}
-        <div className="flex flex-col pt-5 gap-4 lg:col-span-8">
+        <div className="flex flex-col gap-4 pt-5 lg:col-span-8">
           {/* Game Categories */}
           <div className="mx-auto w-full max-w-7xl">
             <div className="relative mb-6 ml-4 flex items-center gap-4">
@@ -373,7 +373,7 @@ export default function TournamentPage() {
 
         {/* ===== All Tournaments ===== */}
         <div className="mx-auto w-full py-10 lg:col-span-12">
-          <div className="relative mb-6  flex items-center gap-4">
+          <div className="relative mb-6 flex items-center gap-4">
             <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
             <h2 className="text-2xl font-bold tracking-wider text-white">
               All Tournament
@@ -384,7 +384,7 @@ export default function TournamentPage() {
             {[1, 2, 3, 4, 5, 6].map((_, i) => (
               <div
                 key={i}
-                className="group relative h-[320px] overflow-hidden rounded-3xl mx-auto w-full"
+                className="group relative mx-auto h-[320px] w-full overflow-hidden rounded-3xl"
               >
                 {/* Background Image */}
                 <div

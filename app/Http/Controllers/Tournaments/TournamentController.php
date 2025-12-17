@@ -20,7 +20,7 @@ class TournamentController extends Controller
 			TournamentCategory::orderBy('id', 'desc')->get()
 		)->toArray($request);
 
-		return Inertia::render('tournaments/tournament-page', [
+		return Inertia::render('tournaments/index', [
 			'user' => new UserResource(
 				$request->user()->load(['avatar', 'background'])
 			),

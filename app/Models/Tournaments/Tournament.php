@@ -2,6 +2,7 @@
 
 namespace App\Models\Tournaments;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,11 @@ class Tournament extends Model
 	];
 
 	/** Relation */
+
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 
 	public function category()
 	{

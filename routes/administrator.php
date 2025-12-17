@@ -2,11 +2,25 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Tournaments\TournamentCategoryController;
+use App\Http\Controllers\Admin\Tournaments\TournamentPostController;
 use Illuminate\Support\Facades\Route;
 
 // Administrator - Dashboard Route
 Route::middleware(['auth', 'role:administrator'])->group(function () {
 	Route::get('/administrator/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+});
+
+// Administrator - Tournament Category Route
+Route::middleware(['auth', 'role:administrator'])->group(function () {
+	Route::get('/administrator/tournaments', [TournamentPostController::class, 'index'])->name('admin.tournaments');
+	Route::get('/administrator/tournaments/create', [TournamentPostController::class, 'create'])->name('admin.tournaments.create');
+
+	Route::post('/administrator/tournaments/create', [TournamentPostController::class, 'store'])->name('admin.tournaments.store');
+
+	Route::get('/administrator/tournaments/{slug}/edit', [TournamentPostController::class, 'edit'])->name('admin.tournaments.edit');
+	Route::patch('/administrator/tournaments/{slug}/edit', [TournamentPostController::class, 'update'])->name('admin.tournaments.update');
+
+	Route::delete('/administrator/tournaments/{slug}', [TournamentPostController::class, 'destroy'])->name('admin.tournaments.destroy');
 });
 
 // Administrator - Tournament Category Route

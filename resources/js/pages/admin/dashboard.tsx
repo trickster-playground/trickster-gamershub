@@ -24,7 +24,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-export default function Dashboard() {
+export default function AdministratorDashboard() {
   return (
     <AdminAppLayout breadcrumbs={breadcrumbs}>
       <Head title="Administrator" />

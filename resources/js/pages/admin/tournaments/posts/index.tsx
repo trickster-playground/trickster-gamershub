@@ -11,27 +11,26 @@ import AdminAppLayout from '@/components/customs/layouts/admin/admin-app-layout'
 /**
  *  Components
  */
-import { tournamentCategoryColumns } from '@/components/customs/display/tournaments/categories/data-column-category';
+import { tournamentPostColumns } from '@/components/customs/display/tournaments/posts/data-column-post';
 import { DataTable } from '@/components/customs/display/ui/data-table';
-
 /**
  * Types
  */
+
 import { type BreadcrumbItem } from '@/types';
-import { TournamentCategory } from '@/types/tournaments';
+import { TournamentPost } from '@/types/tournaments';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: 'Tournament Category',
-    href: '/administrator/category',
+    title: 'Administrator Tournament Posts',
+    href: '/administrator/tournaments',
   },
 ];
 
-export default function TournamentCategoryPage() {
-  const { tournamentCategories } = usePage<{
-    tournamentCategories: TournamentCategory[];
+export default function TournamentPostIndex() {
+  const { tournamentPosts } = usePage<{
+    tournamentPosts: TournamentPost[];
   }>().props;
-
   return (
     <AdminAppLayout breadcrumbs={breadcrumbs}>
       <Head title="Administrator | Tournaments" />
@@ -39,10 +38,10 @@ export default function TournamentCategoryPage() {
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
             <DataTable
-              title={`Tournament Category`}
-              columns={tournamentCategoryColumns}
-              data={tournamentCategories}
-              url={`/administrator/category/create`}
+              title={`Tournament Posts`}
+              columns={tournamentPostColumns}
+              data={tournamentPosts}
+              url={`/administrator/tournaments/create`}
             />
           </div>
         </div>

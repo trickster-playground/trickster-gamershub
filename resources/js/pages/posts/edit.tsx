@@ -17,7 +17,7 @@ interface PostEditProps {
   post: Post;
 }
 
-const EditPost = ({ post }: PostEditProps) => {
+const PostEdit = ({ post }: PostEditProps) => {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Edit Post" />
@@ -63,4 +63,4 @@ const EditPost = ({ post }: PostEditProps) => {
   );
 };
 
-export default EditPost;
+export default PostEdit;

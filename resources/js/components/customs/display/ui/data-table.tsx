@@ -164,10 +164,9 @@ export function DataTable<TData, TValue>({
                       <EmptyMedia variant="icon">
                         <IconMoodSadDizzy />
                       </EmptyMedia>
-                      <EmptyTitle>No Tournament Category</EmptyTitle>
+                      <EmptyTitle>No {title}</EmptyTitle>
                       <EmptyDescription>
-                        You&apos;re all caught up. New tournament categories
-                        will appear here.
+                        You&apos;re all caught up. New {title} will appear here.
                       </EmptyDescription>
                     </EmptyHeader>
                     <EmptyContent>

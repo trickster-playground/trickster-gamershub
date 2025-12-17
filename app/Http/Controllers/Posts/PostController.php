@@ -27,7 +27,7 @@ class PostController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		return Inertia::render('posts/create-post', [
+		return Inertia::render('posts/create', [
 			'user' => new UserResource(
 				$request->user()->load(['avatar', 'background'])
 			),
@@ -88,7 +88,7 @@ class PostController extends Controller
 
 		$this->authorize('owner', $post);
 
-		return Inertia::render('posts/edit-post', [
+		return Inertia::render('posts/edit', [
 			'post' => new PostResource($post),
 			'user' => new UserResource(
 				$request->user()->load(['avatar'])
@@ -176,7 +176,7 @@ class PostController extends Controller
 			->where('user_id', $user->id)
 			->firstOrFail();
 
-		return Inertia::render('posts/detail-post', [
+		return Inertia::render('posts/show', [
 			'post' => new PostResource($post),
 			'user' => new UserResource(
 				$request->user()->load(['avatar'])
