@@ -5,69 +5,59 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { TournamentCategory, TournamentPost } from '@/types/tournaments';
 import { Link, useForm } from '@inertiajs/react';
+import { useState } from 'react';
+import { MapPicker } from '../../ui/leaflet/map-picker';
 import PreviewTournamentPost from './preview-tournament-post';
 import SelectCategory from './select-category';
+import SelectDate from './select-date';
 
-type CategoryOption = {
-  id: number;
-  name: string;
-  color: string;
-};
+interface FormTournamentPostProps {
+  tournamentPostData?: Partial<TournamentPost>;
+  categories: TournamentCategory[];
+}
 
-type TournamentFormData = {
-  title: string;
-  slug: string;
-  tournament_category_id: number | '';
-  description: string;
+export default function FormTournamentPost({
+  categories,
+  tournamentPostData,
+}: FormTournamentPostProps) {
+  const { data, setData, post, processing, errors } = useForm<TournamentPost>({
+    id: tournamentPostData?.id ?? null,
+    title: tournamentPostData?.title ?? '',
+    slug: tournamentPostData?.slug ?? '',
+    tournament_category_id: tournamentPostData?.tournament_category_id ?? '',
+    description: tournamentPostData?.description ?? '',
+    tags: tournamentPostData?.tags ?? '',
 
-  prize_pool: number | '';
-  max_participants: number | null;
+    prize_pool: tournamentPostData?.prize_pool ?? null,
+    max_participants: tournamentPostData?.max_participants ?? null,
 
-  mode: 'online' | 'lan' | '';
-  location: string;
+    mode: tournamentPostData?.mode ?? '',
 
-  registration_start: string;
-  registration_end: string;
-  start_date: string;
-  end_date: string;
+    location: tournamentPostData?.location ?? '',
+    latitude: tournamentPostData?.latitude ?? null,
+    longitude: tournamentPostData?.longitude ?? null,
 
-  status: 'draft' | 'upcoming' | 'ongoing' | 'finished' | 'cancelled';
-  is_featured: boolean;
-  is_published: boolean;
-};
+    registration_start: tournamentPostData?.registration_start ?? '',
+    registration_end: tournamentPostData?.registration_end ?? '',
 
-type Props = {
-  categories: CategoryOption[];
-  initialData?: Partial<TournamentFormData>;
-};
+    start_date: tournamentPostData?.start_date ?? '',
+    end_date: tournamentPostData?.end_date ?? '',
 
-export default function FormTournamentPost({ categories, initialData }: Props) {
-  const { data, setData, post, processing, errors } =
-    useForm<TournamentFormData>({
-      title: initialData?.title ?? '',
-      slug: initialData?.slug ?? '',
-      tournament_category_id: initialData?.tournament_category_id ?? '',
-      description: initialData?.description ?? '',
+    status: tournamentPostData?.status ?? 'draft',
+    is_featured: tournamentPostData?.is_featured ?? false,
+    is_published: tournamentPostData?.is_published ?? false,
+  });
 
-      prize_pool: initialData?.prize_pool ?? '',
-      max_participants: initialData?.max_participants ?? null,
+  const isUnlimitedParticipants = data.max_participants === null;
+  const isUnlimitedPrizePool = data.prize_pool === null;
+  const isOnlineTournament = data.location === 'online';
 
-      mode: initialData?.mode ?? '',
-      location: initialData?.location ?? '',
-
-      registration_start: initialData?.registration_start ?? '',
-      registration_end: initialData?.registration_end ?? '',
-      start_date: initialData?.start_date ?? '',
-      end_date: initialData?.end_date ?? '',
-
-      status: initialData?.status ?? 'draft',
-      is_featured: initialData?.is_featured ?? false,
-      is_published: initialData?.is_published ?? false,
-    });
-
-    const isUnlimited = data.max_participants === null
-
+  const [locationCoords, setLocationCoords] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,38 +73,36 @@ export default function FormTournamentPost({ categories, initialData }: Props) {
             {/* Header */}
             <div className="flex items-center justify-between">
               <HeadingSmall
-                title={initialData ? 'Edit Tournament' : 'Create Tournament'}
+                title={
+                  tournamentPostData ? 'Edit Tournament' : 'Create Tournament'
+                }
                 description="Manage tournament main information"
               />
               <Link href="/administrator/tournaments">
                 <Button variant="outline">Back</Button>
               </Link>
             </div>
-
             <form onSubmit={handleSubmit} className="w-full space-y-8">
               {/* BASIC INFO */}
               <div className="rounded-xl border p-6">
-                <h3 className="mb-4 h-fit w-fit rounded-lg bg-primary p-3 text-sm font-semibold">
-                  Tournament Information
-                </h3>
-
-                <div className="space-y-4 px-2">
+                <div className="space-y-6 px-2">
                   <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     {/* Title */}
                     <div className="grid gap-2">
-                      <Label>Title</Label>
+                      <Label>Title *</Label>
                       <Input
-                        className="h-14"
+                        className="h-12"
                         value={data.title}
                         onChange={(e) => setData('title', e.target.value)}
                         maxLength={50}
+                        placeholder="Enter tournament title..."
                       />
                       <InputError message={errors.title} />
                     </div>
 
                     {/* Category */}
                     <div className="grid gap-2">
-                      <Label>Category</Label>
+                      <Label>Category *</Label>
                       <SelectCategory
                         value={data.tournament_category_id}
                         options={categories}
@@ -133,10 +121,11 @@ export default function FormTournamentPost({ categories, initialData }: Props) {
                       <div className="flex items-center gap-3">
                         <Input
                           type="number"
-                          className="h-14"
+                          className="h-12"
                           value={data.max_participants ?? ''}
-                          disabled={isUnlimited}
+                          disabled={isUnlimitedParticipants}
                           min={1}
+                          placeholder="Unlimited"
                           onChange={(e) =>
                             setData(
                               'max_participants',
@@ -149,7 +138,7 @@ export default function FormTournamentPost({ categories, initialData }: Props) {
 
                         <div className="flex items-center gap-2">
                           <Switch
-                            checked={isUnlimited}
+                            checked={isUnlimitedParticipants}
                             onCheckedChange={(checked) =>
                               setData('max_participants', checked ? null : 16)
                             }
@@ -166,21 +155,79 @@ export default function FormTournamentPost({ categories, initialData }: Props) {
                     {/* Prize Pool */}
                     <div className="grid gap-2">
                       <Label>Prize Pool</Label>
-                      <Input
-                        type="number"
-                        className="h-14"
-                        value={data.prize_pool}
-                        placeholder="e.g 100000000"
-                        onChange={(e) =>
-                          setData(
-                            'prize_pool',
-                            e.target.value === '' ? '' : Number(e.target.value),
-                          )
-                        }
-                        min={0}
-                      />
+                      <div className="flex items-center gap-3">
+                        <Input
+                          type="number"
+                          className="h-12"
+                          value={data.prize_pool ?? ''}
+                          disabled={isUnlimitedPrizePool}
+                          placeholder="Unlimited"
+                          onChange={(e) =>
+                            setData(
+                              'prize_pool',
+                              e.target.value === ''
+                                ? null
+                                : Number(e.target.value),
+                            )
+                          }
+                          min={0}
+                        />
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={isUnlimitedPrizePool}
+                            onCheckedChange={(checked) =>
+                              setData('prize_pool', checked ? null : 10000000)
+                            }
+                          />
+                          <span className="text-sm text-muted-foreground">
+                            Unlimited
+                          </span>
+                        </div>
+                      </div>
 
                       <InputError message={errors.prize_pool} />
+                    </div>
+                  </div>
+
+                  <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
+                    <div className="grid w-full gap-2">
+                      <Label>Registration Date *</Label>
+
+                      <div className="flex flex-col gap-3">
+                        <SelectDate
+                          label="Start"
+                          value={data.registration_start}
+                          onChange={(value) =>
+                            setData('registration_start', value)
+                          }
+                        />
+
+                        <SelectDate
+                          label="End"
+                          value={data.registration_end}
+                          onChange={(value) =>
+                            setData('registration_end', value)
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    {/* Prize Pool */}
+                    <div className="grid w-full gap-2">
+                      <Label>Tournament Date *</Label>
+                      <div className="flex flex-col gap-3">
+                        <SelectDate
+                          label="Start"
+                          value={data.start_date}
+                          onChange={(value) => setData('start_date', value)}
+                        />
+
+                        <SelectDate
+                          label="End"
+                          value={data.end_date}
+                          onChange={(value) => setData('end_date', value)}
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -189,10 +236,77 @@ export default function FormTournamentPost({ categories, initialData }: Props) {
                     <Textarea
                       rows={3}
                       value={data.description}
+                      placeholder="Enter tournament description..."
+                      onChange={(e) => setData('description', e.target.value)}
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label>
+                      Tags{' '}
+                      <span className="tracking-wide text-muted-foreground">
+                        (separate with commas)
+                      </span>
+                    </Label>
+                    <Input
+                      placeholder="e.g. Mobile Legends, PUBG Mobile, Valorant ..."
+                      value={data.tags}
                       onChange={(e) => setData('description', e.target.value)}
                     />
                   </div>
                 </div>
+              </div>
+
+              <h2 className="mb-4 flex h-8 w-fit items-center rounded-lg bg-primary p-3 text-center text-sm font-semibold">
+                Other Information
+              </h2>
+
+              {/* Location */}
+              <div className="space-y-4 rounded-xl border p-6">
+                <h3 className="font-semibold">Location</h3>
+
+                <div className="flex items-center justify-between px-2">
+                  <Label>
+                    {isOnlineTournament
+                      ? 'Online Tournament'
+                      : 'Offline Tournament'}
+                  </Label>
+
+                  <div className="flex items-center space-x-2">
+                    <Label>Offline</Label>
+                    <Switch
+                      checked={isOnlineTournament}
+                      onCheckedChange={(checked) => {
+                        setData('location', checked ? 'online' : '');
+                      }}
+                    />
+                    <Label>Online</Label>
+                  </div>
+                </div>
+
+                {!isOnlineTournament && (
+                  <div className="space-y-4 px-2">
+                    <div className="grid gap-2">
+                      <Label>Address</Label>
+                      <Input
+                        placeholder="Enter tournament address"
+                        value={data.location}
+                        onChange={(e) => setData('location', e.target.value)}
+                      />
+                    </div>
+
+                    <div className="h-[500px] w-full rounded-lg border">
+                      <MapPicker
+                        value={locationCoords ?? undefined}
+                        onChange={(coords) => {
+                          setLocationCoords(coords);
+                          setData('latitude', coords.lat);
+                          setData('longitude', coords.lng);
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* STATUS */}
@@ -224,9 +338,9 @@ export default function FormTournamentPost({ categories, initialData }: Props) {
 
           {/* PREVIEW */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-3">
+            <div className="sticky top-24 space-y-6">
               <HeadingSmall
-                title={initialData ? 'Preview Card' : 'Preview Card'}
+                title={tournamentPostData ? 'Preview Card' : 'Preview Card'}
                 description="Live preview of your tournament card"
               />
               <PreviewTournamentPost data={data} categories={categories} />

@@ -3,27 +3,30 @@
  */
 
 export interface TournamentPost {
-  id: number;
-  tournament_category_id: number;
+  id: number | null;
   title: string;
   slug: string;
-  description?: string;
+  tournament_category_id: number | '';
+  description: string;
+  tags: string;
 
-  prize_pool?: number;
-  mode?: 'online' | 'lan';
-  location?: string;
+  prize_pool: number | null;
+  max_participants: number | null;
 
-  registration_start?: string;
-  registration_end?: string;
-  start_date?: string;
-  end_date?: string;
+  mode: 'online' | 'lan' | '';
+
+  location: string;
+  latitude: number | null;
+  longitude: number | null;
+
+  registration_start: string;
+  registration_end: string;
+  start_date: string;
+  end_date: string;
 
   status: 'draft' | 'upcoming' | 'ongoing' | 'finished' | 'cancelled';
   is_featured: boolean;
   is_published: boolean;
-
-  created_at: string;
-  updated_at: string;
 }
 
 /**

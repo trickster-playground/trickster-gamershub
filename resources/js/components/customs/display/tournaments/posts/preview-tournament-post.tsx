@@ -1,4 +1,10 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useInitials } from '@/hooks/use-initials';
 import { formatRupiah } from '@/lib/format/currency';
+import { SharedData } from '@/types';
+import { TournamentCategory } from '@/types/tournaments';
+import { usePage } from '@inertiajs/react';
+import { format } from 'date-fns';
 import { Infinity } from 'lucide-react';
 
 type TournamentPreviewProps = {
@@ -6,23 +12,21 @@ type TournamentPreviewProps = {
     title: string;
     description: string;
     status: string;
-    prize_pool: number | '';
+    prize_pool: number | null;
     start_date: string;
     max_participants: number | null;
 
     tournament_category_id?: number | '';
   };
-  categories: {
-    id: number;
-    name: string;
-    color: string;
-  }[];
+  categories: TournamentCategory[];
 };
 
 export default function PreviewTournamentPost({
   data,
   categories,
 }: TournamentPreviewProps) {
+  const { auth } = usePage<SharedData>().props;
+  const getInitials = useInitials();
   const statusColor: Record<string, string> = {
     draft: 'bg-gray-500',
     upcoming: 'bg-blue-600',
@@ -45,6 +49,26 @@ export default function PreviewTournamentPost({
             "url('https://images4.alphacoders.com/136/1363796.jpeg')",
         }}
       />
+
+      {auth.user && (
+        <div className="absolute top-2 left-2 z-10 flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold text-white shadow-lg">
+          <div className='flex items-center gap-1'>
+            <Avatar className="rounded-ful size-10 overflow-hidden border">
+              <AvatarImage
+                src={`/storage/${auth.user.avatar?.path}`}
+                alt={auth.user.name}
+              />
+              <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                {getInitials(auth.user.name)}
+              </AvatarFallback>
+            </Avatar>
+            <div className='flex flex-col items-start'>
+              <p>{auth.user.name}</p>
+              <p className='text-[8px] text-muted-foreground'>@{auth.user.username}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {category && (
         <div
@@ -87,7 +111,12 @@ export default function PreviewTournamentPost({
 
         {/* Meta */}
         <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-white/70">
-          <span>{data.start_date || 'Start Date'}</span>
+          <span>
+            {data.start_date
+              ? format(new Date(data.start_date), 'MMMM dd, yyyy')
+              : 'Start Date'}
+          </span>
+
           <span>•</span>
           <span className="flex items-center gap-1">
             {data.max_participants === null ? (
@@ -103,8 +132,15 @@ export default function PreviewTournamentPost({
 
         {/* Footer */}
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-lg font-extrabold text-blue-500">
-            {formatRupiah(data.prize_pool)}
+          <span className="flex items-center gap-1 text-lg font-extrabold text-blue-500">
+            {data.prize_pool === null ? (
+              <div className="flex items-center gap-1">
+                <Infinity className="size-6" />
+                <p>Prize Pool</p>
+              </div>
+            ) : (
+              formatRupiah(data.prize_pool)
+            )}
           </span>
 
           <span className="text-sm font-bold text-white/80 uppercase">

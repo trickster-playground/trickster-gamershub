@@ -15,6 +15,7 @@ function Calendar({
   showOutsideDays = true,
   captionLayout = "label",
   buttonVariant = "ghost",
+  useCustomNav = true,
   formatters,
   components,
   month, // forwarded from parent
@@ -24,8 +25,84 @@ function Calendar({
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
   month?: Date;
   onMonthChange?: (m: Date) => void;
+  useCustomNav?: boolean
 }) {
   const defaultClassNames = getDefaultClassNames()
+
+  const CustomNav = (navProps: any) => {
+    const today = new Date();
+
+    // prefer displayMonth from navProps (v8+), fallback to forwarded month
+    const displayMonth = navProps?.displayMonth ?? month ?? new Date();
+    const labelMonth = displayMonth.toLocaleString("default", {
+      month: "long",
+      year: "numeric",
+    });
+
+    const handleTodayClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      // try to call parent's onMonthChange (forwarded prop)
+      if (typeof onMonthChange === "function") {
+        onMonthChange(new Date());
+      }
+
+      // some versions provide navProps.onMonthChange
+      if (typeof navProps?.onMonthChange === "function") {
+        navProps.onMonthChange(new Date());
+      }
+
+      // select today if consumer passed onSelect
+      if (typeof (props as any).onSelect === "function") {
+        ; (props as any).onSelect(new Date());
+      }
+    };
+
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-between w-full absolute top-0 inset-x-0 p-1",
+          navProps.className
+        )}
+      >
+        {/* Prev (use provided props if available) */}
+        <button
+          {...(navProps.previousMonthButtonProps ?? {})}
+          onClick={(e) => {
+            e.stopPropagation()
+            if (typeof navProps?.onPreviousClick === "function")
+              navProps.onPreviousClick(e)
+          }}
+          className={cn(buttonVariants({ variant: "ghost" }), "h-8 w-8 p-0")}
+          aria-label="Previous month"
+        >
+          <ChevronLeftIcon className="size-4" />
+        </button>
+
+        <div className="flex items-center gap-1">
+          <button
+            onClick={handleTodayClick}
+            className={cn(buttonVariants({ variant: "outline" }), "h-8 px-3 text-xs rounded-md")}
+            type="button"
+          >
+            Today
+          </button>
+
+          <button
+            {...(navProps.nextMonthButtonProps ?? {})}
+            onClick={(e) => {
+              e.stopPropagation()
+              if (typeof navProps?.onNextClick === "function") navProps.onNextClick(e)
+            }}
+            className={cn(buttonVariants({ variant: "ghost" }), "h-8 w-8 p-0")}
+            aria-label="Next month"
+          >
+            <ChevronRightIcon className="size-4" />
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <DayPicker
@@ -163,81 +240,6 @@ function Calendar({
           )
         },
         DayButton: CalendarDayButton,
-        // custom Nav: use `any` for props to avoid errors if the shape changes between versions
-        Nav: (navProps: any) => {
-          const today = new Date();
-
-          // prefer displayMonth from navProps (v8+), fallback to forwarded month
-          const displayMonth = navProps?.displayMonth ?? month ?? new Date();
-          const labelMonth = displayMonth.toLocaleString("default", {
-            month: "long",
-            year: "numeric",
-          });
-
-          const handleTodayClick = (e: React.MouseEvent) => {
-            e.stopPropagation();
-
-            // try to call parent's onMonthChange (forwarded prop)
-            if (typeof onMonthChange === "function") {
-              onMonthChange(new Date());
-            }
-
-            // some versions provide navProps.onMonthChange
-            if (typeof navProps?.onMonthChange === "function") {
-              navProps.onMonthChange(new Date());
-            }
-
-            // select today if consumer passed onSelect
-            if (typeof (props as any).onSelect === "function") {
-              ; (props as any).onSelect(new Date());
-            }
-          };
-
-          return (
-            <div
-              className={cn(
-                "flex items-center justify-between w-full absolute top-0 inset-x-0 p-1",
-                navProps.className
-              )}
-            >
-              {/* Prev (use provided props if available) */}
-              <button
-                {...(navProps.previousMonthButtonProps ?? {})}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (typeof navProps?.onPreviousClick === "function")
-                    navProps.onPreviousClick(e)
-                }}
-                className={cn(buttonVariants({ variant: "ghost" }), "h-8 w-8 p-0")}
-                aria-label="Previous month"
-              >
-                <ChevronLeftIcon className="size-4" />
-              </button>
-
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={handleTodayClick}
-                  className={cn(buttonVariants({ variant: "outline" }), "h-8 px-3 text-xs rounded-md")}
-                  type="button"
-                >
-                  Today
-                </button>
-
-                <button
-                  {...(navProps.nextMonthButtonProps ?? {})}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    if (typeof navProps?.onNextClick === "function") navProps.onNextClick(e)
-                  }}
-                  className={cn(buttonVariants({ variant: "ghost" }), "h-8 w-8 p-0")}
-                  aria-label="Next month"
-                >
-                  <ChevronRightIcon className="size-4" />
-                </button>
-              </div>
-            </div>
-          );
-        },
         WeekNumber: ({ children, ...props }) => {
           return (
             <td {...props}>
@@ -247,6 +249,8 @@ function Calendar({
             </td>
           )
         },
+        // custom Nav: use `any` for props to avoid errors if the shape changes between versions
+        ...(useCustomNav ? { Nav: CustomNav } : {}),
         ...components,
       }}
       {...props}

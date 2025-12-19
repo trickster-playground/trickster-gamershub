@@ -52,27 +52,30 @@ import { useInitials } from '@/hooks/use-initials';
  * Routes
  */
 import { dashboard } from '@/routes';
-import { dashboard as AdminDashboard } from '@/routes/admin';
 
 /**
  * Types
  */
-import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
+import { NavItem, type BreadcrumbItem, type SharedData } from '@/types';
 
 /**
  * Assets
  */
-import { IconDeviceDesktopAnalytics } from '@tabler/icons-react';
-import { LayoutGrid, Menu, Search } from 'lucide-react';
-import { mainNavItems } from '@/lib/routes/globalRoute';
 import { rightNavItems } from '@/lib/routes/adminRoute';
+import { mainNavItems } from '@/lib/routes/globalRoute';
+import { Menu, Search } from 'lucide-react';
 
+interface AppHeaderProps {
+  breadcrumbs?: BreadcrumbItem[];
+}
 
 const activeItemStyles =
   'text-neutral-900 dark:bg-blue-600 dark:text-neutral-100';
 
-interface AppHeaderProps {
-  breadcrumbs?: BreadcrumbItem[];
+function hasHref(
+  item: NavItem,
+): item is NavItem & { href: NonNullable<NavItem['href']> } {
+  return typeof item.href !== 'undefined';
 }
 
 export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
@@ -80,7 +83,6 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
   const { auth } = page.props;
   const getInitials = useInitials();
 
-  console.log(auth);
   return (
     <>
       <div className="border-b border-sidebar-border/80">
@@ -108,36 +110,63 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                   <div className="flex h-full flex-col justify-between text-sm">
                     <div className="flex flex-col space-y-4">
-                      {mainNavItems.map((item) => (
-                        <Link
-                          key={item.title}
-                          href={item.href}
-                          className="flex items-center space-x-2 font-medium"
-                        >
-                          {item.icon && (
-                            <Icon iconNode={item.icon} className="h-5 w-5" />
-                          )}
-                          <span>{item.title}</span>
-                        </Link>
-                      ))}
-                    </div>
-
-                    {auth.user.role === 'administrator' ? (
-                      <div className="flex flex-col space-y-4">
-                        {rightNavItems.map((item) => (
-                          <a
+                      {mainNavItems.map((item) =>
+                        hasHref(item) ? (
+                          <Link
                             key={item.title}
-                            href={resolveUrl(item.href)}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href={item.href}
                             className="flex items-center space-x-2 font-medium"
                           >
                             {item.icon && (
                               <Icon iconNode={item.icon} className="h-5 w-5" />
                             )}
                             <span>{item.title}</span>
-                          </a>
-                        ))}
+                          </Link>
+                        ) : (
+                          <div key={item.title} className="font-semibold">
+                            {item.icon && (
+                              <Icon iconNode={item.icon} className="h-5 w-5" />
+                            )}
+                            <span>{item.title}</span>
+
+                            {item.children && (
+                              <div className="mt-2 ml-4 flex flex-col gap-2">
+                                {item.children.map((child) =>
+                                  hasHref(child) ? (
+                                    <Link key={child.title} href={child.href}>
+                                      {child.title}
+                                    </Link>
+                                  ) : null,
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        ),
+                      )}
+                    </div>
+
+                    {auth.user.role === 'administrator' ? (
+                      <div className="flex flex-col space-y-4">
+                        {rightNavItems.map(
+                          (item) =>
+                            hasHref(item) && (
+                              <a
+                                key={item.title}
+                                href={resolveUrl(item.href)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center space-x-2 font-medium"
+                              >
+                                {item.icon && (
+                                  <Icon
+                                    iconNode={item.icon}
+                                    className="h-5 w-5"
+                                  />
+                                )}
+                                <span>{item.title}</span>
+                              </a>
+                            ),
+                        )}
                       </div>
                     ) : (
                       ''
@@ -165,21 +194,33 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     key={index}
                     className="relative flex h-full items-center"
                   >
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        isSameUrl(page.url, item.href) && activeItemStyles,
-                        'h-9 cursor-pointer px-3',
-                      )}
-                    >
-                      {item.icon && (
-                        <Icon iconNode={item.icon} className="mr-2 h-4 w-4" />
-                      )}
-                      {item.title}
-                    </Link>
-                    {isSameUrl(page.url, item.href) && (
-                      <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-blue-600"></div>
+                    {hasHref(item) ? (
+                      <>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            navigationMenuTriggerStyle(),
+                            isSameUrl(page.url, item.href) && activeItemStyles,
+                            'h-9 cursor-pointer px-3',
+                          )}
+                        >
+                          {item.icon && (
+                            <Icon
+                              iconNode={item.icon}
+                              className="mr-2 h-4 w-4"
+                            />
+                          )}
+                          {item.title}
+                        </Link>
+
+                        {isSameUrl(page.url, item.href) && (
+                          <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-blue-600" />
+                        )}
+                      </>
+                    ) : (
+                      <span className="px-3 text-sm font-semibold">
+                        {item.title}
+                      </span>
                     )}
                   </NavigationMenuItem>
                 ))}
@@ -198,31 +239,34 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
               </Button>
               {auth.user.role === 'administrator' ? (
                 <div className="hidden lg:flex">
-                  {rightNavItems.map((item) => (
-                    <TooltipProvider key={item.title} delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Link
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md bg-transparent p-0 text-sm font-medium text-accent-foreground ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-                          >
-                            <span className="sr-only">{item.title}</span>
-                            {item.icon && (
-                              <Icon
-                                iconNode={item.icon}
-                                className="size-5 opacity-80 group-hover:opacity-100"
-                              />
-                            )}
-                          </Link>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{item.title}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ))}
+                  {rightNavItems.map(
+                    (item) =>
+                      item.href && (
+                        <TooltipProvider key={item.title} delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Link
+                                href={item.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md bg-transparent p-0 text-sm font-medium text-accent-foreground ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                              >
+                                <span className="sr-only">{item.title}</span>
+                                {item.icon && (
+                                  <Icon
+                                    iconNode={item.icon}
+                                    className="size-5 opacity-80 group-hover:opacity-100"
+                                  />
+                                )}
+                              </Link>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{item.title}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ),
+                  )}
                 </div>
               ) : (
                 ''

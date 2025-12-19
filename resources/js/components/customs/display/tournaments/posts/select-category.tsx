@@ -48,7 +48,7 @@ export default function SelectCategory({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="h-14 w-full justify-between"
+          className="h-12 w-full justify-between"
         >
           {selected ? selected.name : placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
@@ -56,7 +56,7 @@ export default function SelectCategory({
       </PopoverTrigger>
 
       <PopoverContent
-        align="start"
+        align="end"
         className="w-[--radix-popover-trigger-width] p-0"
       >
         <Command>

@@ -1,5 +1,8 @@
+import 'leaflet/dist/leaflet.css';
 import '../css/app.css';
-import '../css/custom.css'
+import '../css/custom.css';
+
+import '@/lib/leaflet/icon';
 
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
