@@ -15,15 +15,18 @@ type TournamentPreviewProps = {
     prize_pool: number | null;
     start_date: string;
     max_participants: number | null;
+    location: string | '';
 
     tournament_category_id?: number | '';
   };
   categories: TournamentCategory[];
+  thumbnailPreview?: string | null;
 };
 
 export default function PreviewTournamentPost({
   data,
   categories,
+  thumbnailPreview,
 }: TournamentPreviewProps) {
   const { auth } = usePage<SharedData>().props;
   const getInitials = useInitials();
@@ -40,19 +43,20 @@ export default function PreviewTournamentPost({
   );
 
   return (
-    <div className="relative h-[320px] w-full overflow-hidden rounded-3xl">
+    <div className="relative h-[350px] w-full overflow-hidden rounded-3xl">
       {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage:
-            "url('https://images4.alphacoders.com/136/1363796.jpeg')",
+          backgroundImage: thumbnailPreview
+            ? `url(${thumbnailPreview})`
+            : "url('https://images4.alphacoders.com/136/1363796.jpeg')",
         }}
       />
 
       {auth.user && (
         <div className="absolute top-2 left-2 z-10 flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold text-white shadow-lg">
-          <div className='flex items-center gap-1'>
+          <div className="flex items-center gap-1">
             <Avatar className="rounded-ful size-10 overflow-hidden border">
               <AvatarImage
                 src={`/storage/${auth.user.avatar?.path}`}
@@ -62,9 +66,11 @@ export default function PreviewTournamentPost({
                 {getInitials(auth.user.name)}
               </AvatarFallback>
             </Avatar>
-            <div className='flex flex-col items-start'>
+            <div className="flex flex-col items-start">
               <p>{auth.user.name}</p>
-              <p className='text-[8px] text-muted-foreground'>@{auth.user.username}</p>
+              <p className="text-[8px] text-muted-foreground">
+                @{auth.user.username}
+              </p>
             </div>
           </div>
         </div>
@@ -110,14 +116,7 @@ export default function PreviewTournamentPost({
         </h3>
 
         {/* Meta */}
-        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-white/70">
-          <span>
-            {data.start_date
-              ? format(new Date(data.start_date), 'MMMM dd, yyyy')
-              : 'Start Date'}
-          </span>
-
-          <span>•</span>
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-white/70">
           <span className="flex items-center gap-1">
             {data.max_participants === null ? (
               <>
@@ -127,6 +126,20 @@ export default function PreviewTournamentPost({
             ) : (
               `${data.max_participants} Teams`
             )}
+          </span>
+          <span>•</span>
+          <span className="capitalize">
+            {data.location !== '' ? (
+              <>{data.location}</>
+            ) : (
+              <>Offline</>
+            )}
+          </span>
+          <span>•</span>
+          <span>
+            {data.start_date
+              ? format(new Date(data.start_date), 'MMMM dd, yyyy')
+              : 'Start Date'}
           </span>
         </div>
 

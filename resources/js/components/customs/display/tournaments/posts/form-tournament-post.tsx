@@ -1,13 +1,29 @@
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Button } from '@/components/ui/button';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { TournamentCategory, TournamentPost } from '@/types/tournaments';
+import {
+  TournamentCategory,
+  TournamentPost,
+  TournamentPostForm,
+} from '@/types/tournaments';
 import { Link, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { IconUpload } from '@tabler/icons-react';
+import { GalleryThumbnails, Wallpaper } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { MapPicker } from '../../ui/leaflet/map-picker';
 import PreviewTournamentPost from './preview-tournament-post';
 import SelectCategory from './select-category';
@@ -22,33 +38,83 @@ export default function FormTournamentPost({
   categories,
   tournamentPostData,
 }: FormTournamentPostProps) {
-  const { data, setData, post, processing, errors } = useForm<TournamentPost>({
-    id: tournamentPostData?.id ?? null,
-    title: tournamentPostData?.title ?? '',
-    slug: tournamentPostData?.slug ?? '',
-    tournament_category_id: tournamentPostData?.tournament_category_id ?? '',
-    description: tournamentPostData?.description ?? '',
-    tags: tournamentPostData?.tags ?? '',
+  const { data, setData, post, processing, errors } =
+    useForm<TournamentPostForm>({
+      id: tournamentPostData?.id ?? null,
+      title: tournamentPostData?.title ?? '',
+      slug: tournamentPostData?.slug ?? '',
+      tournament_category_id: tournamentPostData?.tournament_category_id ?? '',
+      description: tournamentPostData?.description ?? '',
+      tags: tournamentPostData?.tags ?? '',
 
-    prize_pool: tournamentPostData?.prize_pool ?? null,
-    max_participants: tournamentPostData?.max_participants ?? null,
+      prize_pool: tournamentPostData?.prize_pool ?? null,
+      max_participants: tournamentPostData?.max_participants ?? null,
 
-    mode: tournamentPostData?.mode ?? '',
+      mode: tournamentPostData?.mode ?? '',
 
-    location: tournamentPostData?.location ?? '',
-    latitude: tournamentPostData?.latitude ?? null,
-    longitude: tournamentPostData?.longitude ?? null,
+      location: tournamentPostData?.location ?? '',
+      latitude: tournamentPostData?.latitude ?? null,
+      longitude: tournamentPostData?.longitude ?? null,
 
-    registration_start: tournamentPostData?.registration_start ?? '',
-    registration_end: tournamentPostData?.registration_end ?? '',
+      registration_start: tournamentPostData?.registration_start ?? '',
+      registration_end: tournamentPostData?.registration_end ?? '',
 
-    start_date: tournamentPostData?.start_date ?? '',
-    end_date: tournamentPostData?.end_date ?? '',
+      banner: null,
+      thumbnail: null,
 
-    status: tournamentPostData?.status ?? 'draft',
-    is_featured: tournamentPostData?.is_featured ?? false,
-    is_published: tournamentPostData?.is_published ?? false,
-  });
+      start_date: tournamentPostData?.start_date ?? '',
+      end_date: tournamentPostData?.end_date ?? '',
+
+      status: tournamentPostData?.status ?? 'draft',
+      is_featured: tournamentPostData?.is_featured ?? false,
+      is_published: tournamentPostData?.is_published ?? false,
+    });
+
+  const bannerAttachment = tournamentPostData?.attachments?.find(
+    (a) => a.type === 'banner',
+  );
+
+  const thumbnailAttachment = tournamentPostData?.attachments?.find(
+    (a) => a.type === 'thumbnail',
+  );
+
+  const [previewBanner, setPreviewBanner] = useState<string | null>(
+    bannerAttachment ? `/storage/${bannerAttachment.path}` : null,
+  );
+
+  const [previewThumbnail, setPreviewThumbnail] = useState<string | null>(
+    thumbnailAttachment ? `/storage/${thumbnailAttachment.path}` : null,
+  );
+
+  const bannerInputRef = useRef<HTMLInputElement>(null);
+  const thumbnailInputRef = useRef<HTMLInputElement>(null);
+
+  const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setData('banner', file);
+    setPreviewBanner(URL.createObjectURL(file));
+  };
+
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setData('thumbnail', file);
+    setPreviewThumbnail(URL.createObjectURL(file));
+  };
+
+  useEffect(() => {
+    return () => {
+      if (previewBanner?.startsWith('blob:')) {
+        URL.revokeObjectURL(previewBanner);
+      }
+      if (previewThumbnail?.startsWith('blob:')) {
+        URL.revokeObjectURL(previewThumbnail);
+      }
+    };
+  }, [previewBanner, previewThumbnail]);
 
   const isUnlimitedParticipants = data.max_participants === null;
   const isUnlimitedPrizePool = data.prize_pool === null;
@@ -86,6 +152,155 @@ export default function FormTournamentPost({
               {/* BASIC INFO */}
               <div className="rounded-xl border p-6">
                 <div className="space-y-6 px-2">
+                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                    {/* Banner */}
+                    <div className="grid gap-2 lg:col-span-2">
+                      <Label className="mb-2">Banner *</Label>
+
+                      <AspectRatio ratio={16 / 9}>
+                        <button
+                          type="button"
+                          onClick={() => bannerInputRef.current?.click()}
+                          className="relative h-full w-full overflow-hidden rounded-xl border"
+                        >
+                          {previewBanner ? (
+                            <>
+                              <img
+                                src={previewBanner}
+                                className="h-full w-full object-cover"
+                              />
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                className="absolute top-2 right-2 bg-background hover:bg-red-600"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPreviewBanner(null);
+                                  setData('banner', null);
+                                  if (bannerInputRef.current)
+                                    bannerInputRef.current.value = '';
+                                }}
+                              >
+                                Remove
+                              </Button>
+                            </>
+                          ) : (
+                            <div className="flex h-full w-full cursor-pointer items-center justify-center text-sm text-muted-foreground hover:bg-dark-3">
+                              <Empty>
+                                <EmptyHeader>
+                                  <EmptyMedia variant="icon">
+                                    <Wallpaper size={32} />
+                                  </EmptyMedia>
+                                  <EmptyTitle>No banner uploaded</EmptyTitle>
+                                  <EmptyDescription>
+                                    Upload banner for your tournament.
+                                  </EmptyDescription>
+                                </EmptyHeader>
+                                <EmptyContent>
+                                  <Label className="flex cursor-pointer items-center gap-2 text-sm hover:underline">
+                                    <IconUpload size={16} />
+                                    Choose File
+                                  </Label>
+                                </EmptyContent>
+                              </Empty>
+                            </div>
+                          )}
+                        </button>
+                      </AspectRatio>
+
+                      <InputError message={errors.banner} />
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={bannerInputRef}
+                        className="hidden"
+                        onChange={handleBannerChange}
+                      />
+
+                      <p className="text-xs text-muted-foreground">
+                        Appears on tournament detail page
+                      </p>
+                    </div>
+
+                    {/* Thumbnail */}
+                    <div className="grid gap-2">
+                      <Label>Thumbnail *</Label>
+
+                      <div className="mb-13 flex h-full items-center">
+                        <div className="w-full">
+                          <AspectRatio ratio={1 / 1} className="cursor-pointer">
+                            <button
+                              type="button"
+                              onClick={() => thumbnailInputRef.current?.click()}
+                              className="relative h-full w-full overflow-hidden rounded-xl border"
+                            >
+                              {previewThumbnail ? (
+                                <>
+                                  <img
+                                    src={previewThumbnail}
+                                    className="h-full w-full object-cover"
+                                  />
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="outline"
+                                    className="absolute top-2 right-2 bg-background hover:bg-red-600"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setPreviewThumbnail(null);
+                                      setData('thumbnail', null);
+                                      if (thumbnailInputRef.current)
+                                        thumbnailInputRef.current.value = '';
+                                    }}
+                                  >
+                                    Remove
+                                  </Button>
+                                </>
+                              ) : (
+                                <div className="flex h-full w-full cursor-pointer items-center justify-center text-sm text-muted-foreground hover:bg-dark-3">
+                                  <Empty>
+                                    <EmptyHeader>
+                                      <EmptyMedia variant="icon">
+                                        <GalleryThumbnails size={32} />
+                                      </EmptyMedia>
+                                      <EmptyTitle>
+                                        No thumbnail uploaded
+                                      </EmptyTitle>
+                                      <EmptyDescription>
+                                        Upload thumbnail for your tournament.
+                                      </EmptyDescription>
+                                    </EmptyHeader>
+                                    <EmptyContent>
+                                      <Label className="flex cursor-pointer items-center gap-2 text-sm hover:underline">
+                                        <IconUpload size={16} />
+                                        Choose File
+                                      </Label>
+                                    </EmptyContent>
+                                  </Empty>
+                                </div>
+                              )}
+                            </button>
+                          </AspectRatio>
+
+                          <InputError message={errors.thumbnail} />
+
+                          <input
+                            type="file"
+                            accept="image/*"
+                            ref={thumbnailInputRef}
+                            className="hidden"
+                            onChange={handleThumbnailChange}
+                          />
+                        </div>
+                      </div>
+                      <p className="mt-0 text-xs text-muted-foreground">
+                        Used in tournament cards & listings
+                      </p>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     {/* Title */}
                     <div className="grid gap-2">
@@ -251,7 +466,7 @@ export default function FormTournamentPost({
                     <Input
                       placeholder="e.g. Mobile Legends, PUBG Mobile, Valorant ..."
                       value={data.tags}
-                      onChange={(e) => setData('description', e.target.value)}
+                      onChange={(e) => setData('tags', e.target.value)}
                     />
                   </div>
                 </div>
@@ -309,23 +524,61 @@ export default function FormTournamentPost({
                 )}
               </div>
 
-              {/* STATUS */}
-              <div className="space-y-4 rounded-xl border p-6">
-                <h3 className="font-semibold">Status</h3>
+              {/* Configurations */}
+              <div className="space-y-5 rounded-xl border p-6">
+                <h3 className="font-semibold">Configurations</h3>
 
-                <div className="flex items-center justify-between">
-                  <Label>Featured</Label>
-                  <Switch
-                    checked={data.is_featured}
-                    onCheckedChange={(v) => setData('is_featured', v)}
-                  />
+                {/* Status */}
+                <div className="grid gap-2">
+                  <Label>Status</Label>
+
+                  <Select
+                    value={data.status}
+                    onValueChange={(value) =>
+                      setData('status', value as typeof data.status)
+                    }
+                  >
+                    <SelectTrigger className="h-12 cursor-pointer">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="upcoming">Upcoming</SelectItem>
+                      <SelectItem value="ongoing">Ongoing</SelectItem>
+                      <SelectItem value="finished">Finished</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <InputError message={errors.status} />
                 </div>
 
+                {/* Published */}
                 <div className="flex items-center justify-between">
-                  <Label>Published</Label>
+                  <div>
+                    <Label>Published</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Visible to public users
+                    </p>
+                  </div>
                   <Switch
                     checked={data.is_published}
                     onCheckedChange={(v) => setData('is_published', v)}
+                  />
+                </div>
+
+                {/* Featured */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Featured</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Highlight this tournament
+                    </p>
+                  </div>
+                  <Switch
+                    checked={data.is_featured}
+                    onCheckedChange={(v) => setData('is_featured', v)}
                   />
                 </div>
               </div>
@@ -343,7 +596,11 @@ export default function FormTournamentPost({
                 title={tournamentPostData ? 'Preview Card' : 'Preview Card'}
                 description="Live preview of your tournament card"
               />
-              <PreviewTournamentPost data={data} categories={categories} />
+              <PreviewTournamentPost
+                data={data}
+                categories={categories}
+                thumbnailPreview={previewThumbnail}
+              />
             </div>
           </div>
         </div>

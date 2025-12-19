@@ -24,6 +24,8 @@ export interface TournamentPost {
   start_date: string;
   end_date: string;
 
+  attachments?: TournamentAttachment[];
+
   status: 'draft' | 'upcoming' | 'ongoing' | 'finished' | 'cancelled';
   is_featured: boolean;
   is_published: boolean;
@@ -42,4 +44,24 @@ export interface TournamentCategory {
   color: string;
   created_at: string;
   updated_at: string;
+}
+
+/**
+ * Tournament attachment types
+ */
+
+export interface TournamentAttachment {
+  id: number;
+  file_name: string;
+  path: string;
+  size: number;
+  type: 'banner' | 'thumbnail' | 'gallery';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TournamentPostForm
+  extends Omit<TournamentPost, 'attachments'> {
+  banner: File | null;
+  thumbnail: File | null;
 }

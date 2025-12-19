@@ -27,15 +27,21 @@ export default function SelectDate({
 }: SelectDateProps) {
   const [open, setOpen] = React.useState(false);
 
+  const DEFAULT_TIME = '09:00';
+
   // parse value dari parent
   const dateValue = value ? new Date(value) : undefined;
-  const timeValue = value ? (value.split(' ')[1] ?? '00:00:00') : '00:00:00';
+
+  const timeValue = value
+    ? (value.split(' ')[1] ?? DEFAULT_TIME)
+    : DEFAULT_TIME;
 
   const updateDateTime = (date?: Date, time?: string) => {
     if (!date) return;
 
-    const finalTime = time ?? timeValue;
+    const finalTime = time ?? timeValue ?? DEFAULT_TIME;
     const formattedDate = format(date, 'yyyy-MM-dd');
+
     onChange(`${formattedDate} ${finalTime}`);
   };
 
@@ -74,10 +80,8 @@ export default function SelectDate({
         <Input
           type="time"
           id="time-picker"
-          step="1"
-          defaultValue="10:30:00"
           value={timeValue}
-          className="w-full max-w-[100px] appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+          className="w-full max-w-[70px] appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
           onChange={(e) => updateDateTime(dateValue, e.target.value)}
         />
       </div>
