@@ -31,6 +31,8 @@ export default function TournamentPostIndex() {
   const { tournamentPosts } = usePage<{
     tournamentPosts: TournamentPost[];
   }>().props;
+
+  console.log(tournamentPosts);
   return (
     <AdminAppLayout breadcrumbs={breadcrumbs}>
       <Head title="Administrator | Tournaments" />

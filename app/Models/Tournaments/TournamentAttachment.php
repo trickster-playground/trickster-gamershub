@@ -14,7 +14,6 @@ class TournamentAttachment extends Model
 		'file_name',
 		'size',
 		'type',
-		'modified',
 		'path',
 	];
 

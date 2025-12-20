@@ -14,11 +14,10 @@ return new class extends Migration
 		Schema::create('tournament_attachments', function (Blueprint $table) {
 			$table->id();
 
-			$table->foreignId('tournament_id')->constrained()->cascadeOnDelete();
+			$table->foreignId('tournament_id')->constrained('tournaments')->cascadeOnDelete();
 			$table->string('file_name');
-			$table->integer('size');
-			$table->string('type');
-			$table->string('modified');
+			$table->unsignedInteger('size');
+			$table->enum('type', ['banner', 'thumbnail', 'gallery']);
 			$table->string('path');
 
 			$table->timestamps();

@@ -3,17 +3,15 @@
  */
 
 export interface TournamentPost {
-  id: number | null;
+  id?: number;
   title: string;
   slug: string;
-  tournament_category_id: number | '';
+  category_id: number | '';
   description: string;
   tags: string;
 
   prize_pool: number | null;
   max_participants: number | null;
-
-  mode: 'online' | 'lan' | '';
 
   location: string;
   latitude: number | null;

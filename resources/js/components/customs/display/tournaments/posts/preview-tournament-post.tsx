@@ -1,3 +1,4 @@
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/hooks/use-initials';
 import { formatRupiah } from '@/lib/format/currency';
@@ -43,7 +44,10 @@ export default function PreviewTournamentPost({
   );
 
   return (
-    <div className="relative h-[350px] w-full overflow-hidden rounded-3xl">
+    <AspectRatio
+      ratio={16 / 12}
+      className="relative overflow-hidden rounded-3xl"
+    >
       {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -129,11 +133,7 @@ export default function PreviewTournamentPost({
           </span>
           <span>•</span>
           <span className="capitalize">
-            {data.location !== '' ? (
-              <>{data.location}</>
-            ) : (
-              <>Offline</>
-            )}
+            {data.location === 'online' ? 'Online' : 'Offline'}
           </span>
           <span>•</span>
           <span>
@@ -164,6 +164,6 @@ export default function PreviewTournamentPost({
 
       {/* Border */}
       <div className="absolute inset-0 rounded-3xl border border-white/10" />
-    </div>
+    </AspectRatio>
   );
 }

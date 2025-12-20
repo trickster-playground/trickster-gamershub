@@ -19,7 +19,9 @@ class TournamentPostResource extends JsonResource
 	{
 		return [
 			'id' => $this->id,
-			'tournament_category_id' => TournamentCategoryResource::collection($this->whenLoaded('tournament_category_id'))->resolve(),
+			'category' => new TournamentCategoryResource(
+				$this->whenLoaded('category')
+			),
 			'title' => $this->title,
 			'slug' => $this->slug,
 			'description' => $this->description,

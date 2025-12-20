@@ -63,6 +63,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
@@ -87,18 +88,25 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const filterableColumn = React.useMemo(() => {
+    return table.getAllColumns().find((column) => column.getCanFilter());
+  }, [table]);
+
   return (
     <div className="w-full px-8">
       <div className="flex items-center justify-between py-4">
         <div className="flex items-center gap-3">
           {/* Search Input */}
           <Input
-            placeholder="Filter name..."
-            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-            onChange={(event) =>
-              table.getColumn('name')?.setFilterValue(event.target.value)
+            placeholder={
+              filterableColumn
+                ? `Filter ${filterableColumn.id}...`
+                : 'Filter...'
             }
+            value={(filterableColumn?.getFilterValue() as string) ?? ''}
+            onChange={(e) => filterableColumn?.setFilterValue(e.target.value)}
             className="max-w-sm"
+            disabled={!filterableColumn}
           />
 
           {/* Toggler Components */}

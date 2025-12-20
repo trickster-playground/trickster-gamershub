@@ -75,10 +75,13 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
         <img
           src={`${iconPath}`}
           alt="Icon"
-          className="h-20 w-20 rounded-md border object-contain"
+          className="h-20 w-20 rounded-md border object-cover"
         />
       );
     },
+    enableSorting: false,
+    enableHiding: false,
+    enableColumnFilter: false,
   },
 
   // Name

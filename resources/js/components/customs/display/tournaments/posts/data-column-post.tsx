@@ -50,7 +50,7 @@ export const tournamentPostColumns: ColumnDef<TournamentPost>[] = [
 
   // Title
   {
-    accessorKey: 'Title',
+    accessorKey: 'title',
     header: ({ column }) => (
       <div className="flex items-center gap-2">
         <DropdownMenu>
