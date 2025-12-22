@@ -22,8 +22,9 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import {
+  TournamentAttachment,
   TournamentCategory,
-  TournamentPost,
+  TournamentFormData,
   TournamentPostForm,
 } from '@/types/tournaments';
 import { Link, useForm } from '@inertiajs/react';
@@ -35,10 +36,9 @@ import { MapPicker } from '../../ui/leaflet/map-picker';
 import PreviewTournamentPost from './preview-tournament-post';
 import SelectCategory from './select-category';
 import SelectDate from './select-date';
-import { comicToast } from '../../ui/toasts/comic-toast';
 
 interface FormTournamentPostProps {
-  tournamentPostData?: Partial<TournamentPost>;
+  tournamentPostData?: Partial<TournamentFormData>;
   categories: TournamentCategory[];
 }
 
@@ -46,35 +46,43 @@ export default function FormTournamentPost({
   categories,
   tournamentPostData,
 }: FormTournamentPostProps) {
-  const { data, setData, post, processing, errors, setError, clearErrors } =
-    useForm<TournamentPostForm>({
-      id: tournamentPostData?.id,
-      title: tournamentPostData?.title ?? '',
-      slug: tournamentPostData?.slug ?? '',
-      category_id: tournamentPostData?.category_id ?? '',
-      description: tournamentPostData?.description ?? '',
-      tags: tournamentPostData?.tags ?? '',
+  const {
+    data,
+    setData,
+    post,
+    patch,
+    processing,
+    errors,
+    setError,
+    clearErrors,
+  } = useForm<TournamentPostForm>({
+    id: tournamentPostData?.id,
+    title: tournamentPostData?.title ?? '',
+    slug: tournamentPostData?.slug ?? '',
+    category_id: tournamentPostData?.category_id ?? '',
+    description: tournamentPostData?.description ?? '',
+    tags: tournamentPostData?.tags ?? '',
 
-      prize_pool: tournamentPostData?.prize_pool ?? null,
-      max_participants: tournamentPostData?.max_participants ?? null,
+    prize_pool: tournamentPostData?.prize_pool ?? null,
+    max_participants: tournamentPostData?.max_participants ?? null,
 
-      location: tournamentPostData?.location ?? '',
-      latitude: tournamentPostData?.latitude ?? null,
-      longitude: tournamentPostData?.longitude ?? null,
+    location: tournamentPostData?.location ?? '',
+    latitude: tournamentPostData?.latitude ?? null,
+    longitude: tournamentPostData?.longitude ?? null,
 
-      registration_start: tournamentPostData?.registration_start ?? '',
-      registration_end: tournamentPostData?.registration_end ?? '',
+    registration_start: tournamentPostData?.registration_start ?? '',
+    registration_end: tournamentPostData?.registration_end ?? '',
 
-      banner: null,
-      thumbnail: null,
+    banner: null,
+    thumbnail: null,
 
-      start_date: tournamentPostData?.start_date ?? '',
-      end_date: tournamentPostData?.end_date ?? '',
+    start_date: tournamentPostData?.start_date ?? '',
+    end_date: tournamentPostData?.end_date ?? '',
 
-      status: tournamentPostData?.status ?? 'draft',
-      is_featured: tournamentPostData?.is_featured ?? false,
-      is_published: tournamentPostData?.is_published ?? false,
-    });
+    status: tournamentPostData?.status ?? 'draft',
+    is_featured: tournamentPostData?.is_featured ?? false,
+    is_published: tournamentPostData?.is_published ?? false,
+  });
 
   // Banner
   const bannerAttachment = tournamentPostData?.attachments?.find(
@@ -172,9 +180,13 @@ export default function FormTournamentPost({
   // Wizard Form
   const [formStep, setFormStep] = useState<1 | 2 | 3 | 4>(1);
   const totalFormSteps = 4;
+
+  const hasFile = (file: File | null, attachment?: TournamentAttachment) =>
+    !!file || !!attachment;
+
   const isStepOneValid =
-    data.banner &&
-    data.thumbnail &&
+    hasFile(data.banner, bannerAttachment) &&
+    hasFile(data.thumbnail, thumbnailAttachment) &&
     data.title.trim() &&
     data.category_id;
 
@@ -277,15 +289,23 @@ export default function FormTournamentPost({
     (formStep === 2 && isStepTwoValid) ||
     formStep > 2;
 
+  useEffect(() => {
+    if (data.id) {
+      setData('_method' as any, 'patch');
+    }
+  }, [data.id]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    post('/administrator/tournaments/create', {
-      forceFormData: true,
-      onError: () => {
-        comicToast.error('Please fix the form errors.');
+    post(
+      data.id
+        ? `/administrator/tournaments/${data.slug}/edit`
+        : '/administrator/tournaments/create',
+      {
+        forceFormData: true,
       },
-    });
+    );
   };
 
   return (
@@ -526,9 +546,7 @@ export default function FormTournamentPost({
                       <SelectCategory
                         value={data.category_id}
                         options={categories}
-                        onChange={(value) =>
-                          setData('category_id', value)
-                        }
+                        onChange={(value) => setData('category_id', value)}
                       />
                       <InputError message={errors.category_id} />
                     </div>

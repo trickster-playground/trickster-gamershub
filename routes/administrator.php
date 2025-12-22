@@ -10,7 +10,7 @@ Route::middleware(['auth', 'role:administrator'])->group(function () {
 	Route::get('/administrator/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
-// Administrator - Tournament Category Route
+// Administrator - Tournament Post Route
 Route::middleware(['auth', 'role:administrator'])->group(function () {
 	Route::get('/administrator/tournaments', [TournamentPostController::class, 'index'])->name('admin.tournaments');
 	Route::get('/administrator/tournaments/create', [TournamentPostController::class, 'create'])->name('admin.tournaments.create');

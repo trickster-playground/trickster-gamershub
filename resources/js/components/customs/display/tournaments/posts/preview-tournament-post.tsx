@@ -18,7 +18,7 @@ type TournamentPreviewProps = {
     max_participants: number | null;
     location: string | '';
 
-    tournament_category_id?: number | '';
+    category_id?: number | '';
   };
   categories: TournamentCategory[];
   thumbnailPreview?: string | null;
@@ -40,7 +40,7 @@ export default function PreviewTournamentPost({
   };
 
   const category = categories.find(
-    (cat) => cat.id === data.tournament_category_id,
+    (cat) => cat.id === data.category_id,
   );
 
   return (

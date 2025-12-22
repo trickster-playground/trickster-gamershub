@@ -6,6 +6,36 @@ export interface TournamentPost {
   id?: number;
   title: string;
   slug: string;
+  category: TournamentCategory;
+  description: string;
+  tags: string;
+
+  prize_pool: number | null;
+  max_participants: number | null;
+
+  location: string;
+  latitude: number | null;
+  longitude: number | null;
+
+  registration_start: string;
+  registration_end: string;
+  start_date: string;
+  end_date: string;
+
+  attachments?: TournamentAttachment[];
+
+  status: 'draft' | 'upcoming' | 'ongoing' | 'finished' | 'cancelled';
+  is_featured: boolean;
+  is_published: boolean;
+}
+
+/**
+ * Tournament post form types
+ */
+export interface TournamentFormData {
+  id?: number;
+  title: string;
+  slug: string;
   category_id: number | '';
   description: string;
   tags: string;
@@ -27,6 +57,12 @@ export interface TournamentPost {
   status: 'draft' | 'upcoming' | 'ongoing' | 'finished' | 'cancelled';
   is_featured: boolean;
   is_published: boolean;
+}
+
+export interface TournamentPostForm
+  extends Omit<TournamentFormData, 'attachments'> {
+  banner: File | null;
+  thumbnail: File | null;
 }
 
 /**
@@ -56,10 +92,4 @@ export interface TournamentAttachment {
   type: 'banner' | 'thumbnail' | 'gallery';
   created_at: string;
   updated_at: string;
-}
-
-export interface TournamentPostForm
-  extends Omit<TournamentPost, 'attachments'> {
-  banner: File | null;
-  thumbnail: File | null;
 }
