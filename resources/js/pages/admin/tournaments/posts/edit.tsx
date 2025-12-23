@@ -15,7 +15,7 @@ import AdminAppLayout from '@/components/customs/layouts/admin/admin-app-layout'
 /**
  * Types
  */
-import FormTournamentPost from '@/components/customs/display/tournaments/posts/form-tournament-post';
+import FormTournamentPost from '@/components/customs/display/admin/tournaments/posts/form-tournament-post';
 import { type BreadcrumbItem } from '@/types';
 import { TournamentCategory, TournamentFormData } from '@/types/tournaments';
 

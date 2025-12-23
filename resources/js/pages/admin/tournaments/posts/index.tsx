@@ -11,7 +11,8 @@ import AdminAppLayout from '@/components/customs/layouts/admin/admin-app-layout'
 /**
  *  Components
  */
-import { tournamentPostColumns } from '@/components/customs/display/tournaments/posts/data-column-post';
+
+import { tournamentPostColumns } from '@/components/customs/display/admin/tournaments/posts/data-column-post';
 import { DataTable } from '@/components/customs/display/ui/data-table';
 /**
  * Types
@@ -32,7 +33,6 @@ export default function TournamentPostIndex() {
     tournamentPosts: TournamentPost[];
   }>().props;
 
-  console.log(tournamentPosts);
   return (
     <AdminAppLayout breadcrumbs={breadcrumbs}>
       <Head title="Administrator | Tournaments" />

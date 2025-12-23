@@ -11,7 +11,7 @@ import AdminAppLayout from '@/components/customs/layouts/admin/admin-app-layout'
 /**
  *  Components
  */
-import FormCategory from '@/components/customs/display/tournaments/categories/form-category';
+import FormCategory from '@/components/customs/display/admin/tournaments/categories/form-category';
 /**
  * Types
  */

@@ -48,7 +48,8 @@ import {
   MoreHorizontal,
   Star,
 } from 'lucide-react';
-import { comicToast } from '../../ui/toasts/comic-toast';
+import { comicToast } from '../../../ui/toasts/comic-toast';
+
 
 const TOURNAMENT_STATUSES = [
   'draft',

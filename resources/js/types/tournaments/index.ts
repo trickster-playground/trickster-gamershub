@@ -93,3 +93,10 @@ export interface TournamentAttachment {
   created_at: string;
   updated_at: string;
 }
+
+export function getAttachment(
+  tournament: TournamentPost,
+  type: 'banner' | 'thumbnail',
+) {
+  return tournament.attachments?.find((a) => a.type === type)?.path;
+}

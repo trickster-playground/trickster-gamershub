@@ -11,7 +11,7 @@ import AdminAppLayout from '@/components/customs/layouts/admin/admin-app-layout'
 /**
  *  Components
  */
-import { tournamentCategoryColumns } from '@/components/customs/display/tournaments/categories/data-column-category';
+import { tournamentCategoryColumns } from '@/components/customs/display/admin/tournaments/categories/data-column-category';
 import { DataTable } from '@/components/customs/display/ui/data-table';
 
 /**

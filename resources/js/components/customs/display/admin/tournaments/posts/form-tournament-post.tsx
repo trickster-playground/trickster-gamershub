@@ -32,10 +32,10 @@ import { IconUpload } from '@tabler/icons-react';
 import { isAfter, isEqual } from 'date-fns';
 import { GalleryThumbnails, Wallpaper } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { MapPicker } from '../../ui/leaflet/map-picker';
-import PreviewTournamentPost from './preview-tournament-post';
 import SelectCategory from './select-category';
 import SelectDate from './select-date';
+import { MapPicker } from '../../../ui/leaflet/map-picker';
+import PreviewTournamentPost from './preview-tournament-post';
 
 interface FormTournamentPostProps {
   tournamentPostData?: Partial<TournamentFormData>;

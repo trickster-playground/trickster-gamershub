@@ -77,6 +77,17 @@ class Tournament extends Model
 		return 'slug';
 	}
 
+	public function scopePublished($query)
+	{
+		return $query->where('is_published', true);
+	}
+
+	public function scopeFeatured($query)
+	{
+		return $query->where('is_featured', true);
+	}
+
+
 	/** Relation */
 
 	public function user()

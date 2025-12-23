@@ -27,11 +27,12 @@ import {
  * Types
  */
 import { SharedData, type BreadcrumbItem } from '@/types';
-import { TournamentCategory } from '@/types/tournaments';
+import { TournamentCategory, TournamentPost } from '@/types/tournaments';
 
 /**
  * Assets
  */
+import FeaturedTournamentSection from '@/components/customs/display/tournaments/posts/featured-tournament-section';
 import { Button } from '@/components/ui/button';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -44,9 +45,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function TournamentsPage() {
   const { auth, flash } = usePage<SharedData>().props;
 
-  const { tournamentCategories } = usePage<{
+  const { tournamentCategories, featuredTournaments } = usePage<{
     tournamentCategories: TournamentCategory[];
+    featuredTournaments: TournamentPost[];
   }>().props;
+
+  console.log(featuredTournaments);
 
   return (
     <CustomAppLayout breadcrumbs={breadcrumbs}>
@@ -261,14 +265,16 @@ export default function TournamentsPage() {
         </div>
       </div>
 
+      <FeaturedTournamentSection tournaments={featuredTournaments.data} />
+
       {/* ================= TOURNAMENT SECTION ================= */}
       <div className="mx-auto grid max-w-[1820px] grid-cols-1 gap-6 p-4 lg:grid-cols-12">
-        {/* ===== Latest Tournament ===== */}
+        {/* ===== Featured Tournament ===== */}
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 py-4 lg:col-span-8">
           <div className="relative mb-6 ml-4 flex items-center gap-4">
             <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
             <h2 className="text-2xl font-bold tracking-wider text-white">
-              Latest Tournament
+              Featured Tournament
             </h2>
           </div>
 
@@ -299,12 +305,13 @@ export default function TournamentsPage() {
           </div>
         </div>
 
-        {/* ===== Right Info (Blue Esports Luxury) ===== */}
+        {/* ===== Right Info  ===== */}
+
         <div className="mx-auto flex w-full flex-col gap-4 py-4 lg:col-span-4">
           <div className="relative mb-6 ml-4 flex items-center gap-4">
             <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
             <h2 className="text-2xl font-bold tracking-wider text-white">
-              All Tournament
+              Tournament Information
             </h2>
           </div>
 
