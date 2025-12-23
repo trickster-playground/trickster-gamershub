@@ -36,6 +36,7 @@ import { TournamentCategory } from '@/types/tournaments';
 /**
  * Assets
  */
+import { createdAt } from '@/lib/format/date';
 import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import {
   ArrowDown,
@@ -44,6 +45,7 @@ import {
   EyeOff,
   MoreHorizontal,
 } from 'lucide-react';
+import { DataTableColumnHeader } from '../../ui/data-table-column-header';
 import { comicToast } from '../../ui/toasts/comic-toast';
 
 export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
@@ -158,13 +160,22 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
     ),
   },
 
-  // Created At
+  // =========================
+  // Created
+  // =========================
   {
     accessorKey: 'created_at',
-    header: 'Created',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created" />
+    ),
     cell: ({ getValue }) => {
-      const date = new Date(getValue() as string);
-      return date.toLocaleDateString();
+      const { absolute } = createdAt(getValue() as string);
+
+      return (
+        <div className="text-sm">
+          <div className="font-medium">{absolute}</div>
+        </div>
+      );
     },
   },
 
@@ -172,6 +183,7 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
   {
     id: 'actions',
     enableHiding: false,
+    header: () => <div>Actions</div>,
     cell: ({ row }) => {
       const item = row.original;
 

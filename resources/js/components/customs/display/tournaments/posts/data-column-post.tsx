@@ -36,6 +36,7 @@ import { TournamentPost } from '@/types/tournaments';
 /**
  * Assets
  */
+import { createdAt, dateRange } from '@/lib/format/date';
 import { Link, router } from '@inertiajs/react';
 import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import {
@@ -192,7 +193,7 @@ export const tournamentPostColumns: ColumnDef<TournamentPost>[] = [
                   onCheckedChange={(checked) =>
                     column.setFilterValue(checked ? status : undefined)
                   }
-                  className="flex items-center gap-2 w-full p-2"
+                  className="flex w-full items-center gap-2 p-2"
                 >
                   <span
                     className={`h-2.5 w-2.5 rounded-full ${statusColor[status]}`}
@@ -235,14 +236,29 @@ export const tournamentPostColumns: ColumnDef<TournamentPost>[] = [
     id: 'schedule',
     header: 'Schedule',
     cell: ({ row }) => (
-      <div className="text-sm leading-snug">
-        <div>
-          <span className="font-medium">Reg:</span>{' '}
-          {row.original.registration_start} – {row.original.registration_end}
+      <div className="relative pl-6 text-sm">
+        {/* vertical line */}
+        <div className="absolute top-2 left-2 h-full w-px bg-border" />
+
+        {/* Regist */}
+        <div className="relative mb-3">
+          <span className="absolute top-1.5 -left-6 h-2.5 w-2.5 rounded-full bg-blue-500" />
+          <div className="text-xs text-muted-foreground">Registration</div>
+          <div className="font-medium">
+            {dateRange(
+              row.original.registration_start,
+              row.original.registration_end,
+            )}
+          </div>
         </div>
-        <div className="text-muted-foreground">
-          <span className="font-medium">Event:</span> {row.original.start_date}{' '}
-          – {row.original.end_date}
+
+        {/* Event */}
+        <div className="relative">
+          <span className="absolute top-1.5 -left-6 h-2.5 w-2.5 rounded-full bg-emerald-500" />
+          <div className="text-xs text-muted-foreground">Event</div>
+          <div className="font-medium">
+            {dateRange(row.original.start_date, row.original.end_date)}
+          </div>
         </div>
       </div>
     ),
@@ -290,7 +306,15 @@ export const tournamentPostColumns: ColumnDef<TournamentPost>[] = [
   {
     accessorKey: 'created_at',
     header: ({ column }) => <SortableHeader column={column} title="Created" />,
-    cell: ({ getValue }) => new Date(getValue() as string).toLocaleDateString(),
+    cell: ({ getValue }) => {
+      const { absolute, relative } = createdAt(getValue() as string);
+
+      return (
+        <div className="text-sm">
+          <div className="font-medium">{absolute}</div>
+        </div>
+      );
+    },
   },
 
   // =========================
@@ -299,6 +323,7 @@ export const tournamentPostColumns: ColumnDef<TournamentPost>[] = [
   {
     id: 'actions',
     enableHiding: false,
+    header: () => <div>Actions</div>,
     cell: ({ row }) => {
       const item = row.original;
 
@@ -378,9 +403,7 @@ export const tournamentPostColumns: ColumnDef<TournamentPost>[] = [
                         onSuccess: () =>
                           comicToast.success('Tournament post deleted'),
                         onError: () =>
-                          comicToast.error(
-                            'Failed to delete tournament post',
-                          ),
+                          comicToast.error('Failed to delete tournament post'),
                       });
                     }}
                     className="rounded-xl bg-red-600 px-6 font-semibold hover:bg-red-700"
