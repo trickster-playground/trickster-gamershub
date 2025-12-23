@@ -6,10 +6,22 @@ import { ColumnDef } from '@tanstack/react-table';
 /**
  * Components
  */
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
@@ -25,6 +37,7 @@ import { TournamentPost } from '@/types/tournaments';
  * Assets
  */
 import { Link, router } from '@inertiajs/react';
+import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import {
   ArrowDown,
   ArrowUp,
@@ -136,13 +149,80 @@ export const tournamentPostColumns: ColumnDef<TournamentPost>[] = [
   {
     accessorKey: 'status',
     filterFn: 'equalsString',
-    header: 'Status',
-    cell: ({ getValue }) => {
-      const status = getValue<TournamentPost['status']>();
+
+    header: ({ column }) => {
+      const sort = column.getIsSorted();
+
       return (
         <div className="flex items-center gap-2">
-          <span className={`h-2.5 w-2.5 rounded-full ${statusColor[status]}`} />
-          <span className="text-sm capitalize">{status.replace('_', ' ')}</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="-ml-3 h-8 data-[state=open]:bg-accent"
+              >
+                <span>Status</span>
+
+                {sort === 'desc' && <ArrowDown />}
+                {sort === 'asc' && <ArrowUp />}
+                {!sort && <ChevronsUpDown />}
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="start" className="w-fit">
+              {/* Sorting */}
+              <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
+                <ArrowUp className="mr-2 h-4 w-4" />
+                Asc
+              </DropdownMenuItem>
+
+              <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
+                <ArrowDown className="mr-2 h-4 w-4" />
+                Desc
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              {/* Filter */}
+              {TOURNAMENT_STATUSES.map((status) => (
+                <DropdownMenuCheckboxItem
+                  key={status}
+                  checked={column.getFilterValue() === status}
+                  onCheckedChange={(checked) =>
+                    column.setFilterValue(checked ? status : undefined)
+                  }
+                  className="flex items-center gap-2 w-full p-2"
+                >
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full ${statusColor[status]}`}
+                  />
+                  <span className="text-sm capitalize">
+                    {status.replace('_', ' ')}
+                  </span>
+                </DropdownMenuCheckboxItem>
+              ))}
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                onClick={() => column.setFilterValue(undefined)}
+              >
+                Clear filter
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
+
+    cell: ({ getValue }) => {
+      const value = getValue<TournamentPost['status']>();
+
+      return (
+        <div className="flex items-center gap-2">
+          <span className={`h-2.5 w-2.5 rounded-full ${statusColor[value]}`} />
+          <span className="capitalize">{value.replace('_', ' ')}</span>
         </div>
       );
     },
@@ -225,36 +305,91 @@ export const tournamentPostColumns: ColumnDef<TournamentPost>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreHorizontal />
+            <Button
+              size="icon"
+              className="rounded-full border border-border bg-background shadow-sm transition-all hover:scale-105 hover:shadow-md"
+            >
+              <MoreHorizontal className="size-5" />
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>View</DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href={`/administrator/tournaments/${item.slug}/edit`}>
+          <DropdownMenuContent
+            align="end"
+            sideOffset={10}
+            className="w-fit animate-in rounded-2xl border border-border/60 bg-gradient-to-br from-background to-muted/40 p-2 shadow-2xl backdrop-blur-xl fade-in slide-in-from-top-2"
+          >
+            {/* VIEW */}
+            <DropdownMenuItem className="group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted">
+              <span className="absolute inset-y-0 left-0 w-1 bg-green-500 opacity-0 transition group-hover:opacity-100" />
+              <IconEye className="size-5 text-muted-foreground transition group-hover:text-foreground" />
+              View
+            </DropdownMenuItem>
+
+            {/* EDIT */}
+            <DropdownMenuItem asChild>
+              <Link
+                href={`/administrator/tournaments/${item.slug}/edit`}
+                className="group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted"
+              >
+                <span className="absolute inset-y-0 left-0 w-1 bg-blue-500 opacity-0 transition group-hover:opacity-100" />
+                <IconEdit className="size-5 text-muted-foreground transition group-hover:text-foreground" />
                 Edit
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-red-600"
-              onClick={() => {
-                if (!confirm(`Delete tournament "${item.title}"?`)) return;
 
-                router.delete(`/administrator/tournaments/${item.slug}`, {
-                  onSuccess: () => {
-                    comicToast.success('Tournament deleted');
-                  },
-                  onError: () => {
-                    comicToast.error('Failed to delete tournament');
-                  },
-                });
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
+            <DropdownMenuSeparator className="my-2 opacity-40" />
+
+            {/* DELETE */}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted"
+                >
+                  <span className="absolute inset-y-0 left-0 w-1 bg-red-500 opacity-0 transition group-hover:opacity-100" />
+                  <IconTrash className="size-5 text-muted-foreground transition group-hover:text-foreground" />
+                  Delete
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent className="animate-in rounded-2xl border shadow-2xl backdrop-blur-xl zoom-in-95 fade-in">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-lg font-semibold">
+                    Delete tournament post?
+                  </AlertDialogTitle>
+
+                  <AlertDialogDescription className="text-sm text-muted-foreground">
+                    This action cannot be undone. The tournament post{' '}
+                    <span className="font-medium text-foreground">
+                      “{item.title}”
+                    </span>{' '}
+                    will be permanently removed.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter className="gap-2">
+                  <AlertDialogCancel className="rounded-xl">
+                    Cancel
+                  </AlertDialogCancel>
+
+                  <AlertDialogAction
+                    onClick={() => {
+                      router.delete(`/administrator/tournaments/${item.slug}`, {
+                        onSuccess: () =>
+                          comicToast.success('Tournament post deleted'),
+                        onError: () =>
+                          comicToast.error(
+                            'Failed to delete tournament post',
+                          ),
+                      });
+                    }}
+                    className="rounded-xl bg-red-600 px-6 font-semibold hover:bg-red-700"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
       );

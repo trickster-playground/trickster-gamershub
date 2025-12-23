@@ -554,7 +554,7 @@ export default function FormTournamentPost({
 
                   {/* Tags */}
                   <div className="grid gap-2">
-                    <Label>
+                    <Label className='flex items-center gap-1'>
                       Tags
                       <span className="tracking-wide text-muted-foreground">
                         (separate with commas)

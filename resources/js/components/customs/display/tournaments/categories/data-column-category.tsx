@@ -7,13 +7,23 @@ import { ColumnDef } from '@tanstack/react-table';
 /**
  * Components
  */
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -26,7 +36,7 @@ import { TournamentCategory } from '@/types/tournaments';
 /**
  * Assets
  */
-import TournamentCategoryController from '@/actions/App/Http/Controllers/Admin/Tournaments/TournamentCategoryController';
+import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import {
   ArrowDown,
   ArrowUp,
@@ -34,6 +44,7 @@ import {
   EyeOff,
   MoreHorizontal,
 } from 'lucide-react';
+import { comicToast } from '../../ui/toasts/comic-toast';
 
 export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
   {
@@ -160,53 +171,98 @@ export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
   // Actions
   {
     id: 'actions',
+    enableHiding: false,
     cell: ({ row }) => {
       const item = row.original;
 
-      // Handle Delete Tournament Category
-      const handleDeleteTournamentCategory = (slug: string) => {
-        const { url, method } = TournamentCategoryController.destroy(slug);
-
-        router.visit(url, {
-          method,
-          onSuccess: () => {
-            console.log('Tournament category deleted');
-          },
-        });
-      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizontal />
+            <Button
+              size="icon"
+              className="rounded-full border border-border bg-background shadow-sm transition-all hover:scale-105 hover:shadow-md"
+            >
+              <MoreHorizontal className="size-5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(item.slug.toString())
-              }
-            >
-              Copy Slug
+
+          <DropdownMenuContent
+            align="end"
+            sideOffset={10}
+            className="w-fit animate-in rounded-2xl border border-border/60 bg-gradient-to-br from-background to-muted/40 p-2 shadow-2xl backdrop-blur-xl fade-in slide-in-from-top-2"
+          >
+            {/* VIEW */}
+            <DropdownMenuItem className="group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted">
+              <span className="absolute inset-y-0 left-0 w-1 bg-green-500 opacity-0 transition group-hover:opacity-100" />
+              <IconEye className="size-5 text-muted-foreground transition group-hover:text-foreground" />
+              View
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            {/* Edit */}
+
+            {/* EDIT */}
             <DropdownMenuItem asChild>
-              <Link href={`/administrator/category/${item.slug}/edit`}>
+              <Link
+                href={`/administrator/category/${item.slug}/edit`}
+                className="group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted"
+              >
+                <span className="absolute inset-y-0 left-0 w-1 bg-blue-500 opacity-0 transition group-hover:opacity-100" />
+                <IconEdit className="size-5 text-muted-foreground transition group-hover:text-foreground" />
                 Edit
               </Link>
             </DropdownMenuItem>
-            {/* Delete */}
-            <DropdownMenuItem
-              onClick={() => {
-                if (confirm(`Delete category "${item.name}"?`)) {
-                  handleDeleteTournamentCategory(item.slug);
-                }
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
+
+            <DropdownMenuSeparator className="my-2 opacity-40" />
+
+            {/* DELETE */}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted"
+                >
+                  <span className="absolute inset-y-0 left-0 w-1 bg-red-500 opacity-0 transition group-hover:opacity-100" />
+                  <IconTrash className="size-5 text-muted-foreground transition group-hover:text-foreground" />
+                  Delete
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent className="animate-in rounded-2xl border shadow-2xl backdrop-blur-xl zoom-in-95 fade-in">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-lg font-semibold">
+                    Delete tournament category?
+                  </AlertDialogTitle>
+
+                  <AlertDialogDescription className="text-sm text-muted-foreground">
+                    This action cannot be undone. The tournament category{' '}
+                    <span className="font-medium text-foreground">
+                      “{item.name}”
+                    </span>{' '}
+                    will be permanently removed.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter className="gap-2">
+                  <AlertDialogCancel className="rounded-xl">
+                    Cancel
+                  </AlertDialogCancel>
+
+                  <AlertDialogAction
+                    onClick={() => {
+                      router.delete(`/administrator/category/${item.slug}`, {
+                        onSuccess: () =>
+                          comicToast.success('Tournament category deleted'),
+                        onError: () =>
+                          comicToast.error(
+                            'Failed to delete tournament category',
+                          ),
+                      });
+                    }}
+                    className="rounded-xl bg-red-600 px-6 font-semibold hover:bg-red-700"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
       );
