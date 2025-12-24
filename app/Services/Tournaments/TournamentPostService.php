@@ -5,6 +5,7 @@ namespace App\Services\Tournaments;
 use App\Models\Tournaments\Tournament;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,6 +14,7 @@ class TournamentPostService
 	public function store(array $data, Request $request): Tournament
 	{
 		return DB::transaction(function () use ($data, $request) {
+			$data['user_id'] = Auth::id();
 			$tournament = Tournament::create($this->filter($data));
 			$this->handleFiles($tournament, $request);
 			return $tournament;

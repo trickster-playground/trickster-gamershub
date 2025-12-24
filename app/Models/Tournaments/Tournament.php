@@ -13,11 +13,15 @@ class Tournament extends Model
 
 	protected $fillable = [
 		'title',
+		'user_id',
 		'category_id',
 		'description',
 		'tags',
 		'prize_pool',
 		'max_participants',
+		'current_participants',
+		'mode',
+		'format',
 		'location',
 		'latitude',
 		'longitude',
@@ -86,6 +90,19 @@ class Tournament extends Model
 	{
 		return $query->where('is_featured', true);
 	}
+
+	public function getFormatLabelAttribute(): string
+	{
+		return match ($this->format) {
+			'single_elimination' => 'Single Elimination',
+			'double_elimination' => 'Double Elimination',
+			'round_robin' => 'Round Robin',
+			'group_stage' => 'Group Stage',
+			'swiss' => 'Swiss System',
+			default => ucfirst(str_replace('_', ' ', $this->format)),
+		};
+	}
+
 
 
 	/** Relation */

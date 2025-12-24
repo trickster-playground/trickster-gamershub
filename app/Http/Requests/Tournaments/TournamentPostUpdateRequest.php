@@ -39,10 +39,24 @@ class TournamentPostUpdateRequest extends FormRequest
 			'start_date' => ['required', 'date'],
 			'end_date' => ['required', 'date', 'after_or_equal:start_date'],
 
+			'mode' => [
+				'required',
+				'in:solo,team',
+			],
+
+			'format' => [
+				'required',
+				'in:single_elimination,double_elimination,round_robin,group_stage,swiss',
+			],
+
 			'banner' => ['nullable', 'image', 'max:5120'],
 			'thumbnail' => ['nullable', 'image', 'max:2048'],
 
-			'status' => ['required', 'string'],
+			'status' => [
+				'required',
+				'in:draft,upcoming,ongoing,finished,cancelled',
+			],
+			
 			'is_featured' => ['boolean'],
 			'is_published' => ['boolean'],
 		];

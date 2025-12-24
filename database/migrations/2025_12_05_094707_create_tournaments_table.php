@@ -14,6 +14,10 @@
 			Schema::create('tournaments', function (Blueprint $table) {
 				$table->id();
 
+				$table->foreignId('user_id')
+					->constrained('users')
+					->cascadeOnDelete();
+
 				$table->foreignId('category_id')
 					->constrained('tournament_categories')
 					->cascadeOnDelete();
@@ -41,6 +45,17 @@
 				$table->decimal('longitude', 10, 7)->nullable();
 
 				$table->integer('max_participants')->nullable();
+				$table->integer('current_participants')->default(0);
+
+				$table->enum('mode', ['solo', 'team'])->default('team');
+
+				$table->enum('format', [
+					'single_elimination',
+					'double_elimination',
+					'round_robin',
+					'group_stage',
+					'swiss'
+				])->default('single_elimination');
 
 				// Status
 				$table->enum('status', [

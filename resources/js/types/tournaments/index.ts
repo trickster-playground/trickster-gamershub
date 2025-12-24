@@ -2,6 +2,8 @@
  * Tournament post types
  */
 
+import { User } from '..';
+
 export interface TournamentPost {
   id?: number;
   title: string;
@@ -12,10 +14,22 @@ export interface TournamentPost {
 
   prize_pool: number | null;
   max_participants: number | null;
+  current_participants: number | null;
 
   location: string;
   latitude: number | null;
   longitude: number | null;
+
+  mode: 'solo' | 'team';
+
+  format:
+    | 'single_elimination'
+    | 'double_elimination'
+    | 'round_robin'
+    | 'group_stage'
+    | 'swiss';
+
+  user: User;
 
   registration_start: string;
   registration_end: string;
@@ -53,6 +67,14 @@ export interface TournamentFormData {
   end_date: string;
 
   attachments?: TournamentAttachment[];
+
+  mode: 'solo' | 'team';
+  format:
+    | 'single_elimination'
+    | 'double_elimination'
+    | 'round_robin'
+    | 'group_stage'
+    | 'swiss';
 
   status: 'draft' | 'upcoming' | 'ongoing' | 'finished' | 'cancelled';
   is_featured: boolean;

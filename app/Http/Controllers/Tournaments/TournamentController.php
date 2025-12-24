@@ -26,6 +26,8 @@ class TournamentController extends Controller
 			->with([
 				'category',
 				'attachments',
+				'user',
+				'user.avatar'
 			])
 			->published()
 			->featured()
@@ -47,7 +49,7 @@ class TournamentController extends Controller
 				$request->user()->load(['avatar', 'background'])
 			),
 			'tournamentCategories' => $tournamentCategories,
-			'featuredTournaments' => TournamentPostResource::collection($featured),
+			'featuredTournaments' => TournamentPostResource::collection($featured)->resolve(),
 			'tournaments' => TournamentPostResource::collection($tournaments),
 		]);
 	}

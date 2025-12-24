@@ -34,6 +34,16 @@ class TournamentPostStoreRequest extends FormRequest
 			'latitude' => ['nullable', 'numeric'],
 			'longitude' => ['nullable', 'numeric'],
 
+			'mode' => [
+				'required',
+				'in:solo,team',
+			],
+
+			'format' => [
+				'required',
+				'in:single_elimination,double_elimination,round_robin,group_stage,swiss',
+			],
+
 			'registration_start' => ['required', 'date'],
 			'registration_end' => ['required', 'date', 'after_or_equal:registration_start'],
 			'start_date' => ['required', 'date'],
@@ -42,7 +52,11 @@ class TournamentPostStoreRequest extends FormRequest
 			'banner' => ['required', 'image', 'max:5120'],
 			'thumbnail' => ['required', 'image', 'max:2048'],
 
-			'status' => ['required', 'string'],
+			'status' => [
+				'required',
+				'in:draft,upcoming,ongoing,finished,cancelled',
+			],
+
 			'is_featured' => ['boolean'],
 			'is_published' => ['boolean'],
 		];

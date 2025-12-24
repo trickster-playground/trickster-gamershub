@@ -35,9 +35,11 @@ class TournamentPostResource extends JsonResource
 
 			'prize_pool' => $this->prize_pool,
 			'mode' => $this->mode,
+			'format' => $this->format_label,
 
 
 			'max_participants' => $this->max_participants,
+			'current_participants' => $this->current_participants,
 
 			'registration_start' => $this->registration_start,
 			'registration_end' => $this->registration_end,

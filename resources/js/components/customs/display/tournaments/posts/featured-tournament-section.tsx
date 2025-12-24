@@ -1,14 +1,18 @@
 'use client';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
+import { useInitials } from '@/hooks/use-initials';
+import { formatRupiah } from '@/lib/format/currency';
 import { dateRange } from '@/lib/format/date';
 import { TournamentPost } from '@/types/tournaments';
 import Autoplay from 'embla-carousel-autoplay';
+import { Infinity } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -18,17 +22,21 @@ interface Props {
 export default function FeaturedTournamentSection({ tournaments }: Props) {
   if (!tournaments?.length) return null;
 
+  const getInitials = useInitials();
   const [api, setApi] = useState<CarouselApi>();
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     if (!api) return;
 
-    setActiveIndex(api.selectedScrollSnap());
+    const onSelect = () => setActiveIndex(api.selectedScrollSnap());
 
-    api.on('select', () => {
-      setActiveIndex(api.selectedScrollSnap());
-    });
+    onSelect();
+    api.on('select', onSelect);
+
+    return () => {
+      api.off('select', onSelect);
+    };
   }, [api]);
 
   const active = tournaments[activeIndex];
@@ -42,7 +50,7 @@ export default function FeaturedTournamentSection({ tournaments }: Props) {
         <Carousel
           setApi={setApi}
           opts={{ loop: true }}
-          className="mx-4 rounded-2xl overflow-hidden"
+          className="mx-3 overflow-hidden rounded-3xl sm:mx-4"
           plugins={[
             Autoplay({
               delay: 5000,
@@ -58,24 +66,76 @@ export default function FeaturedTournamentSection({ tournaments }: Props) {
               return (
                 <CarouselItem key={tournament.slug}>
                   <div
-                    className="relative h-[410px] overflow-hidden rounded-2xl bg-cover bg-center"
+                    className="group relative h-[320px] cursor-pointer overflow-hidden rounded-3xl bg-cover bg-center transition-transform duration-700 hover:scale-[1.02] sm:h-[380px] lg:h-[420px]"
                     style={{ backgroundImage: `url('${banner}')` }}
                   >
                     {/* Overlay */}
-                    <div className="absolute inset-0 bg-black/50" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 transition duration-700 group-hover:opacity-100" />
+
+                    {/* Organizer */}
+                    <div className="absolute top-3 left-3 z-10 rounded-xl bg-black/40 px-2.5 py-2 ring-1 ring-white/10 backdrop-blur-md sm:top-4 sm:left-4">
+                      <div className="flex items-center gap-2">
+                        <Avatar className="size-9 ring-1 ring-white/20 sm:size-11">
+                          <AvatarImage
+                            src={tournament.user.avatar?.path}
+                            alt={tournament.user.name}
+                          />
+                          <AvatarFallback>
+                            {getInitials(tournament.user.name)}
+                          </AvatarFallback>
+                        </Avatar>
+
+                        <div className="hidden leading-tight sm:block">
+                          <p className="text-sm font-semibold text-white">
+                            {tournament.user.name}
+                          </p>
+                          <p className="text-xs text-white/60">
+                            @{tournament.user.username}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Category */}
+                    <div
+                      className="absolute top-3 right-3 z-10 rounded-full px-3 py-1 text-[11px] font-bold text-white shadow-xl ring-1 ring-white/20 sm:top-4 sm:right-4 sm:text-xs"
+                      style={{
+                        backgroundColor: tournament.category.color,
+                        boxShadow: `0 0 18px ${tournament.category.color}80`,
+                      }}
+                    >
+                      {tournament.category.name}
+                    </div>
 
                     {/* Content */}
-                    <div className="relative z-10 flex h-full flex-col justify-end p-6 text-white">
-                      <span className="mb-2 w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold">
-                        FEATURED
+                    <div className="relative z-10 flex h-full flex-col justify-end p-4 text-white sm:p-6 lg:p-8">
+                      <span className="mb-2 w-fit rounded-full bg-blue-600/90 px-3 py-1 text-[10px] font-bold tracking-wide shadow-lg sm:text-xs">
+                        NEW
                       </span>
 
-                      <h3 className="text-2xl font-bold">{tournament.title}</h3>
+                      <h3 className="max-w-full text-xl leading-tight font-extrabold drop-shadow-lg sm:max-w-[85%] sm:text-2xl lg:text-3xl">
+                        {tournament.title}
+                      </h3>
 
-                      <div className="mt-1 flex gap-2 text-sm text-white/80 capitalize">
-                        <span>{tournament.category?.name}</span>
-                        <span>•</span>
-                        <span>{tournament.location || 'Online Event'}</span>
+                      <div className="mt-3 flex flex-wrap items-center gap-1.5 text-[10px] text-white/80 sm:mb-5 sm:gap-2 sm:text-xs lg:mb-0">
+                        <span className="rounded-full bg-white/10 px-3 py-1">
+                          {tournament.location === 'online'
+                            ? 'Online'
+                            : 'Offline'}
+                        </span>
+
+                        <span className="rounded-full bg-white/10 px-3 py-1 capitalize">
+                          {tournament.mode}
+                        </span>
+
+                        <span className="rounded-full bg-white/10 px-3 py-1 capitalize">
+                          {tournament.format}
+                        </span>
+
+                        <span className="rounded-full bg-blue-500/20 px-3 py-1 font-semibold text-blue-300">
+                          {tournament.max_participants ?? 'Unlimited'} Slots
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -85,15 +145,15 @@ export default function FeaturedTournamentSection({ tournaments }: Props) {
           </CarouselContent>
 
           {/* Dots */}
-          <div className="absolute right-4 bottom-4 z-20 flex gap-2">
+          <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2 sm:bottom-5">
             {tournaments.map((_, i) => (
               <button
                 key={i}
                 onClick={() => api?.scrollTo(i)}
-                className={`h-2.5 w-2.5 rounded-full transition ${
+                className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                   i === activeIndex
-                    ? 'scale-110 bg-blue-500'
-                    : 'bg-white/40 hover:bg-white/70'
+                    ? 'w-6 bg-blue-500 shadow-[0_0_14px_rgba(59,130,246,1)] sm:w-7'
+                    : 'w-2.5 bg-white/40 hover:bg-white/70'
                 }`}
               />
             ))}
@@ -122,12 +182,27 @@ export default function FeaturedTournamentSection({ tournaments }: Props) {
           <div className="relative z-10 grid grid-cols-2 gap-3 p-4">
             <Stat
               label="Prize Pool"
-              value={active.prize_pool ? `$${active.prize_pool}` : '-'}
+              value={
+                active.prize_pool ? (
+                  formatRupiah(active.prize_pool)
+                ) : (
+                  <Infinity className="size-8" />
+                )
+              }
               highlight
             />
             <Stat
-              label="Max Participants"
-              value={active.max_participants ?? '-'}
+              label="Registered Participants"
+              value={
+                active.max_participants ? (
+                  `${active.current_participants} / ${active.max_participants}`
+                ) : (
+                  <span className='flex items-center gap-1'>
+                    {active.current_participants} /
+                    <Infinity className="size-8" />
+                  </span>
+                )
+              }
               highlight
             />
             <Stat
@@ -198,7 +273,7 @@ function Stat({
   highlight,
 }: {
   label: string;
-  value: string | number;
+  value: React.ReactNode;
   highlight?: boolean;
 }) {
   return (

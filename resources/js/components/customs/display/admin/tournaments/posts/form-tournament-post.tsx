@@ -32,10 +32,10 @@ import { IconUpload } from '@tabler/icons-react';
 import { isAfter, isEqual } from 'date-fns';
 import { GalleryThumbnails, Wallpaper } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import SelectCategory from './select-category';
-import SelectDate from './select-date';
 import { MapPicker } from '../../../ui/leaflet/map-picker';
 import PreviewTournamentPost from './preview-tournament-post';
+import SelectCategory from './select-category';
+import SelectDate from './select-date';
 
 interface FormTournamentPostProps {
   tournamentPostData?: Partial<TournamentFormData>;
@@ -78,6 +78,10 @@ export default function FormTournamentPost({
 
     start_date: tournamentPostData?.start_date ?? '',
     end_date: tournamentPostData?.end_date ?? '',
+
+    mode: tournamentPostData?.mode ?? 'team',
+
+    format: tournamentPostData?.format ?? 'single_elimination',
 
     status: tournamentPostData?.status ?? 'draft',
     is_featured: tournamentPostData?.is_featured ?? false,
@@ -142,6 +146,8 @@ export default function FormTournamentPost({
 
   // Locations
   const isOnlineTournament = data.location === 'online';
+
+  const tournamentMode = data.mode === 'team';
 
   useEffect(() => {
     if (data.latitude && data.longitude) {
@@ -554,7 +560,7 @@ export default function FormTournamentPost({
 
                   {/* Tags */}
                   <div className="grid gap-2">
-                    <Label className='flex items-center gap-1'>
+                    <Label className="flex items-center gap-1">
                       Tags
                       <span className="tracking-wide text-muted-foreground">
                         (separate with commas)
@@ -587,6 +593,50 @@ export default function FormTournamentPost({
               >
                 <h3 className="font-semibold">Tournament Rules</h3>
                 <div className="space-y-6 px-2">
+                  {/* Mode */}
+                  <div className="mb-8 flex items-center justify-between">
+                    <Label>Mode (Solo/Team)</Label>
+
+                    <div className="flex items-center space-x-2">
+                      <Label>Solo</Label>
+                      <Switch
+                        checked={tournamentMode}
+                        onCheckedChange={(checked) => {
+                          setData('mode', checked ? 'team' : 'solo');
+                        }}
+                      />
+                      <Label>Team</Label>
+                    </div>
+                  </div>
+                  {/* Format */}
+                  <div className="grid gap-2">
+                    <Label>Format</Label>
+
+                    <Select
+                      value={data.format}
+                      onValueChange={(value) =>
+                        setData('format', value as typeof data.format)
+                      }
+                    >
+                      <SelectTrigger className="h-12 cursor-pointer">
+                        <SelectValue placeholder="Select format" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectItem value="single_elimination">
+                          Single Elimination
+                        </SelectItem>
+                        <SelectItem value="double_elimination">
+                          Double Elimination
+                        </SelectItem>
+                        <SelectItem value="round_robin">Round Robin</SelectItem>
+                        <SelectItem value="group_stage">Group Stage</SelectItem>
+                        <SelectItem value="swiss">Swiss</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <InputError message={errors.status} />
+                  </div>
                   <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     {/* Max Participants */}
                     <div className="grid gap-2">
