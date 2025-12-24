@@ -45,8 +45,8 @@ import {
   EyeOff,
   MoreHorizontal,
 } from 'lucide-react';
-import { DataTableColumnHeader } from '../../ui/data-table-column-header';
-import { comicToast } from '../../ui/toasts/comic-toast';
+import { DataTableColumnHeader } from '../../../ui/data-table-column-header';
+import { comicToast } from '../../../ui/toasts/comic-toast';
 
 export const tournamentCategoryColumns: ColumnDef<TournamentCategory>[] = [
   {

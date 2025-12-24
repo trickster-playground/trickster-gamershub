@@ -23,7 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // User Routes
 Route::middleware('auth')->group(function () {
-	Route::get('/user/{username}', [UserProfileController::class, 'show'])->name('user.profile');
+	Route::get('/users/{username}', [UserProfileController::class, 'show'])->name('user.profile');
 	Route::post('/users/{user}/follow', [UserRelationController::class, 'follow'])->name('follow');
 	Route::delete('/users/{user}/unfollow', [UserRelationController::class, 'unfollow'])->name('unfollow');
 
@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 	Route::get('tournaments', [TournamentController::class, 'index'])->name('tournaments');
+	Route::get('tournaments/{slug}', [TournamentController::class, 'show'])->name('tournaments.detail');
 });
 
 

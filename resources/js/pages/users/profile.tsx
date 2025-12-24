@@ -51,7 +51,7 @@ import {
 const breadcrumbs: BreadcrumbItem[] = [
   {
     title: 'User Profile ',
-    href: '/user/profile',
+    href: '/users/profile',
   },
 ];
 

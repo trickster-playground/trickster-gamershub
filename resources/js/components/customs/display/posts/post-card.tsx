@@ -37,6 +37,7 @@ import { Post } from '@/types/posts';
  * Actions
  */
 import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
+import UserProfileController from '@/actions/App/Http/Controllers/Users/UserProfileController';
 
 interface PostCardProps {
   post: Post;
@@ -104,7 +105,7 @@ const PostCard = ({
     <div className="post-card mx-auto flex gap-4">
       {/* Avatar + Divider */}
       <div className="flex flex-col items-center">
-        <Link href={`/user/${post.user.username}`}>
+        <Link href={UserProfileController.show(post.user.username)}>
           <Avatar className="border-2 border-white hover:border-blue-500">
             <AvatarImage
               src={`${post.user?.avatar?.path || 'https://github.com/shadcn.png'}`}
@@ -125,7 +126,7 @@ const PostCard = ({
         <div className="flex items-center justify-between">
           <div className="flex w-full items-center gap-3">
             <div className="flex flex-col">
-              <Link href={`/user/${post.user.username}`}>
+              <Link href={UserProfileController.show(post.user.username)}>
                 <p className="base-medium lg:body-bold text-light-1 capitalize hover:text-blue-400">
                   {post.user.name}
                 </p>

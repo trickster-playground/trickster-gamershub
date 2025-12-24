@@ -45,11 +45,11 @@ import {
   ChevronsUpDown,
   Eye,
   EyeOff,
+  Infinity,
   MoreHorizontal,
   Star,
 } from 'lucide-react';
 import { comicToast } from '../../../ui/toasts/comic-toast';
-
 
 const TOURNAMENT_STATUSES = [
   'draft',
@@ -273,9 +273,13 @@ export const tournamentPostColumns: ColumnDef<TournamentPost>[] = [
     header: 'Capacity',
     cell: ({ row }) => (
       <span className="text-sm">
-        {row.original.max_participants
-          ? `0 / ${row.original.max_participants}`
-          : '∞'}
+        {row.original.max_participants ? (
+          `${row.original.current_participants} / ${row.original.max_participants}`
+        ) : (
+          <div>
+            <Infinity className="size-6" />
+          </div>
+        )}
       </span>
     ),
   },

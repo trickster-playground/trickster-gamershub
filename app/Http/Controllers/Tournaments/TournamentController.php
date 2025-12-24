@@ -55,4 +55,19 @@ class TournamentController extends Controller
 			'tournaments' => TournamentPostResource::collection($tournaments),
 		]);
 	}
+
+	/**
+	 * Display the specified resource.
+	 */
+	public function show(Request $request, string $slug)
+	{
+		$tournament = Tournament::with(['category', 'attachments', 'user', 'user.avatar'])->firstOrFail();
+
+		return Inertia::render('tournaments/show', [
+			'user' => new UserResource(
+				$request->user()->load(['avatar', 'background'])
+			),
+			'tournament' => $tournament
+		]);
+	}
 }

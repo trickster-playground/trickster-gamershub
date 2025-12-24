@@ -27,8 +27,14 @@ import { RefreshCcwIcon, X } from 'lucide-react';
 /**
  * Types
  */
+
 import { absoluteDate } from '@/lib/format/date';
 import { SharedData, User } from '@/types';
+
+/**
+ * Actions
+ */
+import UserProfileController from '@/actions/App/Http/Controllers/Users/UserProfileController';
 
 interface ModalUsersProps {
   isOpen: boolean;
@@ -101,7 +107,7 @@ const ModalUsers = ({
 
               {(users ?? []).map((user) => (
                 <Link
-                  href={`/user/${user.username}`}
+                  href={UserProfileController.show(user.username)}
                   key={user.id}
                   className="flex items-center justify-between gap-3 rounded-md p-2 hover:bg-dark-3"
                 >

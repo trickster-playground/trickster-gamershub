@@ -28,6 +28,7 @@ import AppLayout from '@/layouts/app-layout';
  * Controller
  */
 import PostController from '@/actions/App/Http/Controllers/Posts/PostController';
+import UserProfileController from '@/actions/App/Http/Controllers/Users/UserProfileController';
 
 /**
  * Types
@@ -43,7 +44,6 @@ import { useInitials } from '@/hooks/use-initials';
 /**
  * Helpers
  */
-
 import { absoluteDate } from '@/lib/format/date';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -172,7 +172,7 @@ const PostShow = ({
               <div className="flex w-full items-start justify-between">
                 {/* LEFT: Avatar + Name + Date */}
                 <div className="flex items-center gap-3">
-                  <Link href={`/user/${post.user.username}`}>
+                  <Link href={UserProfileController.show(post.user.username)}>
                     <Avatar className="border-2 border-white hover:border-blue-500">
                       <AvatarImage
                         src={post.user?.avatar?.path ?? '/default-avatar.png'}
@@ -185,7 +185,7 @@ const PostShow = ({
                   </Link>
 
                   <div className="flex flex-col">
-                    <Link href={`/user/${post.user.username}`}>
+                    <Link href={UserProfileController.show(post.user.username)}>
                       <p className="base-medium lg:body-bold text-light-1 hover:text-blue-500">
                         {post.user.name}
                       </p>

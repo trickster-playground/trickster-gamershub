@@ -7,6 +7,7 @@ import { Link, router, usePage } from '@inertiajs/react';
  * Components
  */
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { comicToast } from '../ui/toasts/comic-toast';
 import PostCommentSettings from './post-comment-setting';
 
 /**
@@ -24,8 +25,8 @@ import { useInitials } from '@/hooks/use-initials';
  * Controller
  */
 import PostCommentController from '@/actions/App/Http/Controllers/Posts/PostCommentController';
+import UserProfileController from '@/actions/App/Http/Controllers/Users/UserProfileController';
 import UserFollowButton from '../users/user-follow-button';
-import { comicToast } from '../ui/toasts/comic-toast';
 
 interface PostCommentCardProps {
   comments: PostComment[];
@@ -65,7 +66,7 @@ const PostCommentCard = ({
             className="flex w-full max-w-3xl items-start gap-4 rounded-2xl border border-border bg-background/80 p-4 backdrop-blur-md transition-shadow duration-300 hover:shadow-lg"
           >
             {/* Avatar */}
-            <Link href={`/user/${comment.user.username}`}>
+            <Link href={UserProfileController.show(comment.user.username)}>
               <Avatar className="h-12 w-12 ring-2 ring-sky-500 transition-transform hover:scale-105">
                 <AvatarImage
                   src={comment.user?.avatar?.path ?? '/default-avatar.png'}
@@ -81,7 +82,9 @@ const PostCommentCard = ({
             <div className="flex flex-1 flex-col">
               <div className="mb-1 flex flex-wrap items-center justify-between">
                 <div className="flex flex-col">
-                  <Link href={`/user/${comment.user.username}`}>
+                  <Link
+                    href={UserProfileController.show(comment.user.username)}
+                  >
                     <p className="text-[15px] font-semibold text-foreground transition-colors hover:text-sky-500">
                       {comment.user.name}
                     </p>

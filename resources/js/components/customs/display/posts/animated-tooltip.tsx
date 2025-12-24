@@ -1,9 +1,9 @@
 'use client';
 
-import { Link } from '@inertiajs/react';
 /**
  * Node modules
  */
+import { Link } from '@inertiajs/react';
 import {
   AnimatePresence,
   motion,
@@ -12,6 +12,11 @@ import {
   useTransform,
 } from 'motion/react';
 import { useRef, useState } from 'react';
+
+/**
+ * Actions
+ */
+import UserProfileController from '@/actions/App/Http/Controllers/Users/UserProfileController';
 
 export const AnimatedTooltip = ({
   items,
@@ -85,13 +90,15 @@ export const AnimatedTooltip = ({
                 <div className="absolute inset-x-10 -bottom-px z-30 h-px w-[20%] bg-gradient-to-r from-transparent via-emerald-500 to-transparent" />
                 <div className="absolute -bottom-px left-10 z-30 h-px w-[40%] bg-gradient-to-r from-transparent via-sky-500 to-transparent" />
                 <div className="relative z-30 text-base font-bold text-white">
-                  <Link href={`/user/${item.username}`}>{item.username}</Link>
+                  <Link href={UserProfileController.show(item.username)}>
+                    {item.username}
+                  </Link>
                 </div>
                 <div className="text-xs text-white">{item.designation}</div>
               </motion.div>
             )}
           </AnimatePresence>
-          <Link href={`/user/${item.username}`}>
+          <Link href={UserProfileController.show(item.username)}>
             <img
               onMouseMove={handleMouseMove}
               height={100}
