@@ -33,6 +33,7 @@ import { TournamentCategory, TournamentPost } from '@/types/tournaments';
  * Assets
  */
 import FeaturedTournamentSection from '@/components/customs/display/tournaments/posts/featured-tournament-section';
+import TournamentCardSection from '@/components/customs/display/tournaments/posts/tournament-card-section';
 import { Button } from '@/components/ui/button';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -45,9 +46,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function TournamentsPage() {
   const { auth, flash } = usePage<SharedData>().props;
 
-  const { tournamentCategories, featuredTournaments } = usePage<{
+  const { tournamentCategories, featuredTournaments, tournaments } = usePage<{
     tournamentCategories: TournamentCategory[];
     featuredTournaments: TournamentPost[];
+    tournaments: {
+      data: TournamentPost[];
+    };
   }>().props;
 
   return (
@@ -265,80 +269,8 @@ export default function TournamentsPage() {
 
       <FeaturedTournamentSection tournaments={featuredTournaments} />
 
-      {/* ================= TOURNAMENT SECTION ================= */}
-      <div className="mx-auto grid max-w-[1820px] grid-cols-1 gap-6 p-4 lg:grid-cols-12">
-        {/* ===== All Tournaments ===== */}
-        <div className="mx-auto w-full py-10 lg:col-span-12">
-          <div className="relative mb-6 flex items-center gap-4">
-            <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
-            <h2 className="text-2xl font-bold tracking-wider text-white">
-              All Tournament
-            </h2>
-          </div>
+      <TournamentCardSection tournaments={tournaments} />
 
-          <div className="mx-auto grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map((_, i) => (
-              <div
-                key={i}
-                className="group relative mx-auto h-[320px] w-full overflow-hidden rounded-3xl"
-              >
-                {/* Background Image */}
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                  style={{
-                    backgroundImage:
-                      "url('https://images4.alphacoders.com/136/1363796.jpeg')",
-                  }}
-                />
-
-                {/* Diagonal Dark Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/60 to-transparent" />
-
-                {/* blue Accent Slash */}
-                <div className="absolute top-0 -left-20 h-full w-40 rotate-12 bg-blue-600/20 blur-2xl" />
-
-                {/* Content */}
-                <div className="relative z-10 flex h-full flex-col justify-end p-6 text-white">
-                  {/* Status */}
-                  <span className="mb-3 w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-extrabold tracking-wider uppercase">
-                    Upcoming
-                  </span>
-
-                  {/* Title */}
-                  <h3 className="text-xl leading-tight font-extrabold uppercase">
-                    Regional
-                    <br />
-                    Valorant Cup
-                  </h3>
-
-                  {/* Meta */}
-                  <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-white/70">
-                    <span>SEA</span>
-                    <span>•</span>
-                    <span>16 Teams</span>
-                    <span>•</span>
-                    <span>12 Oct 2024</span>
-                  </div>
-
-                  {/* Footer */}
-                  <div className="mt-4 flex items-center justify-between">
-                    <span className="text-lg font-extrabold text-blue-500">
-                      $10K
-                    </span>
-
-                    <span className="text-sm font-bold text-white/80 uppercase transition group-hover:text-blue-500">
-                      View →
-                    </span>
-                  </div>
-                </div>
-
-                {/* Border Glow */}
-                <div className="absolute inset-0 rounded-3xl border border-white/10 transition group-hover:border-blue-500/40" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </CustomAppLayout>
   );
 }

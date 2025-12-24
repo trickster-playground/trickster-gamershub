@@ -39,6 +39,8 @@ class TournamentController extends Controller
 			->with([
 				'category',
 				'attachments',
+				'user',
+				'user.avatar'
 			])
 			->published()
 			->latest()
