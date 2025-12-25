@@ -37,6 +37,9 @@ class TournamentPostResource extends JsonResource
 			'mode' => $this->mode,
 			'format' => $this->format_label,
 
+			'registration_fee' => $this->registration_fee,
+			'team_size' => $this->team_size,
+
 
 			'max_participants' => $this->max_participants,
 			'current_participants' => $this->current_participants,

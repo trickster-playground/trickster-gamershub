@@ -67,7 +67,7 @@ class TournamentController extends Controller
 			'user' => new UserResource(
 				$request->user()->load(['avatar', 'background'])
 			),
-			'tournament' => $tournament
+			'tournament' => new TournamentPostResource($tournament)
 		]);
 	}
 }

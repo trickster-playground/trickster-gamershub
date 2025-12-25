@@ -69,7 +69,7 @@ const TournamentCardSection = ({ tournaments }: TournamentCardSectionProps) => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="line-clamp-2 max-w-[50%] text-lg leading-snug font-extrabold uppercase sm:text-xl">
+                  <h3 className="line-clamp-2 max-w-[60%] text-lg leading-snug font-extrabold uppercase sm:text-xl">
                     {tournament.title}
                   </h3>
 

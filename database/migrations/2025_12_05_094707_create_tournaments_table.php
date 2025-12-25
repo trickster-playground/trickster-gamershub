@@ -26,7 +26,10 @@
 				$table->string('title');
 				$table->string('slug')->unique();
 				$table->text('description')->nullable();
+
 				$table->unsignedBigInteger('prize_pool')->nullable();
+				$table->unsignedBigInteger('registration_fee')->default(0);
+
 
 				// Tags (text / JSON)
 				$table->string('tags')->nullable();
@@ -48,13 +51,15 @@
 				$table->integer('current_participants')->default(0);
 
 				$table->enum('mode', ['solo', 'team'])->default('team');
+				$table->unsignedTinyInteger('team_size')->default(1);
+
 
 				$table->enum('format', [
 					'single_elimination',
 					'double_elimination',
 					'round_robin',
 					'group_stage',
-					'swiss'
+					'swiss_system'
 				])->default('single_elimination');
 
 				// Status

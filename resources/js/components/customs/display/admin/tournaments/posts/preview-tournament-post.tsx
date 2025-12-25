@@ -39,9 +39,7 @@ export default function PreviewTournamentPost({
     cancelled: 'bg-red-600',
   };
 
-  const category = categories.find(
-    (cat) => cat.id === data.category_id,
-  );
+  const category = categories.find((cat) => cat.id === data.category_id);
 
   return (
     <AspectRatio
@@ -115,7 +113,7 @@ export default function PreviewTournamentPost({
         </span>
 
         {/* Title */}
-        <h3 className="text-xl leading-tight font-extrabold uppercase">
+        <h3 className="line-clamp-2 max-w-[60%] text-lg leading-snug font-extrabold uppercase sm:text-xl">
           {data.title || 'Tournament Title'}
         </h3>
 

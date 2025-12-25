@@ -73,6 +73,8 @@ export default function FormTournamentPost({
     registration_start: tournamentPostData?.registration_start ?? '',
     registration_end: tournamentPostData?.registration_end ?? '',
 
+    registration_fee: tournamentPostData?.registration_fee ?? 0,
+
     banner: null,
     thumbnail: null,
 
@@ -82,11 +84,14 @@ export default function FormTournamentPost({
     mode: tournamentPostData?.mode ?? 'team',
 
     format: tournamentPostData?.format ?? 'single_elimination',
+    team_size: tournamentPostData?.team_size ?? 1,
 
     status: tournamentPostData?.status ?? 'draft',
     is_featured: tournamentPostData?.is_featured ?? false,
     is_published: tournamentPostData?.is_published ?? false,
   });
+
+  console.log(data.banner, data.thumbnail);
 
   // Banner
   const bannerAttachment = tournamentPostData?.attachments?.find(
@@ -144,6 +149,12 @@ export default function FormTournamentPost({
   const isUnlimitedParticipants = data.max_participants === null;
   const isUnlimitedPrizePool = data.prize_pool === null;
 
+  useEffect(() => {
+    if (data.mode === 'solo') {
+      setData('team_size', 1);
+    }
+  }, [data.mode]);
+
   // Locations
   const isOnlineTournament = data.location === 'online';
 
@@ -172,16 +183,12 @@ export default function FormTournamentPost({
 
   // Configurations
   useEffect(() => {
-    if (data.is_published && data.status === 'draft') {
-      setData('status', 'upcoming');
-    }
-  }, [data.is_published]);
+    if (!data.is_published) return;
 
-  useEffect(() => {
-    if (data.start_date && data.is_published) {
+    if (data.status === 'draft') {
       setData('status', 'upcoming');
     }
-  }, [data.start_date]);
+  }, [data.is_published, data.start_date]);
 
   // Wizard Form
   const [formStep, setFormStep] = useState<1 | 2 | 3 | 4>(1);
@@ -279,21 +286,99 @@ export default function FormTournamentPost({
     return valid;
   };
 
-  useEffect(() => {
-    if (formStep !== 2) return;
-
-    validateStepTwo();
-  }, [
-    data.registration_start,
-    data.registration_end,
-    data.start_date,
-    data.end_date,
-  ]);
-
   const canGoNext =
     (formStep === 1 && isStepOneValid) ||
     (formStep === 2 && isStepTwoValid) ||
     formStep > 2;
+
+  const handleNext = () => {
+    clearErrors();
+
+    /* ================= STEP 1 ================= */
+    if (formStep === 1) {
+      if (!hasFile(data.banner, bannerAttachment)) {
+        setError('banner', 'Banner is required');
+        return;
+      }
+
+      if (!hasFile(data.thumbnail, thumbnailAttachment)) {
+        setError('thumbnail', 'Thumbnail is required');
+        return;
+      }
+
+      if (!data.title.trim()) {
+        setError('title', 'Title is required');
+        return;
+      }
+
+      if (!data.category_id) {
+        setError('category_id', 'Category is required');
+        return;
+      }
+    }
+
+    /* ================= STEP 2 ================= */
+    if (formStep === 2) {
+      // TEAM RULE
+      if (data.mode === 'team' && data.team_size < 2) {
+        setError(
+          'team_size',
+          'Team Mode must have at least 2 players per team',
+        );
+        return;
+      }
+
+      // REGISTRATION FEE
+      if (data.registration_fee < 0) {
+        setError('registration_fee', 'Registration fee cannot be negative');
+        return;
+      }
+
+      // MAX PARTICIPANTS
+      if (data.max_participants !== null && data.max_participants < 1) {
+        setError('max_participants', 'Minimum participants is 1');
+        return;
+      }
+
+      if (
+        data.mode === 'team' &&
+        data.max_participants !== null &&
+        data.max_participants < data.team_size
+      ) {
+        setError(
+          'max_participants',
+          'Max participants must be greater than team size',
+        );
+        return;
+      }
+
+      // DATE RULES (reuse existing)
+      if (!validateStepTwo()) return;
+    }
+
+    /* ================= STEP 3 ================= */
+    if (formStep === 3 && data.location !== 'online') {
+      if (!data.location.trim()) {
+        setError('location', 'Location address is required');
+        return;
+      }
+
+      if (!data.latitude || !data.longitude) {
+        setError('location', 'Please select location on map');
+        return;
+      }
+    }
+
+    /* ================= STEP 4 ================= */
+    if (formStep === 4) {
+      if (data.is_published && data.status === 'draft') {
+        setError('status', 'Published tournament cannot have draft status');
+        return;
+      }
+    }
+
+    setFormStep((s) => (s + 1) as typeof formStep);
+  };
 
   useEffect(() => {
     if (data.id) {
@@ -376,15 +461,15 @@ export default function FormTournamentPost({
                 <h3 className="font-semibold">Tournament Information</h3>
                 <div className="space-y-6 px-2">
                   <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    {/* Banner */}
-                    <div className="grid gap-2 lg:col-span-2">
+                    {/* ===================== Banner ===================== */}
+                    <div className="grid h-full flex-col gap-2 lg:col-span-2">
                       <Label className="mb-2">Banner *</Label>
 
                       <AspectRatio ratio={16 / 9}>
                         <button
                           type="button"
                           onClick={() => bannerInputRef.current?.click()}
-                          className="relative h-full w-full overflow-hidden rounded-xl border"
+                          className="relative h-full w-full cursor-pointer overflow-hidden rounded-xl border"
                         >
                           {previewBanner ? (
                             <>
@@ -412,7 +497,7 @@ export default function FormTournamentPost({
                               </Button>
                             </>
                           ) : (
-                            <div className="flex h-full w-full cursor-pointer items-center justify-center text-sm text-muted-foreground hover:bg-dark-3">
+                            <div className="flex h-full w-full items-center justify-center text-sm text-muted-foreground hover:bg-dark-3">
                               <Empty>
                                 <EmptyHeader>
                                   <EmptyMedia variant="icon">
@@ -435,8 +520,6 @@ export default function FormTournamentPost({
                         </button>
                       </AspectRatio>
 
-                      <InputError message={errors.banner} />
-
                       <input
                         type="file"
                         accept="image/*"
@@ -445,90 +528,102 @@ export default function FormTournamentPost({
                         onChange={handleBannerChange}
                       />
 
-                      <p className="text-xs text-muted-foreground">
-                        Appears on tournament detail page
-                      </p>
+                      {/* Footer slot (error replaces text) */}
+                      <div className="mt-2 min-h-[20px] text-xs">
+                        {errors.banner ? (
+                          <InputError message={errors.banner} />
+                        ) : (
+                          <p className="text-muted-foreground">
+                            Appears on tournament detail page
+                          </p>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Thumbnail */}
-                    <div className="grid gap-2">
+                    {/* ===================== Thumbnail ===================== */}
+                    <div className="grid h-full flex-col gap-2">
                       <Label>Thumbnail *</Label>
 
-                      <div className="mb-13 flex h-full items-center">
-                        <div className="w-full">
-                          <AspectRatio ratio={1 / 1} className="cursor-pointer">
-                            <button
-                              type="button"
-                              onClick={() => thumbnailInputRef.current?.click()}
-                              className="relative h-full w-full overflow-hidden rounded-xl border"
-                            >
-                              {previewThumbnail ? (
-                                <>
-                                  <img
-                                    src={previewThumbnail}
-                                    className="h-full w-full object-cover"
-                                  />
-                                  <Button
-                                    type="button"
-                                    size="sm"
-                                    variant="outline"
-                                    className="absolute top-2 right-2 bg-background hover:bg-red-600"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setPreviewThumbnail(null);
-                                      if (
-                                        previewThumbnail?.startsWith('blob:')
-                                      ) {
-                                        URL.revokeObjectURL(previewThumbnail);
-                                      }
-                                      setData('thumbnail', null);
-                                      if (thumbnailInputRef.current)
-                                        thumbnailInputRef.current.value = '';
-                                    }}
-                                  >
-                                    Remove
-                                  </Button>
-                                </>
-                              ) : (
-                                <div className="flex h-full w-full cursor-pointer items-center justify-center text-sm text-muted-foreground hover:bg-dark-3">
-                                  <Empty>
-                                    <EmptyHeader>
-                                      <EmptyMedia variant="icon">
-                                        <GalleryThumbnails size={32} />
-                                      </EmptyMedia>
-                                      <EmptyTitle>
-                                        No thumbnail uploaded
-                                      </EmptyTitle>
-                                      <EmptyDescription>
-                                        Upload thumbnail for your tournament.
-                                      </EmptyDescription>
-                                    </EmptyHeader>
-                                    <EmptyContent>
-                                      <Label className="flex cursor-pointer items-center gap-2 text-sm hover:underline">
-                                        <IconUpload size={16} />
-                                        Choose File
-                                      </Label>
-                                    </EmptyContent>
-                                  </Empty>
-                                </div>
-                              )}
-                            </button>
-                          </AspectRatio>
-
-                          <InputError message={errors.thumbnail} />
-
-                          <input
-                            type="file"
-                            accept="image/*"
-                            ref={thumbnailInputRef}
-                            className="hidden"
-                            onChange={handleThumbnailChange}
-                          />
-                        </div>
+                      <div className="flex flex-1 items-center">
+                        <AspectRatio
+                          ratio={4.42 / 5}
+                          className="w-full cursor-pointer"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => thumbnailInputRef.current?.click()}
+                            className="relative h-full w-full cursor-pointer overflow-hidden rounded-xl border"
+                          >
+                            {previewThumbnail ? (
+                              <>
+                                <img
+                                  src={previewThumbnail}
+                                  className="h-full w-full object-cover"
+                                />
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="outline"
+                                  className="absolute top-2 right-2 bg-background hover:bg-red-600"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (previewThumbnail?.startsWith('blob:')) {
+                                      URL.revokeObjectURL(previewThumbnail);
+                                    }
+                                    setPreviewThumbnail(null);
+                                    setData('thumbnail', null);
+                                    if (thumbnailInputRef.current)
+                                      thumbnailInputRef.current.value = '';
+                                  }}
+                                >
+                                  Remove
+                                </Button>
+                              </>
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center text-sm text-muted-foreground hover:bg-dark-3">
+                                <Empty>
+                                  <EmptyHeader>
+                                    <EmptyMedia variant="icon">
+                                      <GalleryThumbnails size={32} />
+                                    </EmptyMedia>
+                                    <EmptyTitle>
+                                      No thumbnail uploaded
+                                    </EmptyTitle>
+                                    <EmptyDescription>
+                                      Upload thumbnail for your tournament.
+                                    </EmptyDescription>
+                                  </EmptyHeader>
+                                  <EmptyContent>
+                                    <Label className="flex cursor-pointer items-center gap-2 text-sm hover:underline">
+                                      <IconUpload size={16} />
+                                      Choose File
+                                    </Label>
+                                  </EmptyContent>
+                                </Empty>
+                              </div>
+                            )}
+                          </button>
+                        </AspectRatio>
                       </div>
-                      <p className="mt-0 text-xs text-muted-foreground">
-                        Used in tournament cards & listings
-                      </p>
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={thumbnailInputRef}
+                        className="hidden"
+                        onChange={handleThumbnailChange}
+                      />
+
+                      {/* Footer slot (error replaces text) */}
+                      <div className="mt-2 min-h-[20px] text-xs">
+                        {errors.thumbnail ? (
+                          <InputError message={errors.thumbnail} />
+                        ) : (
+                          <p className="text-muted-foreground">
+                            Used in tournament cards & listings
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -542,8 +637,18 @@ export default function FormTournamentPost({
                         onChange={(e) => setData('title', e.target.value)}
                         maxLength={50}
                         placeholder="Enter tournament title..."
+                        autoComplete="title"
                       />
-                      <InputError message={errors.title} />
+                      {/* Footer slot (error replaces text) */}
+                      <div className="mt-1 min-h-[20px] text-xs">
+                        {errors.title ? (
+                          <InputError message={errors.title} />
+                        ) : (
+                          <p className="text-muted-foreground">
+                            Max : 50 Character
+                          </p>
+                        )}
+                      </div>
                     </div>
 
                     {/* Category */}
@@ -554,7 +659,16 @@ export default function FormTournamentPost({
                         options={categories}
                         onChange={(value) => setData('category_id', value)}
                       />
-                      <InputError message={errors.category_id} />
+                      {/* Footer slot (error replaces text) */}
+                      <div className="mt-1 min-h-[20px] text-xs">
+                        {errors.category_id ? (
+                          <InputError message={errors.category_id} />
+                        ) : (
+                          <p className="text-muted-foreground">
+                            Can't find your game? Contact the administrator.
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -570,6 +684,7 @@ export default function FormTournamentPost({
                       placeholder="e.g. Mobile Legends, PUBG Mobile, Valorant ..."
                       value={data.tags}
                       onChange={(e) => setData('tags', e.target.value)}
+                      autoComplete="tags"
                     />
                   </div>
 
@@ -594,8 +709,8 @@ export default function FormTournamentPost({
                 <h3 className="font-semibold">Tournament Rules</h3>
                 <div className="space-y-6 px-2">
                   {/* Mode */}
-                  <div className="mb-8 flex items-center justify-between">
-                    <Label>Mode (Solo/Team)</Label>
+                  <div className="mb-6 flex items-center justify-between">
+                    <Label>Mode (Solo / Team)</Label>
 
                     <div className="flex items-center space-x-2">
                       <Label>Solo</Label>
@@ -603,40 +718,107 @@ export default function FormTournamentPost({
                         checked={tournamentMode}
                         onCheckedChange={(checked) => {
                           setData('mode', checked ? 'team' : 'solo');
+                          if (!checked) setData('team_size', 1);
                         }}
                       />
                       <Label>Team</Label>
                     </div>
                   </div>
-                  {/* Format */}
-                  <div className="grid gap-2">
-                    <Label>Format</Label>
 
-                    <Select
-                      value={data.format}
-                      onValueChange={(value) =>
-                        setData('format', value as typeof data.format)
-                      }
-                    >
-                      <SelectTrigger className="h-12 cursor-pointer">
-                        <SelectValue placeholder="Select format" />
-                      </SelectTrigger>
+                  {/* Team Size */}
+                  {data.mode === 'team' && (
+                    <div className="grid gap-2">
+                      <Label>Players per Team</Label>
 
-                      <SelectContent>
-                        <SelectItem value="single_elimination">
-                          Single Elimination
-                        </SelectItem>
-                        <SelectItem value="double_elimination">
-                          Double Elimination
-                        </SelectItem>
-                        <SelectItem value="round_robin">Round Robin</SelectItem>
-                        <SelectItem value="group_stage">Group Stage</SelectItem>
-                        <SelectItem value="swiss">Swiss</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      <Input
+                        type="number"
+                        className="h-12"
+                        min={2}
+                        value={data.team_size}
+                        onChange={(e) =>
+                          setData('team_size', Number(e.target.value))
+                        }
+                      />
 
-                    <InputError message={errors.status} />
+                      {/* Footer slot (error replaces text) */}
+                      <div className="mt-1 min-h-[20px] text-xs">
+                        {errors.team_size ? (
+                          <InputError message={errors.team_size} />
+                        ) : (
+                          <p className="text-muted-foreground">
+                            Ex: 5 vs 5 player / 3 vs 3 player
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    {/* Registration Fee */}
+                    <div className="grid gap-2">
+                      <Label>Registration Fee</Label>
+
+                      <div className="flex items-center gap-3">
+                        <Input
+                          type="number"
+                          className="h-12"
+                          min={0}
+                          value={data.registration_fee}
+                          onChange={(e) =>
+                            setData('registration_fee', Number(e.target.value))
+                          }
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          IDR
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-muted-foreground">
+                        Set 0 for free tournament
+                      </p>
+
+                      <InputError message={errors.registration_fee} />
+                    </div>
+
+                    {/* Format */}
+                    <div className="grid gap-2">
+                      <Label>Format</Label>
+
+                      <Select
+                        value={data.format}
+                        onValueChange={(value) =>
+                          setData('format', value as typeof data.format)
+                        }
+                      >
+                        <SelectTrigger className="h-12 cursor-pointer">
+                          <SelectValue placeholder="Select format" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          <SelectItem value="single_elimination">
+                            Single Elimination
+                          </SelectItem>
+                          <SelectItem value="double_elimination">
+                            Double Elimination
+                          </SelectItem>
+                          <SelectItem value="round_robin">
+                            Round Robin
+                          </SelectItem>
+                          <SelectItem value="group_stage">
+                            Group Stage
+                          </SelectItem>
+                          <SelectItem value="swiss_system">Swiss</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <p className="text-xs text-muted-foreground">
+                        Match system
+                      </p>
+
+                      <InputError message={errors.format} />
+                    </div>
                   </div>
+
                   <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     {/* Max Participants */}
                     <div className="grid gap-2">
@@ -806,12 +988,23 @@ export default function FormTournamentPost({
                 {!isOnlineTournament && (
                   <div className="space-y-4 px-2">
                     <div className="grid gap-2">
-                      <Label>Address</Label>
+                      <Label>Address*</Label>
                       <Input
                         placeholder="Enter tournament address"
                         value={data.location}
                         onChange={(e) => setData('location', e.target.value)}
                       />
+                      {/* Footer slot (error replaces text) */}
+                      <div className="mt-1 min-h-[20px] text-xs">
+                        {errors.location ? (
+                          <InputError message={errors.location} />
+                        ) : (
+                          <p className="text-muted-foreground">
+                            Enter the full address to help participants find the
+                            location.
+                          </p>
+                        )}
+                      </div>
                     </div>
 
                     <div className="h-[500px] w-full rounded-lg border">
@@ -906,14 +1099,7 @@ export default function FormTournamentPost({
                 </Button>
 
                 {formStep < totalFormSteps && (
-                  <Button
-                    type="button"
-                    disabled={!canGoNext}
-                    onClick={() => {
-                      if (formStep === 2 && !validateStepTwo()) return;
-                      setFormStep((s) => (s + 1) as typeof formStep);
-                    }}
-                  >
+                  <Button type="button" onClick={handleNext}>
                     Next
                   </Button>
                 )}

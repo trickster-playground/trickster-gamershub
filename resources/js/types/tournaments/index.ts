@@ -20,6 +20,9 @@ export interface TournamentPost {
   latitude: number | null;
   longitude: number | null;
 
+  registration_fee: number;
+  team_size: number;
+
   mode: 'solo' | 'team';
 
   format:
@@ -60,6 +63,9 @@ export interface TournamentFormData {
   location: string;
   latitude: number | null;
   longitude: number | null;
+
+  registration_fee: number;
+  team_size: number;
 
   registration_start: string;
   registration_end: string;
@@ -116,6 +122,9 @@ export interface TournamentAttachment {
   updated_at: string;
 }
 
+/**
+ * Helper
+ */
 export function getAttachment(
   tournament: TournamentPost,
   type: 'banner' | 'thumbnail',

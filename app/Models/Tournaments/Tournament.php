@@ -20,8 +20,10 @@ class Tournament extends Model
 		'prize_pool',
 		'max_participants',
 		'current_participants',
+		'registration_fee',
 		'mode',
 		'format',
+		'team_size',
 		'location',
 		'latitude',
 		'longitude',
@@ -98,7 +100,7 @@ class Tournament extends Model
 			'double_elimination' => 'Double Elimination',
 			'round_robin' => 'Round Robin',
 			'group_stage' => 'Group Stage',
-			'swiss' => 'Swiss System',
+			'swiss_system' => 'Swiss System',
 			default => ucfirst(str_replace('_', ' ', $this->format)),
 		};
 	}
