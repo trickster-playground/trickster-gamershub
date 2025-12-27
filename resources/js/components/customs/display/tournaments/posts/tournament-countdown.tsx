@@ -33,8 +33,9 @@ export function TournamentCountdown({ startDate }: { startDate: string }) {
 
   if (isOver) {
     return (
-      <div className="rounded-lg border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm font-semibold text-blue-300">
-        Tournament Started
+      <div className="rounded-lg border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm font-semibold text-white flex items-center gap-2">
+        <span className="h-2 w-2 animate-pulse rounded-full bg-red-600" />
+        LIVE NOW
       </div>
     );
   }
