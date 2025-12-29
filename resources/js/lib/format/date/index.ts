@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 // Single date
 export function absoluteDate(date: Date | string) {
@@ -90,4 +90,22 @@ export function useCountdown(target: string) {
   }, [target]);
 
   return time;
+}
+
+export function formatDateRange(value: string | Date | null): string | null {
+  if (!value) return null;
+
+  const format = (d: string | Date) =>
+    new Date(d).toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+
+  if (typeof value === 'string' && value.includes('–')) {
+    const [start, end] = value.split(' – ');
+    return `${format(start)} – ${format(end)}`;
+  }
+
+  return format(value);
 }

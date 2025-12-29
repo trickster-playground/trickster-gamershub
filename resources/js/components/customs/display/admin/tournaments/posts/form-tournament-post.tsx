@@ -993,6 +993,7 @@ export default function FormTournamentPost({
                         placeholder="Enter tournament address"
                         value={data.location}
                         onChange={(e) => setData('location', e.target.value)}
+                        autoComplete='location'
                       />
                       {/* Footer slot (error replaces text) */}
                       <div className="mt-1 min-h-[20px] text-xs">

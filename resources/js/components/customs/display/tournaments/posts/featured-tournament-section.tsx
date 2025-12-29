@@ -201,7 +201,7 @@ export default function FeaturedTournamentSection({ tournaments }: Props) {
               highlight
             />
             <Stat
-              label="Registered Participants"
+              label="Confirmed Participants"
               value={
                 active.max_participants ? (
                   `${active.current_participants} / ${active.max_participants}`

@@ -378,8 +378,6 @@
   transform: translateY(4px);
 }
 
-
-
 /* Tiptap Editor */
 .tiptap p.is-editor-empty:first-child::before {
   color: oklch(0.705 0.015 286.067);
@@ -495,4 +493,40 @@ blockquote {
 
 .rdp-today.rdp-selected {
   @apply rounded-full bg-primary text-primary-foreground;
+}
+
+/* Leaflet */
+
+.pulse-wrapper {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.pulse-dot {
+  position: absolute;
+  inset: 0;
+  background: #22c55e;
+  border-radius: 9999px;
+  z-index: 2;
+}
+
+.pulse-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 9999px;
+  background: rgba(34, 197, 94, 0.4);
+  animation: pulse 1.8s ease-out infinite;
+  z-index: 1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }

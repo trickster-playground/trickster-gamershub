@@ -4,6 +4,11 @@
 
 import { User } from '..';
 
+export interface TournamentCoordinates {
+  lat: number;
+  lng: number;
+}
+
 export interface TournamentPost {
   id?: number;
   title: string;
@@ -17,8 +22,8 @@ export interface TournamentPost {
   current_participants: number | null;
 
   location: string;
-  latitude: number | null;
-  longitude: number | null;
+
+  coordinates: TournamentCoordinates | null;
 
   registration_fee: number;
   team_size: number;

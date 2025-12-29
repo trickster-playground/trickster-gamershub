@@ -30,10 +30,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { TournamentPost } from '@/types/tournaments';
 import {
-  ArrowBigRight,
   Cog,
   GitPullRequest,
-  ShieldCheck,
   SlashIcon,
   Ticket,
   User,
@@ -43,10 +41,8 @@ import {
 /**
  * Assets
  */
-import UserProfileController from '@/actions/App/Http/Controllers/Users/UserProfileController';
+import TournamentTabOverview from '@/components/customs/display/tournaments/posts/show/overview/tabs-overview';
 import { TournamentCountdown } from '@/components/customs/display/tournaments/posts/tournament-countdown';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useInitials } from '@/hooks/use-initials';
 import { useState } from 'react';
 
 function MetaBadge({
@@ -62,83 +58,11 @@ function MetaBadge({
     <div className="flex items-center gap-2 px-3 py-2">
       {icon}
       <div className="leading-tight">
-        <p className="text-[10px] tracking-wide text-white/60 uppercase">
+        <p className="text-xs tracking-wide text-blue-400 uppercase">
           {label}
         </p>
-        <p className="text-xs font-semibold">{value}</p>
+        <p className="text-base font-semibold">{value}</p>
       </div>
-    </div>
-  );
-}
-
-function InfoCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur">
-      <h4 className="mb-4 text-xs font-semibold tracking-widest text-white uppercase">
-        {title}
-      </h4>
-
-      {children}
-    </div>
-  );
-}
-
-function AdminItem({
-  name,
-  username,
-  avatar,
-}: {
-  name: string;
-  username: string;
-  avatar: string;
-}) {
-  const getInitials = useInitials();
-  return (
-    <div className="flex items-center justify-between">
-      <Link
-        href={UserProfileController.show(username)}
-        className="group flex items-center gap-3 rounded-lg px-2 py-1 hover:bg-dark-4"
-      >
-        {/* Avatar placeholder */}
-        <Avatar className="size-8 ring-1 ring-white/20 group-hover:ring-blue-500 sm:size-11">
-          <AvatarImage src={avatar} alt={name} />
-          <AvatarFallback>{getInitials(name)}</AvatarFallback>
-        </Avatar>
-
-        <div className="leading-tight">
-          <p className="text-sm font-medium text-white group-hover:text-blue-500">
-            {name}
-          </p>
-          <p className="text-xs text-white/50">@{username}</p>
-        </div>
-      </Link>
-
-      <ShieldCheck size={16} className="text-blue-400" />
-    </div>
-  );
-}
-
-function Step({
-  label,
-  status,
-}: {
-  label: string;
-  status: 'open' | 'pending';
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      <span
-        className={`h-2 w-2 rounded-full ${
-          status === 'open' ? 'bg-green-400' : 'bg-white/30'
-        }`}
-      />
-      <span className="text-white/70">{label}</span>
     </div>
   );
 }
@@ -152,11 +76,6 @@ export default function TournamentsShow() {
 
   const tabs = ['Overview', 'Matches', 'Players', 'Results'];
   const [activeTab, setActiveTab] = useState('Overview');
-
-  const max = tournament.max_participants;
-  const current = tournament.current_participants ?? 0;
-
-  const slotsLeft = typeof max === 'number' ? Math.max(max - current, 0) : null;
 
   return (
     <CustomAppLayout>
@@ -219,7 +138,7 @@ export default function TournamentsShow() {
               </div>
 
               <div className="text-right">
-                <p className="text-xs text-blue-400 uppercase">Prize Pool</p>
+                <p className="text-base text-blue-400 uppercase">Prize Pool</p>
                 <p className="text-2xl font-extrabold lg:text-3xl">
                   {tournament.prize_pool
                     ? `₹${tournament.prize_pool.toLocaleString()}`
@@ -234,9 +153,9 @@ export default function TournamentsShow() {
                 <MetaBadge
                   icon={
                     tournament.mode === 'team' ? (
-                      <Users size={16} />
+                      <Users size={20} />
                     ) : (
-                      <User size={16} />
+                      <User size={20} />
                     )
                   }
                   label={tournament.format}
@@ -247,7 +166,7 @@ export default function TournamentsShow() {
                   }
                 />
                 <MetaBadge
-                  icon={<Ticket size={16} />}
+                  icon={<Ticket size={20} />}
                   label="Entry"
                   value={
                     tournament.registration_fee
@@ -294,74 +213,7 @@ export default function TournamentsShow() {
 
           <div className="mt-8">
             {activeTab === 'Overview' && (
-              <div className="grid gap-10 md:grid-cols-3">
-                {/* MAIN */}
-                <div className="space-y-10 md:col-span-2">
-                  <section>
-                    <h3 className="mb-3 text-xs font-semibold tracking-widest text-white uppercase">
-                      About
-                    </h3>
-                    <p className="text-sm leading-relaxed text-white/65">
-                      {tournament.description
-                        ? tournament.description
-                        : tournament.category.description}
-                    </p>
-                  </section>
-                  <section>
-                    <h3 className="mb-4 text-xs font-semibold tracking-widest text-white uppercase">
-                      Registration
-                    </h3>
-
-                    <div className="flex items-center gap-6 text-sm">
-                      <Step label="Registration" status="open" />
-                      <ArrowBigRight />
-                      <Step label="Confirmation" status="pending" />
-                      <ArrowBigRight />
-                      <Step label="Seeding" status="pending" />
-                    </div>
-                  </section>
-                  <section>
-                    <h3 className="mb-3 text-xs font-semibold tracking-widest text-white uppercase">
-                      Game Rules
-                    </h3>
-                    <ul className="list-disc space-y-2 pl-5 text-sm text-white/60">
-                      <li>Mode of play will be standard</li>
-                      <li>All players must be logged in to Entiate</li>
-                      <li>Players have 5 minutes to join the pre-game lobby</li>
-                    </ul>
-                  </section>
-                </div>
-                <div className="space-y-6">
-                  {/* Players */}
-                  <InfoCard title="Participants">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-white/60">Confirmed</span>
-                        <span className="font-semibold text-white">
-                          {tournament.current_participants}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-white/60">Slots Left</span>
-                        <span className="font-semibold text-blue-400">
-                          {slotsLeft !== null ? slotsLeft : 'Unlimited'}
-                        </span>
-                      </div>
-                    </div>
-                  </InfoCard>
-
-                  {/* Admin */}
-                  <InfoCard title="Organized By">
-                    <div className="space-y-3">
-                      <AdminItem
-                        name={tournament.user.name}
-                        username={tournament.user.username}
-                        avatar={tournament.user.avatar?.path || ''}
-                      />
-                    </div>
-                  </InfoCard>
-                </div>
-              </div>
+              <TournamentTabOverview tournament={tournament} />
             )}
           </div>
         </div>

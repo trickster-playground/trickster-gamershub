@@ -75,9 +75,15 @@ const TournamentCardSection = ({ tournaments }: TournamentCardSectionProps) => {
 
                   {/* Meta */}
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-white/70 capitalize sm:text-sm">
-                    <span>{tournament.location}</span>
+                    <span>
+                      {tournament.location === 'online' ? 'Online' : 'Offline'}
+                    </span>
                     <span className="opacity-50">•</span>
                     <span>{tournament.mode}</span>
+                    <span className="opacity-50">•</span>
+                    <span>
+                      {tournament.max_participants ?? 'Unlimited'} Slots
+                    </span>
                     <span className="opacity-50">•</span>
                     <span>{absoluteDate(tournament.start_date)}</span>
                   </div>
